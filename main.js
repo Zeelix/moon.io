@@ -3,6 +3,10 @@
 //import { rocket_modelData, rocket_modelIndexData_1, rocket_modelIndexData_2, rocket_modelIndexData_3 } from './assets.js';
 //import { star_modelData_1, star_modelData_2, star_modelIndexData } from './assets.js';
 
+// HTML elements
+const html_fps = document.querySelector("#html_fps");
+const html_canvas = document.querySelector('#html_canvas');
+
 // GLOBALS
 var g_gl;
 var g_frame_time = {
@@ -12,9 +16,24 @@ var g_frame_time = {
 };
 var g_user_held_keys = {}
 
-// HTML elements
-const html_fps = document.querySelector("#html_fps");
-const html_canvas = document.querySelector('#html_canvas');
+var g_moon_local = {
+	pos: [0.0, 0.0, 0.0]
+};
+
+var g_player_actor = {
+	pos: [0.0, 0.0, 0.0],
+	dir: [0.0, 1.0, 0.0]
+};
+
+var g_player_camera = {
+	pos: [0.0, 0.0, 0.0],
+	dir: [0.0, 1.0, 0.0],
+	right: [1.0, 0.0, 0.0],
+	up: [0.0, 0.0, 1.0],
+	actor_follow_distance: 5.0,
+	actor_follow_height: 5.0,
+	actor_follow_theta: 0.0
+};
 
 window.requestAnimFrame = ( function() {
     return  window.requestAnimationFrame || 
