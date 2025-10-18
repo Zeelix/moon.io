@@ -153,7 +153,7 @@ function render() {
 	gl.bindBuffer(gl.ARRAY_BUFFER, star_bufferInfo.vertex_1);
 	
 	var buffer_swap = art_scene1Info.numStars/2;
-	for(i = 0; i < art_scene1Info.numStars; i++) {
+	for(let i = 0; i < art_scene1Info.numStars; i++) {
 		if(i == buffer_swap)
 			gl.bindBuffer(gl.ARRAY_BUFFER, star_bufferInfo.vertex_2);
 		
@@ -218,7 +218,7 @@ function render() {
   {
 	  useShader("exhaust", false);
 	  
-	  for(i = 0; i < art_scene1Info.numExhaustFire; i++) {
+	  for(let i = 0; i < art_scene1Info.numExhaustFire; i++) {
 		var theta = art_scene1Info.exhaustFireTheta[i];
 	    var P_old = vec3.fromValues(0.0, -4.0, 0.0);
 		var exhaust_scaler = theta / 10.0;
