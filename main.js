@@ -17,23 +17,23 @@ window.requestAnimFrame = ( function() {
   } ) (); 
 
 var g_gl;
+
 var g_frame_time = {
-	counter: 30,
+	counter: 0,
 	timer_last: new Date(),
-	timer_current: new Date(),
-	delta_t: 0.0,
 	fps: 0
 };
 
 const html_fps = document.querySelector("#html_fps");
 
 function Render_Loop(){
-  g_frame_time.timer_current = new Date();
-  g_frame_time.delta_time = (g_frame_time.timer_current.getTime() - g_frame_time.timer_last.getTime()) / 1000.0;
-  g_frame_time.timer_last = g_frame_time.timer_current;
-  g_frame_time.fps = 1 / g_frame_time.delta_t;
+  const timer_current = new Date();
+  const delta_time = (timer_current.getTime() - g_frame_time.timer_last.getTime()) / 1000.0;
+  
+  g_frame_time.timer_last = timer_current;
+  g_frame_time.fps = (1 / delta_t).toFixed(1);
   if(g_frame_time.counter % 10 == 0)
-	html_fps.textContent = g_frame_time.fps.toFixed(1);
+	html_fps.textContent = g_frame_time.fps;
 
   g_frame_time.counter++;
   requestAnimFrame( Render_Loop );
