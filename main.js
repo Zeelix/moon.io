@@ -33,7 +33,7 @@ function Render_Loop(){
   g_frame_time.timer_last = g_frame_time.timer_current;
   g_frame_time.fps = 1 / g_frame_time.delta_t;
   if(g_frame_time.counter % 10 == 0)
-	html_fps.textContent = fps.toFixed(1);
+	html_fps.textContent = g_frame_time.fps.toFixed(1);
 
   g_frame_time.counter++;
   requestAnimFrame( Render_Loop );
