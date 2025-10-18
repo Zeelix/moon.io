@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Evan Diehl</title>
+    <link rel="stylesheet" href="index.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+            integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+            crossorigin="anonymous" defer>
+    </script>
+    <script type="module" src="index.js"></script>
+  </head>
+
+  <body>
+    <canvas id="glcanvas" width="1440" height="900"></canvas>
+	
+
+	
+	<div>
+		<p class = "projectview_overlay">Website and content designed & programmed by Evan Diehl using HTML5, CSS-3, JS & WebGL</p>
+		<p class = "projectview_overlay"> 
+			<span>Rendered real-time on the GPU at approximately </span>
+			<span id = "fps"></span>
+			<span> frames per second</span>
+		</p>
+	
+		<div class = "projectview_modelViewer" id = "mview"><p></p></div>
+		<div class = "projectview_panel">
+			<h2 class = "projectview_title">Nonlinear Systems Solver</h2>
+			<h3 class = "projectview_statusHeader">
+				<span class = "projectview_statusText">Status: </span>
+				<span class = "projectview_statusCurrent">Completed</span>
+			</h3>
+			<hr class = "projectview_splitter"></hr>
+			<div class = "projectview_langapirow">
+				<button class = "projectview_langapi">C/C++</button>
+				<button class = "projectview_langapi">OpenGL</button>
+			</div>
+			<p class = "projectview_desc">A cross-platform program for solving most systems of ordinary differential equations (ODE's) using a custom shunting-yard algorithm with Runge-Kutta iteration techniques. Applications for rocket systems and metabolic engineering linked below.</p>
+			<div class = "projectview_refbuttonrow">
+				<button class = "projectview_refbutton" id = "r_examples">Examples</button>
+				<button class = "projectview_refbutton" id = "r_git">Git</button>
+			</div>
+			
+		</div>
+	</div>
+	<p id="demo"></p>
+  </body>
+</html>
