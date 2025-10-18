@@ -17,21 +17,25 @@ window.requestAnimFrame = ( function() {
   } ) (); 
 
 var g_gl;
-var g_frame_counter = 30;
-var g_timestamp_last = new Date();
-var g_timestamp_current;
+var g_frame_time = {
+	counter = 30;
+	timer_last = new Date();
+	timer_current = new Date();
+	delta_t;
+	fps;
+};
 
 const html_fps = document.querySelector("#html_fps");
 
 function Render_Loop(){
-  g_timestamp_current = new Date();
-  const delta_time = (g_timestamp_current.getTime() - g_timestamp_last.getTime()) / 1000.0;
-  g_timestamp_last = g_timestamp_current;
-  const fps = 1 / delta_time;
-  if(g_frame_counter % 10 == 0)
+  g_frame_time.timer_current = new Date();
+  g_frame_time.delta_time = (g_frame_time.timer_current.getTime() - g_frame_time.timer_last.getTime()) / 1000.0;
+  g_frame_time.timer_last = g_frame_time.timer_current;
+  g_frame_time.fps = 1 / g_frame_time.delta_t;
+  if(g_frame_time.counter % 10 == 0)
 	html_fps.textContent = fps.toFixed(1);
 
-  g_frame_counter++;
+  g_frame_time.counter++;
   requestAnimFrame( Render_Loop );
   Render(); 
 }
