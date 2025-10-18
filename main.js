@@ -28,7 +28,7 @@ const html_fps = document.querySelector("#html_fps");
 
 function Render_Loop(){
   const timer_current = new Date();
-  const delta_time = (timer_current.getTime() - g_frame_time.timer_last.getTime()) / 1000.0;
+  const delta_t = (timer_current.getTime() - g_frame_time.timer_last.getTime()) / 1000.0;
   
   g_frame_time.timer_last = timer_current;
   g_frame_time.fps = (1 / delta_t).toFixed(1);
