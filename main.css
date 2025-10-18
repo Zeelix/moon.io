@@ -8,3 +8,13 @@ canvas {
 	height: 100vh;
 	margin: 0;
 }
+.css_footer_text {
+	text-align: center;
+	position: relative;
+	color: white;
+	z-index: 1000;
+	top: 85vh;
+	
+	margin-top: 5px;
+	margin-bottom: 0;
+}
