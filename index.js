@@ -1,4 +1,6 @@
 
+import { my_a } from './secondfile.js'
+
 var gl;
 var canvas_handle = document.getElementById("mview");
 var timer = 30.0;
@@ -4879,6 +4881,8 @@ document.getElementById("mview").addEventListener("mouseup", function(e){
 function main() {
     const canvas = document.querySelector('#glcanvas');
     gl = canvas.getContext('webgl');
+
+	Console.writeln(my_a);
 
     if (!gl) {
         alert('Unable to initialize WebGL. Your browser or machine may not support it.');
