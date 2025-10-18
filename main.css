@@ -9,12 +9,12 @@ canvas {
 	margin: 0;
 }
 .css_footer_text {
-	text-align: center;
+	text-align: left;
 	position: relative;
 	color: white;
 	z-index: 1000;
-	top: 85vh;
+	top: 95vh;
 	
 	margin-top: 5px;
-	margin-bottom: 0;
+	margin-bottom: 5px;
 }
