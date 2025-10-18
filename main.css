@@ -13,8 +13,10 @@ canvas {
 	position: relative;
 	color: white;
 	z-index: 1000;
-	top: 95vh;
+	top: 98vh;
 	
 	margin-top: 5px;
 	margin-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
