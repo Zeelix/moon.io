@@ -14,7 +14,7 @@ var g_user_held_keys = {}
 
 // HTML elements
 const html_fps = document.querySelector("#html_fps");
-const html_canvas = document.querySelector('#glcanvas');
+const html_canvas = document.querySelector('#html_canvas');
 
 window.requestAnimFrame = ( function() {
     return  window.requestAnimationFrame || 
@@ -54,7 +54,7 @@ function Init()
 
 function Render_Loop()
 {
-  // Timer 
+  // Frame_Time
   const timer_current = new Date();
   const delta_t = (timer_current.getTime() - g_frame_time.timer_last.getTime()) / 1000.0;
   g_frame_time.timer_last = timer_current;
@@ -63,7 +63,7 @@ function Render_Loop()
 	html_fps.textContent = g_frame_time.fps;
   g_frame_time.counter++;
   
-  requestAnimFrame( Render_Loop );
+  requestAnimFrame(Render_Loop);
   Game_Update_And_Render(delta_t); 
 }
 
