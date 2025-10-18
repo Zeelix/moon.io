@@ -1,0 +1,105 @@
+body {
+	background-color: black;
+	margin: 0 auto;
+}
+canvas {
+	position: absolute;
+	width: 100%;
+	height: 100vh;
+	margin: 0;
+}
+.projectview_title {
+	text-align: center;
+}
+.projectview_statusHeader {
+	text-align: center;
+	margin-bottom: 0;
+}
+hr.projectview_splitter {
+	width: 90%;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+div.projectview_langapirow, div.projectview_refbuttonrow {
+	text-align:center;
+	margin: 0;
+}
+button.projectview_langapi, button.projectview_refbutton {
+	border-radius: 15px;
+	margin: 15px auto;
+	display: inline-block;
+	
+	font-weight: bold;
+	border: none;
+	
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 10px;
+	font-size: 16px;
+	padding: 1px 17px;
+}
+button.projectview_langapi:hover, button.projectview_refbutton:hover {
+  padding: 2px 15px;
+  margin: 0px 0px;
+}
+
+button.projectview_langapi {
+  background-color: #777777;
+}
+button.projectview_refbutton#r_git {
+  background-color: #00D0FF;
+  cursor: pointer;
+}
+button.projectview_refbutton#r_examples  {
+  background-color: #FFD00a;
+  cursor: pointer;
+}
+
+.projectview_desc {
+	margin: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	
+	font-family: 'Helvetica', 'Arial', sans-serif;
+}
+.projectview_statusCurrent {
+	color: rgb(100, 255, 100);
+	text-shadow: 1px 0px #AAFFAA;
+}
+.projectview_overlay {
+	text-align: center;
+	position: relative;
+	color: white;
+	z-index: 1000;
+	top: 85vh;
+	
+	margin-top: 5px;
+	margin-bottom: 0;
+}
+div.projectview_modelViewer {
+	position: absolute;
+	z-index: 1;
+	
+	min-width: 55%;
+	width: 55%;
+	height: 95vh;
+	min-height: 95vh;
+	margin: 0 auto;
+	margin-left: 5px;
+}
+div.projectview_panel {
+	background-color: white;
+	border: 2px solid white;
+	border-radius: 3px;
+	
+	opacity: 0.75;
+	position: absolute;
+	left: 60%;
+	top: 25vh;
+
+	width: 35%;
+	height: auto;
+	margin: 0 auto;
+	margin-right: 5px;
+}
