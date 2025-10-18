@@ -69,7 +69,25 @@ function Render_Loop()
 
 function Game_Update_And_Render(t_delta_t) 
 {
+	if(g_user_held_keys['w'])
+	{
+		console.log('W');
+	}
 	
+	if(g_user_held_keys['a'])
+	{
+		console.log('A');
+	}
+
+	if(g_user_held_keys['s'])
+	{
+		console.log('S');
+	}
+	
+	if(g_user_held_keys['d'])
+	{
+		console.log('D');
+	}
 }
 
 Init();
