@@ -4882,7 +4882,7 @@ function main() {
     const canvas = document.querySelector('#glcanvas');
     gl = canvas.getContext('webgl');
 
-	Console.log(my_a);
+	console.log(my_a);
 
     if (!gl) {
         alert('Unable to initialize WebGL. Your browser or machine may not support it.');
