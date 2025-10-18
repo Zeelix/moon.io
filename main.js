@@ -18,11 +18,11 @@ window.requestAnimFrame = ( function() {
 
 var g_gl;
 var g_frame_time = {
-	counter = 30,
-	timer_last = new Date(),
-	timer_current = new Date(),
-	delta_t,
-	fps
+	counter: 30,
+	timer_last: new Date(),
+	timer_current: new Date(),
+	delta_t: 0.0,
+	fps: 0
 };
 
 const html_fps = document.querySelector("#html_fps");
