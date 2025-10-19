@@ -174,7 +174,7 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
 	
 	var actor_is_moving = false;
-	var actor_proj_vec2 = vec2.create();
+	var actor_proj_vec2 = vec2.fromValues(0.0, 0.0);
 	if(g_user_held_keys['w'])
 	{
 		actor_is_moving = true;
@@ -198,7 +198,7 @@ function Game_Update_And_Render(t_delta_t)
 	
 	if(actor_is_moving)
 	{
-		vec2.normalize(actor_proj_vec2, actor_proj_vec2);
+		//vec2.normalize(actor_proj_vec2, actor_proj_vec2);
 		
 		vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2.x);
 		vec3.scaleAndAdd(g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2.y);
