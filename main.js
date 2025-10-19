@@ -155,7 +155,7 @@ function Game_Update_And_Render(t_delta_t)
 	
 	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
 	
-	var camera_dir_flat_s_inv;
+	var camera_dir_flat_s_inv = vec3.create();
 	vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
 	vec3.add(g_player_camera.pos, g_player_actor.pos, camera_dir_flat_s_inv);
 	vec3.add(g_player_camera.pos, g_player_camera.pos, g_player_camera.actor_follow_height_vec3);
