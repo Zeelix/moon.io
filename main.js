@@ -46,9 +46,14 @@ var g_player_camera = {
 	dir_u: vec3.fromValues(0.0, 1.0, 0.0),
 	dir_flat_u: vec3.fromValues(0.0, 1.0, 0.0),
 	right_u: vec3.fromValues(1.0, 0.0, 0.0),
-	left_u: vec3.fromValues(-1.0, 0.0, 0.0),
 	local_up_u: vec3.fromValues(0.0, 0.0, 1.0)
 };
+
+const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
+const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
+const g_yp_vec2 = vec2.fromValues(0.0, 1.0);
+const g_yn_vec2 = vec2.fromValues(0.0, -1.0);
+const g_zero_vec2 = vec2.fromValues(0.0, 0.0);
 
 const g_xp_vec3 = vec3.fromValues(1.0, 0.0, 0.0);
 const g_xn_vec3 = vec3.fromValues(-1.0, 0.0, 0.0);
@@ -141,6 +146,7 @@ function Render_Loop()
 
 function Game_Update_And_Render(t_delta_t) 
 {
+	// Update Camera
 	var fov_r_half = (Math.PI/360.0) * g_player_camera.fov_d;
 	
 	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta - (g_user_mouse.x_movement_n * fov_r_half * g_player_camera.mouse_sensitivity_x);
@@ -162,16 +168,50 @@ function Game_Update_And_Render(t_delta_t)
 	var camera_dir_u_inv = vec3.create();
 	vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
 	vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
-	
 	vec3.scale(camera_dir_u_inv, g_player_camera.dir_u, -1.0);
 	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
 	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
 	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
 	
-	console.clear();
-	console.log(g_player_camera.dir_u);
-	console.log(g_player_camera.right_u);
-	console.log(g_player_camera.local_up_u);
+	var actor_is_moving = false;
+	var actor_proj_vec2 = vec2.create();
+	if(g_user_held_keys['w'])
+	{
+		actor_is_moving = true;
+		vec2.add(actor_proj_vec2, actor_proj_vec2, g_yp_vec2);
+	}
+	if(g_user_held_keys['s'])
+	{
+		actor_is_moving = true;
+		vec3.add(actor_proj_vec2, actor_proj_vec2, g_yn_vec2);
+	}
+	if(g_user_held_keys['d'])
+	{
+		actor_is_moving = true;
+		vec3.add(actor_proj_vec2, actor_proj_vec2, g_xp_vec2);
+	}
+	if(g_user_held_keys['a'])
+	{
+		actor_is_moving = true;
+		vec3.add(actor_proj_vec2, actor_proj_vec2, g_xn_vec2);
+	}
+	
+	if(actor_is_moving)
+	{
+		vec2.normalize(actor_proj_vec2, actor_proj_vec2);
+		
+		vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2.x);
+		vec3.scaleAndAdd(g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2.y);
+		vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
+		vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
+		vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
+		
+		if(g_frame_time.counter % 10 == 0)
+		{
+			console.clear();
+		}
+		console.log(g_player_actor.pos);
+	}
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
