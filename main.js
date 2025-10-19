@@ -274,9 +274,8 @@ function Game_Update_And_Render(t_delta_t)
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
 	const actor_mvi = mat3.create();
-	nat3.normalFromMat4(actor_mvi, g_player_camera.view);
+	mat3.normalFromMat4(actor_mvi, g_player_camera.view);
 	
-	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
