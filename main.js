@@ -146,7 +146,7 @@ function Game_Update_And_Render(t_delta_t)
 	{
 		g_player_camera.actor_follow_theta += g_2pi;
 	}
-	if(g_player_camera.actor_follow_theta > g_pi)
+	if(g_player_camera.actor_follow_theta > g_2pi)
 	{
 		g_player_camera.actor_follow_theta -= g_2pi;
 	}
