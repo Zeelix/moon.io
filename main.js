@@ -197,9 +197,6 @@ function Game_Update_And_Render(t_delta_t)
 		vec3.add(actor_proj_vec2, actor_proj_vec2, g_xn_vec2);
 	}
 	
-	console.log(actor_proj_vec2[0]);
-	console.log(actor_proj_vec2[1]);
-	
 	if(actor_is_moving)
 	{
 		vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
@@ -210,9 +207,9 @@ function Game_Update_And_Render(t_delta_t)
 		
 		if(g_frame_time.counter % 10 == 0)
 		{
-			//console.clear();
+			console.clear();
 		}
-		//console.log(g_player_actor.dir_u);
+		console.log(g_player_actor.dir_u);
 	}
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
