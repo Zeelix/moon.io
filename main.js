@@ -22,18 +22,32 @@ var g_moon_local = {
 
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	dir: vec3.fromValues(0.0, 1.0, 0.0)
+	dir_s: vec3.fromValues(0.0, 0.0, -1.0),
+	dir_u: vec3.fromValues(0.0, 0.0, -0.1),
+	speed: 0.1
 };
 
-var g_player_camera = {
-	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	dir: vec3.fromValues(0.0, 1.0, 0.0),
-	right: vec3.fromValues(1.0, 0.0, 0.0),
-	up: vec3.fromValues(0.0, 0.0, 1.0),
+var g_player_camera = {	
+	global_up_u: vec3.fromValues(0.0, 0.0, 1.0),
 	actor_follow_distance: 5.0,
 	actor_follow_height: 5.0,
-	actor_follow_theta: 0.0
+	actor_follow_theta: 0.0,
+	
+	pos: vec3.fromValues(0.0, 0.0, 0.0),
+	dir_u: vec3.fromValues(0.0, 1.0, 0.0),
+	dir_flat_u: vec3.fromValues(0.0, 1.0, 0.0),
+	right_u: vec3.fromValues(1.0, 0.0, 0.0),
+	left_u: vec3.fromValues(-1.0, 0.0, 0.0),
+	local_up_u: vec3.fromValues(0.0, 0.0, 1.0)
 };
+
+const g_xp_vec3 = vec3.fromValues(1.0, 0.0, 0.0);
+const g_xn_vec3 = vec3.fromValues(-1.0, 0.0, 0.0);
+const g_yp_vec3 = vec3.fromValues(0.0, 1.0, 0.0);
+const g_yn_vec3 = vec3.fromValues(0.0, -1.0, 0.0);
+const g_zp_vec3 = vec3.fromValues(0.0, 0.0, 1.0);
+const g_zn_vec3 = vec3.fromValues(0.0, 0.0, -1.0);
+const g_zero_vec3 = vec3.fromValues(0.0, 0.0, 0.0);
 
 window.requestAnimFrame = ( function() {
     return  window.requestAnimationFrame || 
@@ -69,6 +83,11 @@ function Init()
 	
 	document.addEventListener('keydown', CB_Key_Pressed);
 	document.addEventListener('keyup', CB_Key_Released);
+	
+	gl.clearColor(1.0, 0.0, 0.0, 0.0);
+    gl.clearDepth(1.0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
 }
 
 function Render_Loop()
@@ -87,26 +106,8 @@ function Render_Loop()
 }
 
 function Game_Update_And_Render(t_delta_t) 
-{	
-	if(g_user_held_keys['w'])
-	{
-		console.log('W');
-	}
-	
-	if(g_user_held_keys['a'])
-	{
-		console.log('A');
-	}
-
-	if(g_user_held_keys['s'])
-	{
-		console.log('S');
-	}
-	
-	if(g_user_held_keys['d'])
-	{
-		console.log('D');
-	}
+{
+	gl.clear(gl.COLOR_BUFFER_BIT| gl.DEPTH_BUFFER_BIT);
 }
 
 Init();
