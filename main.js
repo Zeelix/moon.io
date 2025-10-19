@@ -163,7 +163,7 @@ function Init()
 	const sm_vbo_stride = 4 * 8 // 8 floats of 4 bytes each
 	const sm_vbo_vertex_count = e_asset_sm_cube_vertices.length;
 	
-	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 2, g_gl.FLOAT, false, sm_vbo_stride, 0);
+	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
 	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
 		
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
