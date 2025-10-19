@@ -1,5 +1,5 @@
-
 // IMPORTS
+import { e_sm_vs_code, e_sm_fs_code } from './shaders.js'
 //import { rocket_modelData, rocket_modelIndexData_1, rocket_modelIndexData_2, rocket_modelIndexData_3 } from './assets.js';
 //import { star_modelData_1, star_modelData_2, star_modelIndexData } from './assets.js';
 
