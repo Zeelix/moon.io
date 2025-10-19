@@ -164,11 +164,10 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, g_player_camera.dir_u);
 	vec3.cross(g_player_camera.local_up_u, g_player_camera.dir_u, g_player_camera.right_u);
 	
-	console.log(g_player_camera.pos);
-	if(g_frame_time.counter % 60 == 0)
-	{
-		console.clear();
-	}
+	console.clear();
+	console.log(g_player_camera.dir_u);
+	console.log(g_player_camera.right_u);
+	console.log(g_player_camera.local_up_u);
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
