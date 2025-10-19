@@ -138,6 +138,8 @@ function Game_Update_And_Render(t_delta_t)
 	var mouse_dx_n = g_user_mouse.x_window_n - g_user_mouse.x_last_window_n;
 	var mouse_dy_n = g_user_mouse.y_window_n - g_user_mouse.y_last_window_n;
 	
+	console.log(`Mouse position on canvas: X=${mouse_dx_n}, Y=${mouse_dy_n}`);
+	
 	g_user_mouse.x_last_window_px = g_user_mouse.x_window_px;
 	g_user_mouse.y_last_window_px = g_user_mouse.y_window_px;
 	g_user_mouse.x_last_window_n = g_user_mouse.x_window_n;
