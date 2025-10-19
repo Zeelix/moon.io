@@ -162,6 +162,7 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
 	vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
 	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, g_player_camera.dir_u);
+	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
 	vec3.cross(g_player_camera.local_up_u, g_player_camera.dir_u, g_player_camera.right_u);
 	
 	console.clear();
