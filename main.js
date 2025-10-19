@@ -307,7 +307,7 @@ function Game_Update_And_Render(t_delta_t)
 	
 	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, g_player_camera.view_proj);
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
-	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, true, local_light_dir);
+	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, 1, local_light_dir);
 	
 	g_gl.drawElements(g_gl.TRIANGLES, g_gpu.static_mesh.element_count, g_gl.UNSIGNED_SHORT, 0);
 }
