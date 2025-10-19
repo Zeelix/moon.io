@@ -92,7 +92,7 @@ function CB_Mouse_Move(event)
 
 function CB_Mouse_Click(event)
 {
-	await html_canvas.requestPointerLock();
+	html_canvas.requestPointerLock();
 }
 
 function Init() 
