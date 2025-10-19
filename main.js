@@ -15,6 +15,10 @@ var g_frame_time = {
 	fps: 0
 };
 var g_user_held_keys = {}
+var g_user_mouse = {
+	x: 0.0,
+	y: 0.0
+}
 
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0)
@@ -72,10 +76,19 @@ function CB_Key_Released(event)
 	g_user_held_keys[event.key] = false;
 }
 
+function CB_Mouse_Move(event)
+{
+	g_user_mouse.x = event.offsetX;
+	g_user_mouse.y = event.offsetY;
+	
+	console.log(`Mouse position on canvas: X=${g_user_mouse.x}, Y=${g_user_mouse.y}`);
+}
+
 function Init() 
 {
 	document.addEventListener('keydown', CB_Key_Pressed);
 	document.addEventListener('keyup', CB_Key_Released);
+	document.addEventListener('mousemove', CB_Mouse_Move);
 	
     g_gl = html_canvas.getContext('webgl');
 
@@ -107,6 +120,55 @@ function Render_Loop()
 
 function Game_Update_And_Render(t_delta_t) 
 {
+	// Adjust Player Camera
+	var camera_dir_flat_inv_s;
+	vec3.rotateX(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
+	vec3.scale(camera_dir_flat_inv_s, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
+	
+	vec3.add(g_player_camera.pos, g_player_actor.pos, camera_dir_flat_inv_s);
+	vec3.add(
+	
+	vec3.normalize(g_player_camera.dir_u, g_player_camera.pos - g_player_actor.pos);
+	vec3.cross(g_player_camera.right, g_player_camera.global_up, g_player_camera.dir_u);
+	vec3.normalize(g_player_camera.right, g_player_camera.right);
+	vec3.cross(g_player_camera.local_up, g_player_camera.dir_u, g_player_camera.right);
+	
+	// Adjust Player Actor
+	var is_moving = false;
+	if(g_user_held_keys['w'])
+	{
+		g_player_actor.dir_u = g_player_camera.dir_flat_u;
+		is_moving = true;
+	}
+	
+	if(g_user_held_keys['a'])
+	{
+		g_player_actor.dir_u = g_player_camera.left_u;
+		is_moving = true;
+	}
+
+	if(g_user_held_keys['s'])
+	{
+		var inv_dir;
+		vec3.scale(inv_dir, g_player_camera.dir_flat_u, -1);
+		g_player_actor.dir_u = inv_dir;
+		is_moving = true;
+	}
+	
+	if(g_user_held_keys['d'])
+	{
+		g_player_actor.dir_u = g_player_camera.right_u;
+		is_moving = true;
+	}
+	
+	if (is_moving)
+	{
+		vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t); 
+		vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
+	}
+	
+
+	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
 
