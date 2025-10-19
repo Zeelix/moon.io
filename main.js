@@ -153,15 +153,18 @@ function Game_Update_And_Render(t_delta_t)
 		g_player_camera.actor_follow_theta -= g_2pi;
 	}
 	
-	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
-	
 	var camera_dir_flat_s_inv = vec3.create();
+	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
 	vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
 	vec3.add(g_player_camera.pos, g_player_actor.pos, camera_dir_flat_s_inv);
 	vec3.add(g_player_camera.pos, g_player_camera.pos, g_player_camera.actor_follow_height_vec3);
 	
-	console.log(g_player_camera.pos);
+	vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
+	vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
+	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, g_player_camera.dir_u);
+	vec3.cross(g_player_camera.local_up_u, g_player_camera.dir_u, g_player_camera.right_u);
 	
+	console.log(g_player_camera.pos);
 	if(g_frame_time.counter % 60 == 0)
 	{
 		console.clear();
