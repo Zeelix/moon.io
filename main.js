@@ -104,8 +104,8 @@ function CB_Mouse_Click(event)
 
 function Init() 
 {
-	html_canvas.addEventListener('keydown', CB_Key_Pressed);
-	html_canvas.addEventListener('keyup', CB_Key_Released);
+	document.addEventListener('keydown', CB_Key_Pressed);
+	document.addEventListener('keyup', CB_Key_Released);
 	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
 	html_canvas.addEventListener('click', CB_Mouse_Click);
 	
@@ -175,6 +175,7 @@ function Game_Update_And_Render(t_delta_t)
 	
 	var actor_is_moving = false;
 	var actor_proj_vec2 = vec2.fromValues(0.0, 0.0);
+	
 	if(g_user_held_keys['w'])
 	{
 		actor_is_moving = true;
