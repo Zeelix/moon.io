@@ -87,7 +87,7 @@ function Init()
 	g_gl.clearColor(1.0, 0.0, 0.0, 0.0);
     g_gl.clearDepth(1.0);
     g_gl.enable(g_gl.DEPTH_TEST);
-    g_gl.depthFunc(gl.LEQUAL);
+    g_gl.depthFunc(g_gl.LEQUAL);
 }
 
 function Render_Loop()
