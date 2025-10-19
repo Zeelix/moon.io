@@ -17,19 +17,19 @@ var g_frame_time = {
 var g_user_held_keys = {}
 
 var g_moon_local = {
-	pos: [0.0, 0.0, 0.0]
+	pos: vec3.fromValues(0.0, 0.0, 0.0)
 };
 
 var g_player_actor = {
-	pos: [0.0, 0.0, 0.0],
-	dir: [0.0, 1.0, 0.0]
+	pos: vec3.fromValues(0.0, 0.0, 0.0),
+	dir: vec3.fromValues(0.0, 1.0, 0.0)
 };
 
 var g_player_camera = {
-	pos: [0.0, 0.0, 0.0],
-	dir: [0.0, 1.0, 0.0],
-	right: [1.0, 0.0, 0.0],
-	up: [0.0, 0.0, 1.0],
+	pos: vec3.fromValues(0.0, 0.0, 0.0),
+	dir: vec3.fromValues(0.0, 1.0, 0.0),
+	right: vec3.fromValues(1.0, 0.0, 0.0),
+	up: vec3.fromValues(0.0, 0.0, 1.0),
 	actor_follow_distance: 5.0,
 	actor_follow_height: 5.0,
 	actor_follow_theta: 0.0
@@ -87,7 +87,7 @@ function Render_Loop()
 }
 
 function Game_Update_And_Render(t_delta_t) 
-{
+{	
 	if(g_user_held_keys['w'])
 	{
 		console.log('W');
