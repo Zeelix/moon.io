@@ -19,7 +19,11 @@ var g_user_mouse = {
 	x_window_px: 0,
 	y_window_py: 0,
 	x_window_n: 0.0,
-	y_window_n: 0.0
+	y_window_n: 0.0,
+	x_last_window_px: 0,
+	y_last_window_py: 0,
+	x_last_window_n: 0.0,
+	y_last_window_n: 0.0
 }
 
 var g_moon_local = {
@@ -82,16 +86,21 @@ function CB_Mouse_Move(event)
 {
 	g_user_mouse.x_window_px = event.offsetX;
 	g_user_mouse.y_window_px = event.offsetY;
-	
 	g_user_mouse.x_window_n = g_user_mouse.x_window_px / html_canvas.clientWidth;
 	g_user_mouse.y_window_n = g_user_mouse.y_window_px / html_canvas.clientHeight;
 }
 
+function CB_Mouse_Click(event)
+{
+	await html_canvas.requestPointerLock();
+}
+
 function Init() 
 {
-	document.addEventListener('keydown', CB_Key_Pressed);
-	document.addEventListener('keyup', CB_Key_Released);
-	document.addEventListener('mousemove', CB_Mouse_Move);
+	html_canvas.addEventListener('keydown', CB_Key_Pressed);
+	html_canvas.addEventListener('keyup', CB_Key_Released);
+	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
+	html_canvas.addEventListener('click', CB_Mouse_Click);
 	
     g_gl = html_canvas.getContext('webgl');
 
@@ -118,15 +127,21 @@ function Render_Loop()
   g_frame_time.counter++;
   
   requestAnimFrame(Render_Loop);
+  
   Game_Update_And_Render(delta_t); 
 }
 
 function Game_Update_And_Render(t_delta_t) 
 {
-
-
-	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
+	
+	var mouse_dx_n = g_user_mouse.x_window_n - g_user_mouse.x_last_window_n;
+	var mouse_dy_n = g_user_mouse.y_window_n - g_user_mouse.y_last_window_n;
+	
+	g_user_mouse.x_last_window_px = g_user_mouse.x_window_px;
+	g_user_mouse.y_last_window_px = g_user_mouse.y_window_px;
+	g_user_mouse.x_last_window_n = g_user_mouse.x_window_n;
+	g_user_mouse.y_last_window_n = g_user_mouse.y_window_n;
 }
 
 Init();
