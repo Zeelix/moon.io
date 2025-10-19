@@ -56,6 +56,8 @@ const g_zp_vec3 = vec3.fromValues(0.0, 0.0, 1.0);
 const g_zn_vec3 = vec3.fromValues(0.0, 0.0, -1.0);
 const g_zero_vec3 = vec3.fromValues(0.0, 0.0, 0.0);
 
+const g_2pi = Math.PI * 2.0;
+
 window.requestAnimFrame = ( function() {
     return  window.requestAnimationFrame || 
             window.webkitRequestAnimationFrame ||  
@@ -140,6 +142,14 @@ function Game_Update_And_Render(t_delta_t)
 	var fov_r_half = (Math.PI/360.0) * g_player_camera.fov_d;
 	
 	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta + (g_user_mouse.x_movement_n * fov_r_half);
+	if(g_player_camera.actor_follow_theta < 0.0)
+	{
+		g_player_camera.actor_follow_theta += g_2pi;
+	}
+	if(g_player_camera.actor_follow_theta > g_pi)
+	{
+		g_player_camera.actor_follow_theta -= g_2pi;
+	}
 	
 	console.log(g_player_camera.actor_follow_theta);
 	
