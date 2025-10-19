@@ -143,7 +143,7 @@ function Game_Update_And_Render(t_delta_t)
 {
 	var fov_r_half = (Math.PI/360.0) * g_player_camera.fov_d;
 	
-	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta + (g_user_mouse.x_movement_n * fov_r_half * g_player_camera.mouse_sensitivity_x);
+	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta - (g_user_mouse.x_movement_n * fov_r_half_neg * g_player_camera.mouse_sensitivity_x);
 	if(g_player_camera.actor_follow_theta < 0.0)
 	{
 		g_player_camera.actor_follow_theta += g_2pi;
@@ -155,7 +155,12 @@ function Game_Update_And_Render(t_delta_t)
 	
 	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
 	
-	//console.log(g_player_camera.dir_flat_u);
+	console.log(g_player_camera.dir_flat_u);
+	
+	if(g_frame_time.counter % 60 == 0)
+	{
+		console.clear();
+	}
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
