@@ -146,8 +146,8 @@ function Init()
     g_gl.depthFunc(g_gl.LEQUAL);
 	
 	// Compile Static-Mesh (SM)
-	const sm_vs = loadShader(g_gl.VERTEX_SHADER, e_sm_vs_code);
-    const sm_fs = loadShader(g_gl.FRAGMENT_SHADER, e_sm_fs_code);
+	const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, e_sm_vs_code);
+    const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, e_sm_fs_code);
     g_gpu.static_mesh.program_id = g_gl.createProgram();
     g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
     g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
