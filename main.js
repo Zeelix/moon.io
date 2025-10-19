@@ -18,7 +18,6 @@ var g_gpu = {
 		uniform_mvi: -1
 	}
 };
-
 var g_frame_time = {
 	counter: 0,
 	timer_last: new Date(),
@@ -31,18 +30,15 @@ var g_user_mouse = {
 	x_movement_n: 0.0,
 	y_movement_n: 0.0
 }
-
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0)
 };
-
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
 	dir_s: vec3.fromValues(0.0, 0.0, -0.5),
 	speed: 0.5
 };
-
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
 	actor_follow_distance: 10.0,
@@ -58,13 +54,11 @@ var g_player_camera = {
 	right_u: vec3.fromValues(1.0, 0.0, 0.0),
 	local_up_u: vec3.fromValues(0.0, 0.0, 1.0)
 };
-
 const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
 const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
 const g_yp_vec2 = vec2.fromValues(0.0, 1.0);
 const g_yn_vec2 = vec2.fromValues(0.0, -1.0);
 const g_zero_vec2 = vec2.fromValues(0.0, 0.0);
-
 const g_xp_vec3 = vec3.fromValues(1.0, 0.0, 0.0);
 const g_xn_vec3 = vec3.fromValues(-1.0, 0.0, 0.0);
 const g_yp_vec3 = vec3.fromValues(0.0, 1.0, 0.0);
@@ -72,7 +66,6 @@ const g_yn_vec3 = vec3.fromValues(0.0, -1.0, 0.0);
 const g_zp_vec3 = vec3.fromValues(0.0, 0.0, 1.0);
 const g_zn_vec3 = vec3.fromValues(0.0, 0.0, -1.0);
 const g_zero_vec3 = vec3.fromValues(0.0, 0.0, 0.0);
-
 const g_2pi = Math.PI * 2.0;
 
 window.requestAnimFrame = ( function() {
@@ -85,19 +78,16 @@ window.requestAnimFrame = ( function() {
       window.setTimeout(callback, 1000 / 60);
     };
   } ) (); 
-
 function CB_Key_Pressed(event)
 {
 	if(event.repeat) return;
 	g_user_held_keys[event.key] = true;
 }
-
 function CB_Key_Released(event)
 {
 	if(event.repeat) return;
 	g_user_held_keys[event.key] = false;
 }
-
 function CB_Mouse_Move(event)
 {
 	if (document.pointerLockElement === html_canvas) 
@@ -106,12 +96,10 @@ function CB_Mouse_Move(event)
 		g_user_mouse.y_movement_px = g_user_mouse.y_movement_px + event.movementY;
 	}
 }
-
 function CB_Mouse_Click(event)
 {
 	html_canvas.requestPointerLock();
 }
-
 function Load_Shader(t_shader_type, t_shader_code)
 {
     const shader = g_gl.createShader(t_shader_type);
@@ -125,7 +113,6 @@ function Load_Shader(t_shader_type, t_shader_code)
     }
     return shader;
 }
-
 function Init() 
 {
 	document.addEventListener('keydown', CB_Key_Pressed);
@@ -158,7 +145,6 @@ function Init()
         return null;
     }
 }
-
 function Render_Loop()
 {
   // Frame_Time
@@ -180,7 +166,6 @@ function Render_Loop()
   g_user_mouse.x_movement_px = 0.0;
   g_user_mouse.y_movement_px = 0.0;
 }
-
 function Game_Update_And_Render(t_delta_t) 
 {
 	// Update Camera
@@ -246,8 +231,6 @@ function Game_Update_And_Render(t_delta_t)
 	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
-	
-	
 }
 
 Init();

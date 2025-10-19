@@ -4,7 +4,7 @@ attribute vec2 in_tex;
 attribute vec3 in_nrm;
 
 uniform mat4 u_mvp;
-uniform mat4 u_mvi;
+uniform mat3 u_mvi;
 
 varying highp vec3 out_nrm;
 
