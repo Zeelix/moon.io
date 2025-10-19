@@ -16,7 +16,7 @@ var g_gpu = {
 		attrib_tex: -1,
 		attrib_nrm: -1,
 		uniform_mvp: -1
-	};
+	}
 };
 
 var g_frame_time = {
