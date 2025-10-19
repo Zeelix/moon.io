@@ -84,10 +84,10 @@ function Init()
 	document.addEventListener('keydown', CB_Key_Pressed);
 	document.addEventListener('keyup', CB_Key_Released);
 	
-	gl.clearColor(1.0, 0.0, 0.0, 0.0);
-    gl.clearDepth(1.0);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
+	g_gl.clearColor(1.0, 0.0, 0.0, 0.0);
+    g_gl.clearDepth(1.0);
+    g_gl.enable(g_gl.DEPTH_TEST);
+    g_gl.depthFunc(gl.LEQUAL);
 }
 
 function Render_Loop()
