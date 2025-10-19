@@ -205,13 +205,13 @@ function Game_Update_And_Render(t_delta_t)
 		vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
 		vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
 		vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
-		
-		if(g_frame_time.counter % 10 == 0)
-		{
-			console.clear();
-		}
-		console.log(g_player_actor.pos);
 	}
+	
+	if(g_frame_time.counter % 10 == 0)
+	{
+		console.clear();
+	}
+	console.log(g_player_actor.pos);
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
