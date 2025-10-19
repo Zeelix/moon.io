@@ -36,7 +36,7 @@ var g_player_actor = {
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 0.0, 1.0),
 	actor_follow_distance: 5.0,
-	actor_follow_height: 5.0,
+	actor_follow_height_vec3: vec3.fromValues(0.0, 0.0, 5.0),
 	actor_follow_theta: 0.0,
 	fov_d: 90.0,
 	mouse_sensitivity_x: 2.0,
@@ -155,7 +155,12 @@ function Game_Update_And_Render(t_delta_t)
 	
 	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
 	
-	console.log(g_player_camera.dir_flat_u);
+	var camera_dir_flat_s_inv;
+	vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
+	vec3.add(g_player_camera.pos, g_player_actor.pos, camera_dir_flat_s_inv);
+	vec3.add(g_player_camera.pos, g_player_camera.pos, g_player_camera.actor_follow_height_vec3);
+	
+	console.log(g_player_camera.pos);
 	
 	if(g_frame_time.counter % 60 == 0)
 	{
