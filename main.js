@@ -297,7 +297,7 @@ function Game_Update_And_Render(t_delta_t)
 	mat3.normalFromMat4(light_vi, g_player_camera.view);
 	mat3.normalFromMat4(actor_mvi, g_player_camera.view); // usually model-view
 	
-	const local_light_dir = g_space.light_dir;
+	const local_light_dir = vec3.clone(g_space.light_dir);
 	vec3.normalize(local_light_dir, local_light_dir);
 	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
