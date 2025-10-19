@@ -211,7 +211,7 @@ function Game_Update_And_Render(t_delta_t)
 	{
 		console.clear();
 	}
-	console.log(g_player_actor.pos);
+	console.log(actor_proj_vec2);
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
