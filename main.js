@@ -107,7 +107,7 @@ function Render_Loop()
 
 function Game_Update_And_Render(t_delta_t) 
 {
-	g_gl.clear(gl.COLOR_BUFFER_BIT| gl.DEPTH_BUFFER_BIT);
+	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
 
 Init();
