@@ -80,8 +80,8 @@ function CB_Mouse_Move(event)
 {
 	if (document.pointerLockElement === html_canvas) 
 	{
-		g_user_mouse.x_movement_px = x_movement_px + event.movementX;
-		g_user_mouse.y_movement_px = y_movement_px + event.movementY;
+		g_user_mouse.x_movement_px = g_user_mouse.x_movement_px + event.movementX;
+		g_user_mouse.y_movement_px = g_user_mouse.y_movement_px + event.movementY;
 	}
 }
 
