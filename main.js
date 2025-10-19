@@ -172,8 +172,8 @@ function Init()
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
 	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
 	
-	gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_cube_vertices, g_gl.STATIC_DRAW);
-	gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_cube_indices, g_gl.STATIC_DRAW);
+	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_cube_vertices, g_gl.STATIC_DRAW);
+	g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_cube_indices, g_gl.STATIC_DRAW);
 }
 function Render_Loop()
 {
