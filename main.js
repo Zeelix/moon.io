@@ -16,14 +16,8 @@ var g_frame_time = {
 };
 var g_user_held_keys = {}
 var g_user_mouse = {
-	x_window_px: 0,
-	y_window_py: 0,
-	x_window_n: 0.0,
-	y_window_n: 0.0,
-	x_last_window_px: 0,
-	y_last_window_py: 0,
-	x_last_window_n: 0.0,
-	y_last_window_n: 0.0
+	x_movement_px: 0.0,
+	y_movement_px: 0.0
 }
 
 var g_moon_local = {
@@ -84,10 +78,11 @@ function CB_Key_Released(event)
 
 function CB_Mouse_Move(event)
 {
-	g_user_mouse.x_window_px = event.offsetX;
-	g_user_mouse.y_window_px = event.offsetY;
-	g_user_mouse.x_window_n = g_user_mouse.x_window_px / html_canvas.clientWidth;
-	g_user_mouse.y_window_n = g_user_mouse.y_window_px / html_canvas.clientHeight;
+	if (document.pointerLockElement === html_canvas) 
+	{
+		g_user_mouse.x_movement_px = x_movement_px + event.movementX;
+		g_user_mouse.y_movement_px = y_movement_px + event.movementY;
+	}
 }
 
 function CB_Mouse_Click(event)
@@ -135,15 +130,13 @@ function Game_Update_And_Render(t_delta_t)
 {
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
-	var mouse_dx_n = g_user_mouse.x_window_n - g_user_mouse.x_last_window_n;
-	var mouse_dy_n = g_user_mouse.y_window_n - g_user_mouse.y_last_window_n;
+	var mouse_dx = g_user_mouse.x_movement_px;
+	var mouse_dy = g_user_mouse.y_movement_px;
 	
-	console.log(`Mouse position on canvas: X=${mouse_dx_n}, Y=${mouse_dy_n}`);
+	console.log(`Mouse position on canvas: X=${mouse_dx}, Y=${mouse_dy}`);
 	
-	g_user_mouse.x_last_window_px = g_user_mouse.x_window_px;
-	g_user_mouse.y_last_window_px = g_user_mouse.y_window_px;
-	g_user_mouse.x_last_window_n = g_user_mouse.x_window_n;
-	g_user_mouse.y_last_window_n = g_user_mouse.y_window_n;
+	g_user_mouse.x_movement_px = 0.0;
+	g_user_mouse.y_movement_px = 0.0;
 }
 
 Init();
