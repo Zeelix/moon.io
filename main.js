@@ -9,6 +9,16 @@ const html_canvas = document.querySelector('#html_canvas');
 
 // GLOBALS
 var g_gl;
+var g_gpu = {
+	static_mesh: {
+		program_id: -1,
+		attrib_pos: -1,
+		attrib_tex: -1,
+		attrib_nrm: -1,
+		uniform_mvp: -1
+	};
+};
+
 var g_frame_time = {
 	counter: 0,
 	timer_last: new Date(),
@@ -29,8 +39,8 @@ var g_moon_local = {
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
-	dir_s: vec3.fromValues(0.0, 0.0, -0.1),
-	speed: 0.1
+	dir_s: vec3.fromValues(0.0, 0.0, -0.5),
+	speed: 0.5
 };
 
 var g_player_camera = {	
@@ -173,6 +183,7 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
 	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
 	
+	// Update Actor
 	var actor_is_moving = false;
 	var actor_proj_vec2 = vec2.fromValues(0.0, 0.0);
 	
@@ -204,15 +215,12 @@ function Game_Update_And_Render(t_delta_t)
 		vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
 		vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
 		vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
-		
-		if(g_frame_time.counter % 10 == 0)
-		{
-			console.clear();
-		}
-		console.log(g_player_actor.pos);
 	}
 	
+	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
+	
+	
 }
 
 Init();
