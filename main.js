@@ -155,7 +155,7 @@ function Game_Update_And_Render(t_delta_t)
 	
 	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
 	
-	console.log(g_player_camera.dir_flat_u);
+	//console.log(g_player_camera.dir_flat_u);
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 }
