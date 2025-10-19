@@ -15,8 +15,21 @@ void main() {
 export const e_sm_fs_code = `
 precision highp float;
 
+uniform float u_toon_num_bands;
+uniform float u_toon_stride;
+
+uniform vec3  u_object_color;
+uniform vec3  u_light_dir;
+uniform float u_light_amb;
+
 varying highp vec3 out_nrm;
 
+float toonify(float value) {
+	float x = clamp(value, u_toon_stride, 1.0 - u_toon_stride - 0.001);
+	float bandlen = (1.0 - 2.0*u_toon_stride) / u_toon_num_bands;
+    return u_toon_stride + bandlen*(floor((x - u_toon_stride)/bandlen) + 0.5);
+}
 void main() {
-	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  float intensity = clamp(dot(u_light_dir, out_nrm),0.0,1.0) + u_light_amb;
+  gl_FragColor = vec4(u_object_color * toonify(intensity), 1.0);
 }`;

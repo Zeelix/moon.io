@@ -16,6 +16,11 @@ var g_gpu = {
 		attrib_nrm: -1,
 		uniform_mvp: -1,
 		uniform_mvi: -1,
+		uniform_toon_num_bands: -1,
+		uniform_toon_stride: -1,
+		uniform_object_color: -1,
+		uniform_light_dir: -1,
+		uniform_light_amb: -1,
 		vbo: -1,
 		ebo: -1,
 		vertex_count: 0,
@@ -37,6 +42,9 @@ var g_user_mouse = {
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0)
 };
+var g_space = {
+	light_dir: vec3.fromValues(0.6, -1.0, -1.0)
+}
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
@@ -157,8 +165,14 @@ function Init()
 	g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
 	//g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
 	g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
+	
 	g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
-	g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi'),
+	g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
+	g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
+	g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
+	g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
+	g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
+	g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gpu.static_mesh.vbo = g_gl.createBuffer();
@@ -179,6 +193,11 @@ function Init()
 	
 	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_cube_vertices, g_gl.STATIC_DRAW);
 	g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_cube_indices, g_gl.STATIC_DRAW);
+	
+	g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
+	g_gl.uniform1i(g_gpu.static_mesh.uniform_toon_num_bands, 3);
+	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.05);
+	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.09);
 }
 function Render_Loop()
 {
@@ -273,14 +292,22 @@ function Game_Update_And_Render(t_delta_t)
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
+	const light_vi = mat3.create();
 	const actor_mvi = mat3.create();
-	mat3.normalFromMat4(actor_mvi, g_player_camera.view);
+	mat3.normalFromMat4(light_vi, g_player_camera.view);
+	mat3.normalFromMat4(actor_mvi, g_player_camera.view); // usually model-view
+	
+	const local_light_dir = space.light_dir;
+	vec3.normalize(local_light_dir, local_light_dir);
+	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
+	
 	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, g_player_camera.view_proj);
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
+	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, true, local_light_dir);
 	
 	g_gl.drawElements(g_gl.TRIANGLES, g_gpu.static_mesh.element_count, g_gl.UNSIGNED_SHORT, 0);
 }
