@@ -74,6 +74,9 @@ function CB_Key_Released(event)
 
 function Init() 
 {
+	document.addEventListener('keydown', CB_Key_Pressed);
+	document.addEventListener('keyup', CB_Key_Released);
+	
     g_gl = html_canvas.getContext('webgl');
 
     if (!g_gl) {
@@ -81,10 +84,7 @@ function Init()
         return;
     }
 	
-	document.addEventListener('keydown', CB_Key_Pressed);
-	document.addEventListener('keyup', CB_Key_Released);
-	
-	g_gl.clearColor(1.0, 0.0, 0.0, 0.0);
+	g_gl.clearColor(0.0, 0.0, 0.0, 0.0);
     g_gl.clearDepth(1.0);
     g_gl.enable(g_gl.DEPTH_TEST);
     g_gl.depthFunc(g_gl.LEQUAL);
