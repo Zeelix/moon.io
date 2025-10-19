@@ -16,8 +16,10 @@ var g_frame_time = {
 };
 var g_user_held_keys = {}
 var g_user_mouse = {
-	x_movement_px: 0.0,
-	y_movement_px: 0.0
+	x_movement_px: 0,
+	y_movement_px: 0,
+	x_movement_n: 0.0,
+	y_movement_n: 0.0
 }
 
 var g_moon_local = {
@@ -130,10 +132,13 @@ function Game_Update_And_Render(t_delta_t)
 {
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
-	var mouse_dx = g_user_mouse.x_movement_px;
-	var mouse_dy = g_user_mouse.y_movement_px;
+	g_user_mouse.x_movement_n = ((2 * g_user_mouse.x_movement_px) / html_canvas.clientWidth);
+	g_user_mouse.y_movement_n = ((2 * g_user_mouse.y_movement_px) / html_canvas.clientHeight);
 	
-	console.log(`Mouse position on canvas: X=${mouse_dx}, Y=${mouse_dy}`);
+	if(g_user_mouse.x_movement_n != 0 && g_user_mouse.y_movement_n != 0)
+	{
+		console.log(`Delta: X=${g_user_mouse.x_movement_n}, Y=${g_user_mouse.y_movement_n}`);
+	}
 	
 	g_user_mouse.x_movement_px = 0.0;
 	g_user_mouse.y_movement_px = 0.0;
