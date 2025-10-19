@@ -17,7 +17,9 @@ var g_gpu = {
 		uniform_mvp: -1,
 		uniform_mvi: -1,
 		vbo: -1,
-		ebo: -1
+		ebo: -1,
+		vertex_count: 0,
+		element_count: 0
 	}
 };
 var g_frame_time = {
@@ -47,6 +49,8 @@ var g_player_camera = {
 	actor_follow_height_vec3: vec3.fromValues(0.0, 5.0, 0.0),
 	actor_follow_theta: 0.0,
 	fov_d: 90.0,
+	near: 0.1,
+	far: 100.0,
 	mouse_sensitivity_x: 2.0,
 	mouse_sensitivity_y: 2.0,
 	
@@ -54,7 +58,10 @@ var g_player_camera = {
 	dir_u: vec3.fromValues(0.0, 1.0, 0.0),
 	dir_flat_u: vec3.fromValues(0.0, 1.0, 0.0),
 	right_u: vec3.fromValues(1.0, 0.0, 0.0),
-	local_up_u: vec3.fromValues(0.0, 0.0, 1.0)
+	local_up_u: vec3.fromValues(0.0, 0.0, 1.0),
+	proj: mat4.create(),
+	view: mat4.create(),
+	view_proj: mat4.create()
 };
 const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
 const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
@@ -160,7 +167,9 @@ function Init()
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
 	
 	const sm_vbo_stride = 4 * 8 // 8 floats of 4 bytes each
-	const sm_vbo_vertex_count = e_asset_sm_cube_vertices.length;
+	g_gpu.static_mesh.vertex_count = e_asset_sm_cube_vertices.length;
+	g_gpu.static_mesh.element_count = e_asset_sm_cube_indices.length;
+	
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
 	//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
@@ -195,7 +204,8 @@ function Render_Loop()
 function Game_Update_And_Render(t_delta_t) 
 {
 	// Update Camera
-	var fov_r_half = (Math.PI/360.0) * g_player_camera.fov_d;
+	var fov_r = (Math.PI/180.0) * g_player_camera.fov_d;
+	var fov_r_half = fov_r / 2.0;
 	
 	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta - (g_user_mouse.x_movement_n * fov_r_half * g_player_camera.mouse_sensitivity_x);
 	if(g_player_camera.actor_follow_theta < 0.0)
@@ -220,6 +230,11 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
 	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
 	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
+	
+    const proj_aspect = g_gl.canvas.clientWidth / g_gl.canvas.clientHeight;
+	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
+	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_player_actor.pos, g_player_camera.global_up_u);
+	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
 	
 	// Update Actor
 	var actor_is_moving = false;
@@ -257,6 +272,18 @@ function Game_Update_And_Render(t_delta_t)
 	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
+	
+	const actor_mvi = mat3.create();
+	nat3.normalFromMat4(actor_mvi, g_player_camera.view);
+	
+	g_gl.useProgram(g_gpu.static_mesh.program_id);
+	g_gl.useProgram(g_gpu.static_mesh.program_id);
+	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
+	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
+	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, g_player_camera.view_proj);
+    g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
+	
+	g_gl.drawElements(g_gl.TRIANGLES, g_gpu.static_mesh.element_count, g_gl.UNSIGNED_SHORT, 0);
 }
 
 Init();
