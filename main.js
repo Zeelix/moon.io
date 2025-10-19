@@ -1,7 +1,6 @@
 // IMPORTS
 import { e_sm_vs_code, e_sm_fs_code } from './shaders.js'
-//import { rocket_modelData, rocket_modelIndexData_1, rocket_modelIndexData_2, rocket_modelIndexData_3 } from './assets.js';
-//import { star_modelData_1, star_modelData_2, star_modelIndexData } from './assets.js';
+import { e_asset_sm_cube_vertices, e_asset_sm_cube_indices } from './assets.js'
 
 // HTML elements
 const html_fps = document.querySelector("#html_fps");
@@ -15,7 +14,8 @@ var g_gpu = {
 		attrib_pos: -1,
 		attrib_tex: -1,
 		attrib_nrm: -1,
-		uniform_mvp: -1
+		uniform_mvp: -1,
+		uniform_mvi: -1
 	}
 };
 
@@ -112,6 +112,20 @@ function CB_Mouse_Click(event)
 	html_canvas.requestPointerLock();
 }
 
+function Load_Shader(t_shader_type, t_shader_code)
+{
+    const shader = g_gl.createShader(t_shader_type);
+    g_gl.shaderSource(shader, t_shader_code);
+    g_gl.compileShader(shader);
+
+    if (!g_gl.getShaderParameter(shader, g_gl.COMPILE_STATUS)) {
+        alert('An error occurred compiling the shaders: ' + g_gl.getShaderInfoLog(shader));
+        g_gl.deleteShader(shader);
+        return null;
+    }
+    return shader;
+}
+
 function Init() 
 {
 	document.addEventListener('keydown', CB_Key_Pressed);
@@ -130,6 +144,19 @@ function Init()
     g_gl.clearDepth(1.0);
     g_gl.enable(g_gl.DEPTH_TEST);
     g_gl.depthFunc(g_gl.LEQUAL);
+	
+	// Compile Static-Mesh (SM)
+	const sm_vs = loadShader(g_gl.VERTEX_SHADER, e_sm_vs_code);
+    const sm_fs = loadShader(g_gl.FRAGMENT_SHADER, e_sm_fs_code);
+    g_gpu.static_mesh.program_id = g_gl.createProgram();
+    g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
+    g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
+    g_gl.linkProgram(g_gpu.static_mesh.program_id);
+
+    if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) {
+        alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
+        return null;
+    }
 }
 
 function Render_Loop()
