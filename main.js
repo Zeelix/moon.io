@@ -16,8 +16,10 @@ var g_frame_time = {
 };
 var g_user_held_keys = {}
 var g_user_mouse = {
-	x: 0.0,
-	y: 0.0
+	x_px: 0,
+	y_py: 0,
+	x_n: 0.0,
+	y_n: 0.0
 }
 
 var g_moon_local = {
@@ -78,10 +80,14 @@ function CB_Key_Released(event)
 
 function CB_Mouse_Move(event)
 {
-	g_user_mouse.x = event.offsetX;
-	g_user_mouse.y = event.offsetY;
+	g_user_mouse.x_px = event.offsetX;
+	g_user_mouse.y_px = event.offsetY;
 	
-	console.log(`Mouse position on canvas: X=${g_user_mouse.x}, Y=${g_user_mouse.y}`);
+	g_user_mouse.x_n = g_user_mouse.x_px / html_canvas.clientWidth;
+	g_user_mouse.y_n = g_user_mouse.y_px / html_canvas.clientHeight;
+	
+	console.log(`Mouse position on PX canvas: X=${g_user_mouse.x_px}, Y=${g_user_mouse.y_px}`);
+	console.log(`Mouse position on N  canvas: X=${g_user_mouse.x_n}, Y=${g_user_mouse.y_n}`);
 }
 
 function Init() 
