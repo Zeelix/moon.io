@@ -1,6 +1,5 @@
 export const e_sm_vs_code = `
 attribute vec3 in_pos;
-attribute vec2 in_tex;
 attribute vec3 in_nrm;
 
 uniform mat4 u_mvp;

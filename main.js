@@ -148,7 +148,7 @@ function Init()
     }
 	
 	g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
-	g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
+	//g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
 	g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
 	g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
 	g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi'),
@@ -156,20 +156,16 @@ function Init()
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gpu.static_mesh.vbo = g_gl.createBuffer();
 	g_gpu.static_mesh.ebo = g_gl.createBuffer();
-	
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
 	
 	const sm_vbo_stride = 4 * 8 // 8 floats of 4 bytes each
 	const sm_vbo_vertex_count = e_asset_sm_cube_vertices.length;
-	
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
-	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
-		
-	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
-	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
-	
+	//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
+	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
+	//g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
 	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
 	
 	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_cube_vertices, g_gl.STATIC_DRAW);
