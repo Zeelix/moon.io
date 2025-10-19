@@ -28,8 +28,8 @@ var g_moon_local = {
 
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	dir_s: vec3.fromValues(0.0, 0.0, -1.0),
-	dir_u: vec3.fromValues(0.0, 0.0, -0.1),
+	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
+	dir_s: vec3.fromValues(0.0, 0.0, -0.1),
 	speed: 0.1
 };
 
@@ -209,7 +209,7 @@ function Game_Update_And_Render(t_delta_t)
 		{
 			console.clear();
 		}
-		console.log(g_player_actor.pos);
+		console.log(g_player_actor.dir_u);
 	}
 	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
