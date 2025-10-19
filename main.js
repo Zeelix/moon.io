@@ -38,6 +38,7 @@ var g_player_camera = {
 	actor_follow_distance: 5.0,
 	actor_follow_height: 5.0,
 	actor_follow_theta: 0.0,
+	fov_d: 90.0,
 	
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 1.0, 0.0),
@@ -125,23 +126,24 @@ function Render_Loop()
   
   requestAnimFrame(Render_Loop);
   
+  g_user_mouse.x_movement_n = ((2 * g_user_mouse.x_movement_px) / html_canvas.clientWidth);
+  g_user_mouse.y_movement_n = ((2 * g_user_mouse.y_movement_px) / html_canvas.clientHeight);
+  
   Game_Update_And_Render(delta_t); 
+  
+  g_user_mouse.x_movement_px = 0.0;
+  g_user_mouse.y_movement_px = 0.0;
 }
 
 function Game_Update_And_Render(t_delta_t) 
 {
+	var fov_r_half = (Math.PI/360.0) * g_player_camera.fov_d;
+	
+	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta + (g_user_mouse.x_movement_n * fov_r_half);
+	
+	console.log(g_player_camera.actor_follow_theta);
+	
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
-	
-	g_user_mouse.x_movement_n = ((2 * g_user_mouse.x_movement_px) / html_canvas.clientWidth);
-	g_user_mouse.y_movement_n = ((2 * g_user_mouse.y_movement_px) / html_canvas.clientHeight);
-	
-	if(g_user_mouse.x_movement_n != 0 && g_user_mouse.y_movement_n != 0)
-	{
-		console.log(`Delta: X=${g_user_mouse.x_movement_n}, Y=${g_user_mouse.y_movement_n}`);
-	}
-	
-	g_user_mouse.x_movement_px = 0.0;
-	g_user_mouse.y_movement_px = 0.0;
 }
 
 Init();
