@@ -129,7 +129,8 @@ function CB_Mouse_Click(event)
 }
 function CB_Mouse_Wheel(event)
 {
-	g_player_camera.actor_follow_distance = Clamp(event.deltaY * g_player_camera.zoom_sensitivity, g_player_camera.zoom_min, g_player_camera.zoom_max);
+	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
+	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
