@@ -40,7 +40,8 @@ var g_user_mouse = {
 	y_movement_n: 0.0
 }
 var g_moon_local = {
-	pos: vec3.fromValues(0.0, 0.0, 0.0)
+	pos: vec3.fromValues(0.0, 0.0, 0.0),
+	view_translate_vec3: vec3.fromValues(0.0, -5.0, 0.0)
 };
 var g_space = {
 	light_theta_current: 0.0,
@@ -318,6 +319,8 @@ function Game_Update_And_Render(t_delta_t)
 	var moon_model = mat4.create();
 	mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
 	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
+	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
+	mat4.translate(moon_model, moon_model, g_moon_local.view_translate_vec3);
 	
 	var moon_mvp = mat4.create();
 	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model);
