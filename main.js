@@ -6,6 +6,11 @@ import { e_asset_sm_cube_vertices, e_asset_sm_cube_indices, e_asset_sm_moon_vert
 const html_fps = document.querySelector("#html_fps");
 const html_canvas = document.querySelector('#html_canvas');
 
+// UTIL
+const Clamp = (value, min, max) => {
+  return Math.min(Math.max(value, min), max);
+};
+
 // GLOBALS
 var g_gl;
 var g_gpu = {
@@ -58,7 +63,9 @@ var g_player_camera = {
 	actor_follow_distance: 10.0,
 	actor_follow_height_vec3: vec3.fromValues(0.0, 5.0, 0.0),
 	actor_follow_theta: 0.0,
-	zoom_sensitivity: 0.02,
+	zoom_sensitivity: 0.002,
+	zoom_max: 20.0,
+	zoom_min: 0.05,
 	fov_d: 90.0,
 	near: 0.1,
 	far: 100.0,
@@ -122,7 +129,7 @@ function CB_Mouse_Click(event)
 }
 function CB_Mouse_Wheel(event)
 {
-	g_player_camera.actor_follow_distance += (event.deltaY * g_player_camera.zoom_sensitivity);
+	g_player_camera.actor_follow_distance = Clamp(event.deltaY * g_player_camera.zoom_sensitivity, g_player_camera.zoom_min, g_player_camera.zoom_max);
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
