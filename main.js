@@ -1,6 +1,6 @@
 // IMPORTS
 import { e_sm_vs_code, e_sm_fs_code } from './shaders.js'
-import { e_asset_sm_cube_vertices, e_asset_sm_cube_indices } from './assets.js'
+import { e_asset_sm_cube_vertices, e_asset_sm_cube_indices, e_asset_sm_moon_vertices, e_asset_sm_moon_indices } from './assets.js'
 
 // HTML elements
 const html_fps = document.querySelector("#html_fps");
@@ -181,8 +181,8 @@ function Init()
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
 	
 	const sm_vbo_stride = 4 * 8 // 8 floats of 4 bytes each
-	g_gpu.static_mesh.vertex_count = e_asset_sm_cube_vertices.length;
-	g_gpu.static_mesh.element_count = e_asset_sm_cube_indices.length;
+	g_gpu.static_mesh.vertex_count = e_asset_sm_moon_vertices.length;
+	g_gpu.static_mesh.element_count = e_asset_sm_moon_indices.length;
 	
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
 	//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
@@ -191,8 +191,8 @@ function Init()
 	//g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
 	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
 	
-	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_cube_vertices, g_gl.STATIC_DRAW);
-	g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_cube_indices, g_gl.STATIC_DRAW);
+	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_moon_vertices, g_gl.STATIC_DRAW);
+	g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_moon_indices, g_gl.STATIC_DRAW);
 	
 	g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 3.0);
