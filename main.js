@@ -57,7 +57,7 @@ var g_player_camera = {
 	actor_follow_distance: 10.0,
 	actor_follow_height_vec3: vec3.fromValues(0.0, 5.0, 0.0),
 	actor_follow_theta: 0.0,
-	zoom_sensitivity: 0.5,
+	zoom_sensitivity: 0.02,
 	fov_d: 90.0,
 	near: 0.1,
 	far: 100.0,
