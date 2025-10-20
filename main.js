@@ -156,6 +156,9 @@ function Init()
     g_gl.enable(g_gl.DEPTH_TEST);
     g_gl.depthFunc(g_gl.LEQUAL);
 	
+	g_gl.enable(g_gl.CULL_FACE);
+	g_gl.cullFace(g_gl.FRONT_AND_BACK);
+	
 	// Compile Static-Mesh (SM)
 	const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, e_sm_vs_code);
     const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, e_sm_fs_code);
@@ -264,7 +267,7 @@ function Game_Update_And_Render(t_delta_t)
 	
     const proj_aspect = g_gl.canvas.clientWidth / g_gl.canvas.clientHeight;
 	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
-	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_player_actor.pos, g_player_camera.global_up_u);
+	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_zero_vec3, g_player_camera.global_up_u);
 	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
 	
 	// Update Actor
