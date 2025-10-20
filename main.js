@@ -326,7 +326,7 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
 	var moon_model = mat4.create();
-	mat4.scale(moon_model, moon_model, radius_vec3);
+	mat4.scale(moon_model, moon_model, g_moon_local.radius_vec3);
 	mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
 	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
 	mat4.translate(moon_model, moon_model, g_moon_local.view_translate_vec3);
