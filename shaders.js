@@ -32,6 +32,6 @@ float toonify(float value) {
 void main() {
   //float intensity = clamp(dot(u_light_dir, out_nrm),0.0,1.0) + u_light_amb;
   //gl_FragColor = vec4(u_object_color * toonify(intensity), 1.0);
-  float intensity = clamp(dot(u_light_dir, out_nrm),0.0,1.0) + u_light_amb;
+  float intensity = clamp(dot(u_light_dir, out_nrm) + 0.4,0.0,1.0) + u_light_amb;
   gl_FragColor = vec4(u_object_color * intensity, 1.0);
 }`;

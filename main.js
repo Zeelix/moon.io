@@ -57,6 +57,7 @@ var g_player_camera = {
 	actor_follow_distance: 10.0,
 	actor_follow_height_vec3: vec3.fromValues(0.0, 5.0, 0.0),
 	actor_follow_theta: 0.0,
+	zoom_sensitivity: 0.5,
 	fov_d: 90.0,
 	near: 0.1,
 	far: 100.0,
@@ -118,6 +119,10 @@ function CB_Mouse_Click(event)
 {
 	html_canvas.requestPointerLock();
 }
+function CB_Mouse_Wheel(event)
+{
+	g_player_camera.actor_follow_distance += (event.deltaY * g_player_camera.zoom_sensitivity);
+}
 function Load_Shader(t_shader_type, t_shader_code)
 {
     const shader = g_gl.createShader(t_shader_type);
@@ -135,6 +140,7 @@ function Init()
 {
 	document.addEventListener('keydown', CB_Key_Pressed);
 	document.addEventListener('keyup', CB_Key_Released);
+	document.addEventListener('wheel', CB_Mouse_Wheel);
 	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
 	html_canvas.addEventListener('click', CB_Mouse_Click);
 	
