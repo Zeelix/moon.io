@@ -62,11 +62,13 @@ var g_player_actor = {
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
 	actor_follow_distance: 10.0,
-	actor_follow_height_vec3: vec3.fromValues(0.0, 0.5, 0.0),
+	actor_follow_height: 0.5,
 	actor_follow_theta: 0.0,
 	zoom_sensitivity: 0.002,
 	zoom_max: 20.0,
-	zoom_min: 0.05,
+	zoom_min: 0.5,
+	actor_follow_height_max: 3.0,
+	actor_follow_height_min: 1.0,
 	fov_d: 90.0,
 	near: 0.1,
 	far: 100.0,
@@ -132,6 +134,9 @@ function CB_Mouse_Wheel(event)
 {
 	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
 	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
+	
+	g_player_camera.actor_follow_height += event.deltaY * g_player_camera.zoom_sensitivity;
+	g_player_camera.actor_follow_height = Clamp(g_player_camera.actor_follow_height, g_player_camera.actor_follow_height_min, g_player_camera.actor_follow_height_max);
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
@@ -262,9 +267,10 @@ function Game_Update_And_Render(t_delta_t)
 	}
 	
 	var camera_dir_flat_s_inv = vec3.create();
+	var actor_follow_height_vec3 = vec3.fromValues(0, g_player_camera.actor_follow_height, 0);
 	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
 	vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
-	vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, g_player_camera.actor_follow_height_vec3);
+	vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, actor_follow_height_vec3);
 	
 	var camera_dir_u_inv = vec3.create();
 	vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
