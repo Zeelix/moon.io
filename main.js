@@ -312,6 +312,7 @@ function Game_Update_And_Render(t_delta_t)
 	
 	if(actor_is_moving)
 	{
+		// TODO(ED1): replace g_player_actor.pos from 3D representation to 2D surface, wrapped around the moon (uv)
 		vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
 		vec3.scaleAndAdd(g_player_actor.dir_u, g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2[1]);
 		vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
