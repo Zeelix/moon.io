@@ -43,7 +43,8 @@ var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0)
 };
 var g_space = {
-	light_dir: vec3.fromValues(0.6, -1.0, -1.0)
+	light_theta_current: 0.0,
+	light_theta_speed: 0.1
 }
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
@@ -222,6 +223,11 @@ function Render_Loop()
 }
 function Game_Update_And_Render(t_delta_t) 
 {
+	// Update World
+	var space_light_dir = vec3.create();
+	vec3.rotateY(space_light_dir, g_xp_vec3, g_zero_vec3, g_space.light_theta_current);
+	g_space.light_theta_current += t_delta_t * g_space.light_theta_speed;
+	
 	// Update Camera
 	var fov_r = (Math.PI/180.0) * g_player_camera.fov_d;
 	var fov_r_half = fov_r / 2.0;
@@ -297,7 +303,7 @@ function Game_Update_And_Render(t_delta_t)
 	mat3.normalFromMat4(light_vi, g_player_camera.view);
 	mat3.normalFromMat4(actor_mvi, g_player_camera.view); // usually model-view
 	
-	const local_light_dir = vec3.clone(g_space.light_dir);
+	const local_light_dir = vec3.clone(space_light_dir);
 	vec3.normalize(local_light_dir, local_light_dir);
 	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
