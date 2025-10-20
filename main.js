@@ -157,7 +157,7 @@ function Init()
     g_gl.depthFunc(g_gl.LEQUAL);
 	
 	g_gl.enable(g_gl.CULL_FACE);
-	g_gl.cullFace(g_gl.FRONT_AND_BACK);
+	g_gl.cullFace(g_gl.BACK);
 	
 	// Compile Static-Mesh (SM)
 	const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, e_sm_vs_code);
