@@ -44,7 +44,7 @@ var g_moon_local = {
 };
 var g_space = {
 	light_theta_current: 0.0,
-	light_theta_speed: 0.1
+	light_theta_speed: 0.4
 }
 var g_player_actor = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
