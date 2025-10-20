@@ -196,8 +196,8 @@ function Init()
 	g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_moon_indices, g_gl.STATIC_DRAW);
 	
 	g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
-	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 8.0);
-	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.05); 
+	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
+	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15); // .09
 }
 function Render_Loop()
