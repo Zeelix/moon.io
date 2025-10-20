@@ -6,5 +6,5 @@ const asset_sm_cube_indices_raw = [
 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,18,1,3,19,4,6,20,7,9,21,10,12,22,13,15,23,16
 ];
 
-export const e_asset_sm_cube_vertices = new Float32Array(asset_vertices_raw);
-export const e_asset_sm_cube_indices = new Uint16Array(asset_indices_raw);
+export const e_asset_sm_cube_vertices = new Float32Array(asset_sm_cube_vertices_raw);
+export const e_asset_sm_cube_indices = new Uint16Array(asset_sm_cube_indices_raw);
