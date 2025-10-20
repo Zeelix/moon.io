@@ -315,11 +315,18 @@ function Game_Update_And_Render(t_delta_t)
 	vec3.normalize(local_light_dir, local_light_dir);
 	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
+	var moon_model = mat4.create();
+	mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
+	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
+	
+	var moon_mvp = mat4.create();
+	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model);
+	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
 	
-	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, g_player_camera.view_proj);
+	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, moon_mvp);
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
 	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
 	
