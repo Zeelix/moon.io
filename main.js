@@ -322,17 +322,17 @@ function Game_Update_And_Render(t_delta_t)
 	if(g_user_held_keys['s'])
 	{
 		actor_is_moving = true;
-		vec3.add(actor_proj_vec2, actor_proj_vec2, g_yn_vec2);
+		vec2.add(actor_proj_vec2, actor_proj_vec2, g_yn_vec2);
 	}
 	if(g_user_held_keys['d'])
 	{
 		actor_is_moving = true;
-		vec3.add(actor_proj_vec2, actor_proj_vec2, g_xp_vec2);
+		vec2.add(actor_proj_vec2, actor_proj_vec2, g_xp_vec2);
 	}
 	if(g_user_held_keys['a'])
 	{
 		actor_is_moving = true;
-		vec3.add(actor_proj_vec2, actor_proj_vec2, g_xn_vec2);
+		vec2.add(actor_proj_vec2, actor_proj_vec2, g_xn_vec2);
 	}
 	
 	if(actor_is_moving)
@@ -346,7 +346,7 @@ function Game_Update_And_Render(t_delta_t)
 		//vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
 		//vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
 		//vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
-		vec3.add(g_player_actor.pos, g_player_actor.pos, actor_proj_vec2);
+		vec2.add(g_player_actor.pos, g_player_actor.pos, actor_proj_vec2);
 	}
 	
 	// Render
@@ -355,10 +355,10 @@ function Game_Update_And_Render(t_delta_t)
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(1, 1, 1);
 	var moon_translate = vec3.fromValues(0, -1, 0);
-	mat4.translate(moon_model, moon_model, moon_translate);
+	//mat4.translate(moon_model, moon_model, moon_translate);
 	mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
 	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
-	mat4.scale(moon_model, moon_model, moon_scale);
+	//mat4.scale(moon_model, moon_model, moon_scale);
 	
 	var moon_mvp = mat4.create();
 	var moon_mv = mat4.create();
