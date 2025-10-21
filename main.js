@@ -63,7 +63,7 @@ var g_player_camera = {
 	actor_follow_distance: 5.0,
 	actor_follow_height: 0,
 	actor_follow_theta: 0.0,
-	actor_focal_height: 1.0,
+	actor_focal_height: 0.0,
 	zoom_sensitivity: 0.002,
 	zoom_max: 20.0,
 	zoom_min: 0.5,
