@@ -224,10 +224,10 @@ function Init()
 	g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
-	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15); // .09
+	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
 	g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
 	
-	var assets_loaded = [false];
+	var each_asset_loaded = [false];
 	const texture_url = './moon_d.png';
 	const moon_diffuse = g_gl.createTexture();
 	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
@@ -237,11 +237,9 @@ function Init()
 		g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
 		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, moon_img);
 		g_gl.generateMipmap(g_gl.TEXTURE_2D);
-		assets_loaded[0] = true;
+		each_asset_loaded[0] = true;
 	};
 	moon_img.src = texture_url;
-	
-	for(let i = 0; i < len(
 	
 	g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 	g_gl.activeTexture(g_gl.TEXTURE0);
@@ -349,8 +347,6 @@ function Game_Update_And_Render(t_delta_t)
 	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
-	
-
 	
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(1, 1, 1);
