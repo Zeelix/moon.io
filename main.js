@@ -46,7 +46,7 @@ var g_user_mouse = {
 }
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	radius: 10.0
+	radius: 5.0
 };
 var g_space = {
 	light_theta_current: 0.0,
@@ -60,15 +60,15 @@ var g_player_actor = {
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
-	actor_follow_distance: 10.0,
-	actor_follow_height: 0.5,
+	actor_follow_distance: 5.0,
+	actor_follow_height: 0,
 	actor_follow_theta: 0.0,
 	actor_focal_height: 1.0,
 	zoom_sensitivity: 0.002,
 	zoom_max: 20.0,
 	zoom_min: 0.5,
 	actor_follow_height_max: 1.0,
-	actor_follow_height_min: 0.3,
+	actor_follow_height_min: 0.0,
 	fov_d: 90.0,
 	near: 0.1,
 	far: 100.0,
