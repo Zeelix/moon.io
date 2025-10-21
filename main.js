@@ -62,7 +62,7 @@ var g_player_actor = {
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
 	actor_follow_distance: 5.0,
-	actor_follow_height: 0,
+	actor_follow_height: 0.2,
 	actor_follow_theta: 0.0,
 	actor_focal_height: 0.0,
 	zoom_sensitivity: 0.002,
@@ -136,8 +136,8 @@ function CB_Mouse_Wheel(event)
 	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
 	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
 	
-	g_player_camera.actor_follow_height += event.deltaY * g_player_camera.zoom_sensitivity;
-	g_player_camera.actor_follow_height = Clamp(g_player_camera.actor_follow_height, g_player_camera.actor_follow_height_min, g_player_camera.actor_follow_height_max);
+	//g_player_camera.actor_follow_height += event.deltaY * g_player_camera.zoom_sensitivity;
+	//g_player_camera.actor_follow_height = Clamp(g_player_camera.actor_follow_height, g_player_camera.actor_follow_height_min, g_player_camera.actor_follow_height_max);
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
@@ -227,6 +227,7 @@ function Init()
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15); // .09
 	g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
 	
+	var assets_loaded = [false];
 	const texture_url = './moon_d.png';
 	const moon_diffuse = g_gl.createTexture();
 	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
@@ -236,10 +237,13 @@ function Init()
 		g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
 		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, moon_img);
 		g_gl.generateMipmap(g_gl.TEXTURE_2D);
+		assets_loaded[0] = true;
 	};
 	moon_img.src = texture_url;
-	g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 	
+	for(let i = 0; i < len(
+	
+	g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 	g_gl.activeTexture(g_gl.TEXTURE0);
 	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
 }
