@@ -330,8 +330,8 @@ function Game_Update_And_Render(t_delta_t)
 
 	
 	var moon_model = mat4.create();
-	var moon_scale = vec3.fromValues(1, g_moon_local.radius, 10);
-	var moon_translate = vec3.fromValues(0, -(g_moon_local.radius + g_player_camera.actor_focal_height), 0);
+	var moon_scale = vec3.fromValues(1, 1, 1);
+	var moon_translate = vec3.fromValues(0, 0, 0);
 	mat4.scale(moon_model, moon_model, moon_scale);
 	//mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
 	//mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
