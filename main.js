@@ -26,6 +26,7 @@ var g_gpu = {
 		uniform_object_color: -1,
 		uniform_light_dir: -1,
 		uniform_light_amb: -1,
+		uniform_sampler_diffuse: -1,
 		vbo: -1,
 		ebo: -1,
 		vertex_count: 0,
@@ -198,6 +199,7 @@ function Init()
 	g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
 	g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
 	g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
+	g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gpu.static_mesh.vbo = g_gl.createBuffer();
@@ -210,10 +212,10 @@ function Init()
 	g_gpu.static_mesh.element_count = e_asset_sm_moon_indices.length;
 	
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
-	//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
+	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
 	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
 	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
-	//g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
+	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
 	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
 	
 	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_moon_vertices, g_gl.STATIC_DRAW);
@@ -223,6 +225,23 @@ function Init()
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15); // .09
+	g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
+	
+	const texture_url = './moon_d.PNG';
+	const moon_diffuse = g_gl.createTexture();
+	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
+	g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, 1, 1, 0, g_gl.RGBA, g_gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
+	var moon_img = new Image();
+	moon_img.onload = () => {
+		g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
+		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, image);
+		g_gl.generateMipmap(g_gl.TEXTURE_2D);
+	};
+	moon_img.src = texture_url;
+	g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
+	
+	g_gl.activeTexture(g_gl.TEXTURE0);
+	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
 }
 function Render_Loop()
 {
