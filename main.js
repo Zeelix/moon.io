@@ -54,7 +54,7 @@ var g_space = {
 	light_theta_speed: 0.4
 }
 var g_player_actor = {
-	pos: vec3.fromValues(0.0, 0.0, 0.0),
+	pos: vec2.fromValues(0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
 	dir_s: vec3.fromValues(0.0, 0.0, -0.5),
 	speed: 0.5
@@ -337,12 +337,16 @@ function Game_Update_And_Render(t_delta_t)
 	
 	if(actor_is_moving)
 	{
+		ec3.normalize(actor_proj_vec2, actor_proj_vec2);
+		vec2.rotate(actor_proj_vec2, actor_proj_vec2, g_zero_vec2, g_player_camera.actor_follow_theta);
+		vec2.scale(actor_proj_vec2, actor_proj_vec2, g_player_actor.speed * t_delta_t);
 		// TODO(ED1): replace g_player_actor.pos from 3D representation to 2D surface, wrapped around the moon (uv)
 		//vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
 		//vec3.scaleAndAdd(g_player_actor.dir_u, g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2[1]);
 		//vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
 		//vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
 		//vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
+		vec3.add(g_player_actor.pos, g_player_actor.pos, actor_proj_vec2);
 	}
 	
 	// Render
@@ -352,8 +356,8 @@ function Game_Update_And_Render(t_delta_t)
 	var moon_scale = vec3.fromValues(2, 2, 2);
 	var moon_translate = vec3.fromValues(0, -1, 0);
 	mat4.scale(moon_model, moon_model, moon_scale);
-	//mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
-	//mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
+	mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
+	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
 	mat4.translate(moon_model, moon_model, moon_translate);
 	
 	var moon_mvp = mat4.create();
