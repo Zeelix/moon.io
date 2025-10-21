@@ -349,8 +349,8 @@ function Game_Update_And_Render(t_delta_t)
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
 	var moon_model = mat4.create();
-	var moon_scale = vec3.fromValues(1, 1, 1);
-	var moon_translate = vec3.fromValues(0, -1, 0);
+	var moon_scale = vec3.fromValues(2, 2, 2);
+	var moon_translate = vec3.fromValues(0, -2, 0);
 	mat4.scale(moon_model, moon_model, moon_scale);
 	//mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
 	//mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
