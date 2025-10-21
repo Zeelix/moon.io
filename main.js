@@ -189,7 +189,7 @@ function Init()
     }
 	
 	g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
-	//g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
+	g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
 	g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
 	
 	g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
@@ -227,7 +227,7 @@ function Init()
 	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15); // .09
 	g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
 	
-	const texture_url = './moon_d.PNG';
+	const texture_url = './moon_d.png';
 	const moon_diffuse = g_gl.createTexture();
 	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
 	g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, 1, 1, 0, g_gl.RGBA, g_gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
