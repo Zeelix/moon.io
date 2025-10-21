@@ -271,7 +271,7 @@ function Game_Update_And_Render(t_delta_t)
 	// Update World
 	var space_light_dir = vec3.create();
 	vec3.rotateY(space_light_dir, g_xp_vec3, g_zero_vec3, g_space.light_theta_current);
-	//g_space.light_theta_current += t_delta_t * g_space.light_theta_speed;
+	g_space.light_theta_current += t_delta_t * g_space.light_theta_speed;
 	
 	// Update Camera
 	var fov_r = (Math.PI/180.0) * g_player_camera.fov_d;
