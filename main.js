@@ -46,8 +46,7 @@ var g_user_mouse = {
 }
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	view_translate_vec3: vec3.fromValues(0.0, -3.0, 0.0),
-	radius_vec3: vec3.fromValues(5.0, 5.0, 5.0)
+	radius: 5.0
 };
 var g_space = {
 	light_theta_current: 0.0,
@@ -64,6 +63,7 @@ var g_player_camera = {
 	actor_follow_distance: 10.0,
 	actor_follow_height: 0.5,
 	actor_follow_theta: 0.0,
+	actor_focal_height: 1.0,
 	zoom_sensitivity: 0.002,
 	zoom_max: 20.0,
 	zoom_min: 0.5,
@@ -266,24 +266,28 @@ function Game_Update_And_Render(t_delta_t)
 		g_player_camera.actor_follow_theta -= g_2pi;
 	}
 	
-	var camera_dir_flat_s_inv = vec3.create();
-	var actor_follow_height_vec3 = vec3.fromValues(0, g_player_camera.actor_follow_height, 0);
-	vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
-	vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
-	vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, actor_follow_height_vec3);
+	const proj_aspect = g_gl.canvas.clientWidth / g_gl.canvas.clientHeight;
+	const sin_dist = Math.sin(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
+	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
-	var camera_dir_u_inv = vec3.create();
-	vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
-	vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
-	vec3.scale(camera_dir_u_inv, g_player_camera.dir_u, -1.0);
-	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
-	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
-	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
-	
-    const proj_aspect = g_gl.canvas.clientWidth / g_gl.canvas.clientHeight;
+	g_player_camera.pos = vec3.fromValues(sin_dist, g_player_camera.actor_follow_height, cos_dist);
 	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
 	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_zero_vec3, g_player_camera.global_up_u);
 	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
+	
+	//var camera_dir_flat_s_inv = vec3.create();
+	//var actor_follow_height_vec3 = vec3.fromValues(0, g_player_camera.actor_follow_height, 0);
+	//vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
+	//vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
+	//vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, actor_follow_height_vec3);
+	
+	//var camera_dir_u_inv = vec3.create();
+	//vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
+	//vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
+	//vec3.scale(camera_dir_u_inv, g_player_camera.dir_u, -1.0);
+	//vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
+	//vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
+	//vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
 	
 	// Update Actor
 	var actor_is_moving = false;
@@ -313,40 +317,46 @@ function Game_Update_And_Render(t_delta_t)
 	if(actor_is_moving)
 	{
 		// TODO(ED1): replace g_player_actor.pos from 3D representation to 2D surface, wrapped around the moon (uv)
-		vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
-		vec3.scaleAndAdd(g_player_actor.dir_u, g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2[1]);
-		vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
-		vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
-		vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
+		//vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
+		//vec3.scaleAndAdd(g_player_actor.dir_u, g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2[1]);
+		//vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
+		//vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
+		//vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
 	}
 	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
-	const light_vi = mat3.create();
-	const actor_mvi = mat3.create();
-	mat3.normalFromMat4(light_vi, g_player_camera.view);
-	mat3.normalFromMat4(actor_mvi, g_player_camera.view); // usually model-view
-	
-	const local_light_dir = vec3.clone(space_light_dir);
-	vec3.normalize(local_light_dir, local_light_dir);
-	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
+
 	
 	var moon_model = mat4.create();
-	mat4.scale(moon_model, moon_model, g_moon_local.radius_vec3);
-	mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
-	mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
-	mat4.translate(moon_model, moon_model, g_moon_local.view_translate_vec3);
+	var moon_scale = vec3.fromValues(g_moon_local.radius, g_moon_local.radius, g_moon_local.radius);
+	var moon_translate = vec3.fromValues(0, -(g_moon_local.radius + g_player_camera.actor_focal_height), 0);
+	mat4.scale(moon_model, moon_model, moon_scale);
+	//mat4.rotateY(moon_model, moon_model, g_player_actor.pos[0]);
+	//mat4.rotateX(moon_model, moon_model, g_player_actor.pos[1]);
+	mat4.translate(moon_model, moon_model, moon_translate);
 	
 	var moon_mvp = mat4.create();
+	var moon_mv = mat4.create();
 	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model);
+	mat4.mul(moon_mv, g_player_camera.view, moon_model);
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
 	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
 	
+	const light_vi = mat3.create();
+	const moon_mvi = mat3.create();
+	mat3.normalFromMat4(light_vi, g_player_camera.view);
+	mat3.normalFromMat4(moon_mvi, moon_mv);
+	
+	const local_light_dir = vec3.clone(space_light_dir);
+	vec3.normalize(local_light_dir, local_light_dir);
+	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
+	
 	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, moon_mvp);
-    g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
+    g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, moon_mvi);
 	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
 	
 	g_gl.drawElements(g_gl.TRIANGLES, g_gpu.static_mesh.element_count, g_gl.UNSIGNED_SHORT, 0);
