@@ -357,10 +357,10 @@ function Game_Update_And_Render(t_delta_t)
 	var moon_scale = vec3.fromValues(1, 1, 1);
 	var moon_translate = vec3.fromValues(0, -1, 0);
 	//mat4.translate(moon_model, moon_model, moon_translate);
-	mat4.rotateY(rotation, rotation, g_player_actor.pos[0]);
-	mat4.rotateX(rotation, rotation, g_player_actor.pos[1]);
+	mat4.rotateY(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0]);
+	mat4.rotateX(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1]);
 	//mat4.mul(moon_model, rotation, g_player_actor.pos[1]);
-	moon_model = mat4.clone(rotation);
+	moon_model = mat4.copy(g_moon_local.rotation);
 	//mat4.scale(moon_model, moon_model, moon_scale);
 	
 	var moon_mvp = mat4.create();
