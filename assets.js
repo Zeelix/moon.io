@@ -24,5 +24,5 @@ const asset_sm_moon_flat_indices_raw = [
 
 export const e_asset_sm_cube_vertices = new Float32Array(asset_sm_cube_vertices_raw);
 export const e_asset_sm_cube_indices = new Uint16Array(asset_sm_cube_indices_raw);
-export const e_asset_sm_moon_vertices = new Float32Array(asset_sm_moon_flat_vertices_raw);
-export const e_asset_sm_moon_indices = new Uint16Array(asset_sm_moon_flat_indices_raw);
+export const e_asset_sm_moon_vertices = new Float32Array(asset_sm_moon_smooth_vertices_raw);
+export const e_asset_sm_moon_indices = new Uint16Array(asset_sm_moon_smooth_indices_raw);
