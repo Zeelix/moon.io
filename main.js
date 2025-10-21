@@ -234,7 +234,7 @@ function Init()
 	var moon_img = new Image();
 	moon_img.onload = () => {
 		g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
-		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, image);
+		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, moon_img);
 		g_gl.generateMipmap(g_gl.TEXTURE_2D);
 	};
 	moon_img.src = texture_url;
