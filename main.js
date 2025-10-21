@@ -46,7 +46,7 @@ var g_user_mouse = {
 }
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	radius: 5.0
+	radius: 10.0
 };
 var g_space = {
 	light_theta_current: 0.0,
