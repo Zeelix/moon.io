@@ -303,13 +303,13 @@ function Game_Update_And_Render(t_delta_t)
 	//vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
 	//vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, actor_follow_height_vec3);
 	
-	//var camera_dir_u_inv = vec3.create();
-	//vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
-	//vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
-	//vec3.scale(camera_dir_u_inv, g_player_camera.dir_u, -1.0);
-	//vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
-	//vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
-	//vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
+	var camera_dir_u_inv = vec3.create();
+	vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
+	vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
+	vec3.scale(camera_dir_u_inv, g_player_camera.dir_u, -1.0);
+	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
+	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
+	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
 	
 	// Update Actor
 	var actor_is_moving = false;
@@ -357,8 +357,8 @@ function Game_Update_And_Render(t_delta_t)
 	var moon_scale = vec3.fromValues(1, 1, 1);
 	var moon_translate = vec3.fromValues(0, -1, 0);
 	//mat4.translate(moon_model, moon_model, moon_translate);
-	mat4.rotateY(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0]);
-	mat4.rotateX(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1]);
+	mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0], g_player_camera.dir_u);
+	mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1], g_player_camera.right_u);
 	g_player_actor.pos[0] = 0.0;
 	g_player_actor.pos[1] = 0.0;
 	//mat4.mul(moon_model, rotation, g_player_actor.pos[1]);
