@@ -304,9 +304,10 @@ function Game_Update_And_Render(t_delta_t)
 	//vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, actor_follow_height_vec3);
 	
 	var camera_dir_u_inv = vec3.create();
-	//vec3.sub(g_player_camera.dir_u, g_player_actor.pos, g_player_camera.pos);
-	vec3.normalize(camera_dir_u_inv, g_player_camera.pos);
-	//vec3.scale(camera_dir_u_inv, g_player_camera.pos, -1.0);
+	vec3.sub(g_player_camera.dir_u, g_zero_vec3, g_player_camera.pos);
+	vec3.normalize(g_player_camera.dir_u, g_player_camera.dir_u);
+	vec3.scale(camera_dir_u_inv, g_player_camera.dir_u, -1.0);
+	
 	vec3.cross(g_player_camera.right_u, g_player_camera.global_up_u, camera_dir_u_inv);
 	vec3.normalize(g_player_camera.right_u, g_player_camera.right_u);
 	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
