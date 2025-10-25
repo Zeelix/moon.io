@@ -87,6 +87,21 @@ var g_player_camera = {
 	view: mat4.create(),
 	view_proj: mat4.create()
 };
+var g_debug_camera = {	
+	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
+	fov_d: 90.0,
+	near: 0.1,
+	far: 100.0,
+	
+	pos: vec3.fromValues(0.0, 0.0, 0.0),
+	dir_u: vec3.fromValues(0.0, 1.0, 0.0),
+	dir_flat_u: vec3.fromValues(0.0, 1.0, 0.0),
+	right_u: vec3.fromValues(1.0, 0.0, 0.0),
+	local_up_u: vec3.fromValues(0.0, 0.0, 1.0),
+	proj: mat4.create(),
+	view: mat4.create(),
+	view_proj: mat4.create()
+};
 const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
 const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
 const g_yp_vec2 = vec2.fromValues(0.0, 1.0);
@@ -168,6 +183,26 @@ function Init()
         alert('Unable to initialize WebGL. Your browser or machine may not support it.');
         return;
     }
+
+	// Get the list of supported extensions
+	const availableExtensions = g_gl.getSupportedExtensions();
+	
+	if (availableExtensions && availableExtensions.length > 0) {
+		console.log("Supported WebGL 2 Extensions:");
+		availableExtensions.forEach((extension) => {
+		console.log(`- ${extension}`);
+		});
+	
+		// You can then check for specific extensions
+		if (availableExtensions.includes("EXT_color_buffer_float")) {
+		console.log("EXT_color_buffer_float is supported.");
+		// You can now use the functionality provided by this extension
+		} else {
+		console.log("EXT_color_buffer_float is NOT supported.");
+		}
+	} else {
+		console.log("No WebGL 2 extensions are supported.");
+	}
 	
 	g_gl.clearColor(0.0, 0.0, 0.0, 0.0);
     g_gl.clearDepth(1.0);
