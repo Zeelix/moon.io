@@ -33,6 +33,9 @@ var g_gpu = {
 		element_count: 0
 	}
 };
+var g_gl_ext = {
+	WEBGL_multi_draw: 0
+};
 var g_frame_time = {
 	counter: 0,
 	timer_last: new Date(),
@@ -183,24 +186,17 @@ function Init()
         alert('Unable to initialize WebGL. Your browser or machine may not support it.');
         return;
     }
-
-	// Get the list of supported extensions
-	const availableExtensions = g_gl.getSupportedExtensions();
 	
-	if (availableExtensions && availableExtensions.length > 0) {
+	const extensions = g_gl.getSupportedExtensions();
+	if (extensions && extensions.length > 0) 
+	{
 		console.log("Supported WebGL 2 Extensions:");
-		availableExtensions.forEach((extension) => {
-		console.log(`- ${extension}`);
-		});
-	
-		// You can then check for specific extensions
-		if (availableExtensions.includes("EXT_color_buffer_float")) {
-		console.log("EXT_color_buffer_float is supported.");
-		// You can now use the functionality provided by this extension
-		} else {
-		console.log("EXT_color_buffer_float is NOT supported.");
-		}
-	} else {
+		extensions.forEach((extension) => { console.log(`- ${extension}`); } );
+		g_gl_ext.WEBGL_multi_draw = g_gl.getExtension("WEBGL_multi_draw");
+		console.log(g_gl_ext.WEBGL_multi_draw);
+	} 
+	else 
+	{
 		console.log("No WebGL 2 extensions are supported.");
 	}
 	
