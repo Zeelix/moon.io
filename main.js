@@ -193,7 +193,7 @@ function Init()
 		console.log("Supported WebGL 2 Extensions:");
 		extensions.forEach((extension) => { console.log(`- ${extension}`); } );
 		g_gl_ext.WEBGL_multi_draw = g_gl.getExtension("WEBG_multi_draw");
-		console.log(g_gl_ext.WEBGL_multi_draw);
+		console.log("WEBGL_multi_draw: ", g_gl_ext.WEBGL_multi_draw);
 	} 
 	else 
 	{
