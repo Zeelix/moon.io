@@ -251,9 +251,9 @@ function Load()
 	//}
 	
 	// GPU Thread Broker
-	let all_assets_loaded = false;
-	while(!all_assets_loaded)
-	{
+	//let all_assets_loaded = false;
+	//while(!all_assets_loaded)
+	//{
 	//	if(shaders_1_downloaded_status)
 	//	{
 	//		g_assets.shaders_js_1 = shaders_1_promise;
