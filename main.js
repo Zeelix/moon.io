@@ -246,7 +246,7 @@ function Load()
 	{
 		if(shaders_1_loaded)
 		{
-			g_assets.shaders_js_1 = await shaders_1_promise;
+			g_assets.shaders_js_1 = shaders_1_promise;
 			
 			// Compile Shaders
 			const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, g_assets.shaders_js_1.vs_code);
@@ -298,7 +298,7 @@ function Load()
 		
 		if(sm_asset_1_loaded && shaders_1_loaded)
 		{
-			g_assets.static_mesh_js_1 = await sm_asset_1_promise;
+			g_assets.static_mesh_js_1 = sm_asset_1_promise;
 			
 			if(!g_gl_ext.WEBGL_multi_draw)
 			{
