@@ -58,7 +58,7 @@ const g_load = {
 const g_assets = {
 	static_mesh_js_1: null,
 	shaders_js_1: null,
-	diffuse_png_1: new Image()
+	diffuse_png_1: null
 };
 var g_frame_time = {
 	counter: 0,
@@ -175,6 +175,7 @@ function Load()
 	g_load.shader_js_compiled = 0;
 	
 	// Load Textures Async
+	g_assets.diffuse_png_1 = new Image();
 	g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
 	//  
