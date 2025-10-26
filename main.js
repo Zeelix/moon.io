@@ -172,12 +172,12 @@ function Load_Shader(t_shader_type, t_shader_code)
 }
 function Load() 
 {
-	static_mesh_js_downloaded = 0;
-	static_mesh_js_loaded = 0;
-	texture_png_downloaded = 0;
-	texture_png_loaded = 0;
-	shader_js_downloaded = 0;
-	shader_js_loaded = 0;
+	g_load.static_mesh_js_downloaded = 0;
+	g_load.static_mesh_js_loaded = 0;
+	g_load.texture_png_downloaded = 0;
+	g_load.texture_png_loaded = 0;
+	g_load.shader_js_downloaded = 0;
+	g_load.shader_js_loaded = 0;
 	
 	// Load Textures Async
 	g_assets.diffuse_png_1.onload = () => {
