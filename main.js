@@ -47,19 +47,13 @@ var g_gl_ext = {
 	WEBGL_multi_draw: 0
 };
 const g_load = {
-	atomic_buffer_counters: new SharedArrayBuffer(6 * 4), // 6 int32's
-	view_buffer_counters: null,
-	
 	static_mesh_js_count: 1,
 	texture_png_count: 1,
 	shader_js_count: 1,
 	
-	static_mesh_js_idx_downloaded: 0,
-	static_mesh_js_idx_loaded: 1,
-	texture_png_idx_downloaded: 2,
-	texture_png_idx_loaded: 3,
-	shader_js_idx_downloaded: 4,
-	shader_js_idx_compiled: 5,
+	static_mesh_js_loaded: 0,
+	texture_png_loaded: 0,
+	shader_js_compiled: 0,
 };
 const g_assets = {
 	static_mesh_js_1: null,
@@ -176,21 +170,11 @@ function Load()
 {
 	console.log('Load Start');
 	
-	g_load.view_buffer_counters = new Int32Array(g_load.atomic_buffer_counters);
-	Atomics.store(g_load.view_buffer_counters, g_load.static_mesh_js_idx_downloaded, 0);
-	Atomics.store(g_load.view_buffer_counters, g_load.static_mesh_js_idx_loaded, 0);
-	Atomics.store(g_load.view_buffer_counters, g_load.shader_js_idx_downloaded, 0);
-	Atomics.store(g_load.view_buffer_counters, g_load.shader_js_idx_compiled, 0);
-	Atomics.store(g_load.view_buffer_counters, g_load.texture_png_idx_downloaded, 0);
-	Atomics.store(g_load.view_buffer_counters, g_load.texture_png_idx_loaded, 0);
+	g_load.static_mesh_js_loaded = 0;
+	g_load.texture_png_loaded = 0;
+	g_load.shader_js_compiled = 0;
 	
 	// Load Textures Async
-	g_assets.diffuse_png_1.onload = () => {
-		Atomics.add(g_load.view_buffer_counters, g_load.texture_png_idx_downloaded, 1);
-	};
-	g_assets.diffuse_png_1.onerror = () => {
-		console.log('Could not load image');
-	};
 	g_assets.diffuse_png_1.src = './diffuse_1.png';
 	
 	//  
@@ -362,8 +346,7 @@ function Load()
 	//}
 	//
 	
-	var atomic_texture_png_downloaded_count = Atomics.load(g_load.view_buffer_counters, g_load.texture_png_idx_downloaded);
-	while(atomic_texture_png_downloaded_count != g_load.texture_png_count)
+	while(!g_assets.diffuse_png_1.complete)
 	{
 		console.log('Loading PNG...');
 	}
