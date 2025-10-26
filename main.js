@@ -185,7 +185,7 @@ function Load()
 	g_assets.diffuse_png_1.onload = () => {
 		g_load.texture_png_downloaded++;
 	};
-	g_assets.diffuse_png_1.src = './moon_d.png';
+	g_assets.diffuse_png_1.src = './diffuse_1.png';
 	
 	// Load Assets Async
 	let sm_asset_1_downloaded_status = 0;
