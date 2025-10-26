@@ -1,4 +1,4 @@
-export const e_sm_vs_code = `
+export const vs_code = `
 attribute vec3 in_pos;
 attribute vec2 in_tex;
 attribute vec3 in_nrm;
@@ -15,7 +15,7 @@ void main() {
 	out_tex = in_tex;
 }`;
 
-export const e_sm_fs_code = `
+export const fs_code = `
 precision highp float;
 
 uniform float u_toon_num_bands;

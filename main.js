@@ -1,18 +1,25 @@
-// IMPORTS
-import { e_sm_vs_code, e_sm_fs_code } from './shaders.js'
-import { e_asset_sm_cube_vertices, e_asset_sm_cube_indices, e_asset_sm_moon_vertices, e_asset_sm_moon_indices } from './assets.js'
-//import { e_asset_sm_debug_camera_vertices, e_asset_sm_debug_camera_indices } from './assets.js'
-
-// HTML elements
 const html_fps = document.querySelector("#html_fps");
 const html_canvas = document.querySelector('#html_canvas');
 
-// UTIL
 const Clamp = (value, min, max) => {
   return Math.min(Math.max(value, min), max);
 };
 
 // GLOBALS
+const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
+const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
+const g_yp_vec2 = vec2.fromValues(0.0, 1.0);
+const g_yn_vec2 = vec2.fromValues(0.0, -1.0);
+const g_zero_vec2 = vec2.fromValues(0.0, 0.0);
+const g_xp_vec3 = vec3.fromValues(1.0, 0.0, 0.0);
+const g_xn_vec3 = vec3.fromValues(-1.0, 0.0, 0.0);
+const g_yp_vec3 = vec3.fromValues(0.0, 1.0, 0.0);
+const g_yn_vec3 = vec3.fromValues(0.0, -1.0, 0.0);
+const g_zp_vec3 = vec3.fromValues(0.0, 0.0, 1.0);
+const g_zn_vec3 = vec3.fromValues(0.0, 0.0, -1.0);
+const g_zero_vec3 = vec3.fromValues(0.0, 0.0, 0.0);
+const g_2pi = Math.PI * 2.0;
+
 var g_gl;
 var g_gpu = {
 	static_mesh: {
@@ -33,20 +40,29 @@ var g_gpu = {
 		
 		vertex_count: 0,
 		element_count: 0,
-		asset_vram_data: {
-			moon_base_vertex: -1,
-			moon_element_offset: -1,
-			
-			debug_camera_base_vertex: -1,
-			debug_element_offset: -1,
-			
-			cube_base_vertex: -1,
-			cube_element_offset: -1,
-		}
+		tex_diffuse: -1,
 	}
 };
 var g_gl_ext = {
 	WEBGL_multi_draw: 0
+};
+const g_load = {
+	static_mesh_js_count: 1,
+	static_mesh_js_downloaded: 0,
+	static_mesh_js_loaded: 0,
+	
+	texture_png_count: 1,
+	texture_png_downloaded: 0,
+	texture_png_loaded: 0,
+	
+	shader_js_count: 1,
+	shader_js_downloaded: 0,
+	shader_js_compiled: 0,
+};
+const g_assets = {
+	static_mesh_js_1: null,
+	shaders_js_1: null,
+	diffuse_png_1: new Image()
 };
 var g_frame_time = {
 	counter: 0,
@@ -79,8 +95,7 @@ var g_player_actor = {
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
 	actor_follow_distance: 5.0,
-	actor_follow_height: 0.0,
-	//actor_follow_height: 0.2,
+	actor_follow_height: 0.0, // 0.2
 	actor_follow_theta: 0.0,
 	actor_focal_height: 0.0,
 	zoom_sensitivity: 0.002,
@@ -103,35 +118,8 @@ var g_player_camera = {
 	view: mat4.create(),
 	view_proj: mat4.create()
 };
-var g_debug_camera = {	
-	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
-	fov_d: 90.0,
-	near: 0.1,
-	far: 100.0,
-	
-	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	dir_u: vec3.fromValues(0.0, 1.0, 0.0),
-	dir_flat_u: vec3.fromValues(0.0, 1.0, 0.0),
-	right_u: vec3.fromValues(1.0, 0.0, 0.0),
-	local_up_u: vec3.fromValues(0.0, 0.0, 1.0),
-	proj: mat4.create(),
-	view: mat4.create(),
-	view_proj: mat4.create()
-};
-const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
-const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
-const g_yp_vec2 = vec2.fromValues(0.0, 1.0);
-const g_yn_vec2 = vec2.fromValues(0.0, -1.0);
-const g_zero_vec2 = vec2.fromValues(0.0, 0.0);
-const g_xp_vec3 = vec3.fromValues(1.0, 0.0, 0.0);
-const g_xn_vec3 = vec3.fromValues(-1.0, 0.0, 0.0);
-const g_yp_vec3 = vec3.fromValues(0.0, 1.0, 0.0);
-const g_yn_vec3 = vec3.fromValues(0.0, -1.0, 0.0);
-const g_zp_vec3 = vec3.fromValues(0.0, 0.0, 1.0);
-const g_zn_vec3 = vec3.fromValues(0.0, 0.0, -1.0);
-const g_zero_vec3 = vec3.fromValues(0.0, 0.0, 0.0);
-const g_2pi = Math.PI * 2.0;
 
+// Functions
 window.requestAnimFrame = ( function() {
     return  window.requestAnimationFrame || 
             window.webkitRequestAnimationFrame ||  
@@ -168,11 +156,6 @@ function CB_Mouse_Wheel(event)
 {
 	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
 	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
-	
-	//g_player_camera.fov_d += event.deltaY * g_player_camera.zoom_sensitivity;
-	
-	//g_player_camera.actor_follow_height += event.deltaY * g_player_camera.zoom_sensitivity;
-	//g_player_camera.actor_follow_height = Clamp(g_player_camera.actor_follow_height, g_player_camera.actor_follow_height_min, g_player_camera.actor_follow_height_max);
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
@@ -187,21 +170,57 @@ function Load_Shader(t_shader_type, t_shader_code)
     }
     return shader;
 }
-function Init() 
+function Load() 
 {
+	static_mesh_js_downloaded = 0;
+	static_mesh_js_loaded = 0;
+	texture_png_downloaded = 0;
+	texture_png_loaded = 0;
+	shader_js_downloaded = 0;
+	shader_js_loaded = 0;
+	
+	// Load Textures Async
+	g_assets.diffuse_png_1.onload = () => {
+		g_load.texture_png_downloaded++;
+	};
+	g_assets.diffuse_png_1.src = './moon_d.png';
+	
+	// Load Assets Async
+	let sm_asset_1_downloaded_status = 0;
+	let sm_asset_1_promise = import('./static_mesh_1.js').then(module => 
+	{
+		module.Init();
+		sm_asset_1_downloaded_status = 1;
+		g_load.static_mesh_js_downloaded++;
+    }).catch(() => 
+	{
+		sm_asset_1_downloaded_status = 2;
+	});
+	
+	// Load Shaders Async
+	let shaders_1_downloaded_status = 0;
+	let shaders_1_promise = import('./shaders_1.js').then(() => 
+	{
+		shaders_1_downloaded_status = 1;
+		g_load.shader_js_downloaded++;
+    }).catch(() => 
+	{
+		shaders_1_downloaded_status = 2;
+	});
+	
+	// Callbacks
 	document.addEventListener('keydown', CB_Key_Pressed);
 	document.addEventListener('keyup', CB_Key_Released);
 	document.addEventListener('wheel', CB_Mouse_Wheel);
 	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
 	html_canvas.addEventListener('click', CB_Mouse_Click);
 	
+	// GL Render-Context
     g_gl = html_canvas.getContext('webgl');
-
     if (!g_gl) {
         alert('Unable to initialize WebGL. Your browser or machine may not support it.');
         return;
     }
-	
 	const extensions = g_gl.getSupportedExtensions();
 	if (extensions && extensions.length > 0) 
 	{
@@ -214,84 +233,109 @@ function Init()
 	{
 		console.log("No WebGL 2 extensions are supported.");
 	}
-	
 	g_gl.clearColor(0.0, 0.0, 0.0, 0.0);
     g_gl.clearDepth(1.0);
     g_gl.enable(g_gl.DEPTH_TEST);
     g_gl.depthFunc(g_gl.LEQUAL);
-	
 	g_gl.enable(g_gl.CULL_FACE);
 	g_gl.cullFace(g_gl.BACK);
 	
-	// Compile Static-Mesh (SM)
-	const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, e_sm_vs_code);
-    const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, e_sm_fs_code);
-    g_gpu.static_mesh.program_id = g_gl.createProgram();
-    g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
-    g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
-    g_gl.linkProgram(g_gpu.static_mesh.program_id);
+	// GPU Thread Broker
+	let all_assets_loaded = false;
+	while(!all_assets_loaded)
+	{
+		if(shaders_1_loaded)
+		{
+			g_assets.shaders_js_1 = await shaders_1_promise;
+			
+			// Compile Shaders
+			const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, g_assets.shaders_js_1.vs_code);
+			const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, g_assets.shaders_js_1.fs_code);
+			g_gpu.static_mesh.program_id = g_gl.createProgram();
+			g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
+			g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
+			g_gl.linkProgram(g_gpu.static_mesh.program_id);
+			if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) 
+			{
+				alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
+				return null;
+			}
+			g_gl.useProgram(g_gpu.static_mesh.program_id);
 
-    if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) {
-        alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
-        return null;
-    }
-	
-	g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
-	g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
-	g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
-	
-	g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
-	g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
-	g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
-	g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
-	g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
-	g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
-	g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
-	g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
-	
-	g_gl.useProgram(g_gpu.static_mesh.program_id);
-	g_gpu.static_mesh.vbo = g_gl.createBuffer();
-	g_gpu.static_mesh.ebo = g_gl.createBuffer();
-	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
-	g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
-	
-	const sm_vbo_stride = 4 * 8 // 8 floats of 4 bytes each
-	g_gpu.static_mesh.vertex_count = e_asset_sm_moon_vertices.length;
-	g_gpu.static_mesh.element_count = e_asset_sm_moon_indices.length;
-	
-	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
-	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
-	g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
-	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
-	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
-	g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
-	
-	g_gl.bufferData(g_gl.ARRAY_BUFFER, e_asset_sm_moon_vertices, g_gl.STATIC_DRAW);
-	g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, e_asset_sm_moon_indices, g_gl.STATIC_DRAW);
-	
-	g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
-	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
-	g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
-	g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
-	g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
-	
-	var each_asset_loaded = [false];
-	const texture_url = './moon_d.png';
-	const moon_diffuse = g_gl.createTexture();
-	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
-	g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, 1, 1, 0, g_gl.RGBA, g_gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
-	var moon_img = new Image();
-	moon_img.onload = () => {
-		g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
-		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, moon_img);
-		g_gl.generateMipmap(g_gl.TEXTURE_2D);
-		each_asset_loaded[0] = true;
-	};
-	moon_img.src = texture_url;
-	
-	g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
-	g_gl.activeTexture(g_gl.TEXTURE0);
-	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
+			// Attributes
+			g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
+			g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
+			g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
+			g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
+			g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
+			g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
+			g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
+			g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
+			g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
+			
+			// Uniforms
+			g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
+			g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
+			g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
+			g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
+			g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
+			g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
+			g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
+			g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
+			
+			g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
+			g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
+			g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
+			g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
+			g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
+			
+			// Buffers
+			g_gpu.static_mesh.vbo = g_gl.createBuffer();
+			g_gpu.static_mesh.ebo = g_gl.createBuffer();
+			
+			g_load.shader_js_loaded++;
+		}
+		
+		if(sm_asset_1_loaded && shaders_1_loaded)
+		{
+			g_assets.static_mesh_js_1 = await sm_asset_1_promise;
+			
+			if(!g_gl_ext.WEBGL_multi_draw)
+			{
+				// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
+				alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
+				return null;
+			}
+			
+			g_gl.useProgram(g_gpu.static_mesh.program_id);
+			g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
+			g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
+			
+			g_gpu.static_mesh.vertex_count = g_assets.static_mesh_js_1.e_pooled_vertices_length;
+			g_gpu.static_mesh.element_count = g_assets.static_mesh_js_1.e_pooled_indices_length;
+			
+			g_gl.bufferData(g_gl.ARRAY_BUFFER, g_assets.static_mesh_js_1.e_pooled_vertices, g_gl.STATIC_DRAW);
+			g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, g_assets.static_mesh_js_1.e_pooled_indices, g_gl.STATIC_DRAW);
+			
+			g_load.static_mesh_js_loaded++;
+		}
+		
+		if(g_assets.diffuse_png_1.complete)
+		{
+			g_gpu.static_mesh.tex_diffuse = g_gl.createTexture();
+			g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
+			g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, g_assets.diffuse_png_1);
+			g_gl.generateMipmap(g_gl.TEXTURE_2D);
+			g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
+			g_gl.activeTexture(g_gl.TEXTURE0);
+			g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
+		}
+		
+		all_assets_loaded = 
+			(static_mesh_js_loaded == static_mesh_js_count) && 
+			(texture_png_loaded == texture_png_count) && 
+			(shader_js_loaded == shader_js_count);
+	}
 }
 function Render_Loop()
 {
@@ -458,5 +502,5 @@ function Game_Update_And_Render(t_delta_t)
 	g_gl.drawElements(g_gl.TRIANGLES, g_gpu.static_mesh.element_count, g_gl.UNSIGNED_SHORT, 0);
 }
 
-Init();
+Load();
 Render_Loop();
