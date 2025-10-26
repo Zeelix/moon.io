@@ -332,9 +332,9 @@ function Load()
 		}
 		
 		all_assets_loaded = 
-			(static_mesh_js_loaded == static_mesh_js_count) && 
-			(texture_png_loaded == texture_png_count) && 
-			(shader_js_loaded == shader_js_count);
+			(g_load.static_mesh_js_loaded == g_load.static_mesh_js_count) && 
+			(g_load.texture_png_loaded == g_load.texture_png_count) && 
+			(g_load.shader_js_loaded == g_load.shader_js_count);
 	}
 }
 function Render_Loop()
