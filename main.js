@@ -245,7 +245,7 @@ function Load()
 	g_gl.cullFace(g_gl.BACK);
 	
 	let i = 0;
-	while (i != 10000000)
+	while (i != 100)
 	{
 		i++;
 	}
