@@ -310,7 +310,8 @@ function Game_Update_And_Render(t_delta_t)
 	var fov_r = (Math.PI/180.0) * g_player_camera.fov_d;
 	var fov_r_half = fov_r / 2.0;
 	
-	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta - (g_user_mouse.x_movement_n * fov_r_half * g_player_camera.mouse_sensitivity_x);
+	var dtheta = (g_user_mouse.x_movement_n * fov_r_half * g_player_camera.mouse_sensitivity_x);
+	g_player_camera.actor_follow_theta = g_player_camera.actor_follow_theta - dtheta;
 	if(g_player_camera.actor_follow_theta < 0.0)
 	{
 		g_player_camera.actor_follow_theta += g_2pi;
@@ -324,7 +325,8 @@ function Game_Update_And_Render(t_delta_t)
 	const sin_dist = Math.sin(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
-	g_player_camera.pos = vec3.fromValues(sin_dist, g_player_camera.actor_follow_height, cos_dist);
+	g_player_camera.pos = vec3.fromValues(0.0, 0.0, g_player_camera.actor_follow_distance);
+	//g_player_camera.pos = vec3.fromValues(sin_dist, g_player_camera.actor_follow_height, cos_dist);
 	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
 	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_zero_vec3, g_player_camera.global_up_u);
 	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
@@ -372,7 +374,7 @@ function Game_Update_And_Render(t_delta_t)
 	if(actor_is_moving)
 	{
 		vec3.normalize(actor_proj_vec2, actor_proj_vec2);
-		vec2.rotate(actor_proj_vec2, actor_proj_vec2, g_zero_vec2, g_player_camera.actor_follow_theta);
+		//vec2.rotate(actor_proj_vec2, actor_proj_vec2, g_zero_vec2, g_player_camera.actor_follow_theta);
 		vec2.scale(actor_proj_vec2, actor_proj_vec2, g_player_actor.speed * t_delta_t);
 		// TODO(ED1): replace g_player_actor.pos from 3D representation to 2D surface, wrapped around the moon (uv)
 		//vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
@@ -392,8 +394,9 @@ function Game_Update_And_Render(t_delta_t)
 	//mat4.translate(moon_model, moon_model, moon_translate);
 	if(vec2.len(g_player_actor.pos) != 0)
 	{
-		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0], g_player_camera.dir_u);
-		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1], g_player_camera.right_u);
+		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, dtheta, g_yp_vec3);
+		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0], g_zp_vec3);
+		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1], g_xp_vec3);
 		g_player_actor.pos[0] = 0.0;
 		g_player_actor.pos[1] = 0.0;
 	}
