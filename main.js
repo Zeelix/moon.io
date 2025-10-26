@@ -179,9 +179,11 @@ function Load()
 	// Load Textures Async
 	g_assets.diffuse_png_1 = new Image();
 	g_assets.diffuse_png_1.onload = () => {
+		console.log('LOADED IMAGE');
 		hi = true;
 	};
 	g_assets.diffuse_png_1.onerror = () => {
+		console.log('ERROR LOADING IMAGE');
 		hi = true;
 	};
 	g_assets.diffuse_png_1.src = 'diffuse_1.png';
