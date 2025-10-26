@@ -181,11 +181,11 @@ function Load()
 	g_load.shader_js_downloaded = 0;
 	g_load.shader_js_loaded = 0;
 	
-	//// Load Textures Async
-	//g_assets.diffuse_png_1.onload = () => {
-	//	g_load.texture_png_downloaded++;
-	//};
-	//g_assets.diffuse_png_1.src = './diffuse_1.png';
+	// Load Textures Async
+	g_assets.diffuse_png_1.onload = () => {
+		g_load.texture_png_downloaded++;
+	};
+	g_assets.diffuse_png_1.src = './diffuse_1.png';
 	//
 	//// Load Assets Async
 	//let sm_asset_1_downloaded_status = 0;
@@ -354,6 +354,12 @@ function Load()
 	//	all_assets_loaded = true;
 	//}
 	//
+	
+	while(g_load.texture_png_downloaded != g_load.texture_png_count)
+	{
+		console.log('Loading PNG...');
+	}
+	
 	console.log('Load Complete');
 }
 //function Render_Loop()
