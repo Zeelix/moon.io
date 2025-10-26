@@ -183,7 +183,10 @@ function Load()
 	
 	// Load Textures Async
 	g_assets.diffuse_png_1.onload = () => {
-		g_load.texture_png_downloaded++;
+		g_load.texture_png_downloaded = 1;
+	};
+	g_assets.diffuse_png_1.onerror = () => {
+		console.log('Could not load image');
 	};
 	g_assets.diffuse_png_1.src = './diffuse_1.png';
 	//
