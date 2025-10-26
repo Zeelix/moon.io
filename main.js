@@ -333,6 +333,8 @@ function Load()
 			g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 			g_gl.activeTexture(g_gl.TEXTURE0);
 			g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
+			
+			g_load.texture_png_loaded++;
 		}
 		
 		all_assets_loaded = 
