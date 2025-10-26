@@ -175,7 +175,7 @@ function Load()
 	g_load.shader_js_compiled = 0;
 	
 	// Load Textures Async
-	g_assets.diffuse_png_1.src = './diffuse_1.png';
+	g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
 	//  
 	//// Load Assets Async
