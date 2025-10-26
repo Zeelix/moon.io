@@ -174,13 +174,13 @@ function Load()
 	g_load.texture_png_loaded = 0;
 	g_load.shader_js_compiled = 0;
 	
-	var hi = 0;
+	var hi = true;
 	// Load Textures Async
-	g_assets.diffuse_png_1 = new Image();
-	g_assets.diffuse_png_1.onload = () => {
-		hi = 1;
-	};
-	g_assets.diffuse_png_1.src = 'diffuse_1.png';
+	//g_assets.diffuse_png_1 = new Image();
+	//g_assets.diffuse_png_1.onload = () => {
+	//	hi = 1;
+	//};
+	//g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
 	//  
 	//// Load Assets Async
