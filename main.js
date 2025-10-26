@@ -153,8 +153,10 @@ function CB_Mouse_Click(event)
 }
 function CB_Mouse_Wheel(event)
 {
-	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
-	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
+	//g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
+	//g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
+	
+	g_player_camera.fov_d += event.deltaY * g_player_camera.zoom_sensitivity;
 	
 	//g_player_camera.actor_follow_height += event.deltaY * g_player_camera.zoom_sensitivity;
 	//g_player_camera.actor_follow_height = Clamp(g_player_camera.actor_follow_height, g_player_camera.actor_follow_height_min, g_player_camera.actor_follow_height_max);
@@ -398,8 +400,8 @@ function Game_Update_And_Render(t_delta_t)
 		
 		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0], g_zp_vec3);
 		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1], g_xp_vec3);
-		//g_player_actor.pos[0] = 0.0;
-		//g_player_actor.pos[1] = 0.0;
+		g_player_actor.pos[0] = 0.0;
+		g_player_actor.pos[1] = 0.0;
 	}
 	//mat4.mul(moon_model, rotation, g_player_actor.pos[1]);
 	//moon_model = mat4.copy(g_moon_local.rotation);
