@@ -350,6 +350,8 @@ function Load()
 			(g_load.static_mesh_js_loaded == g_load.static_mesh_js_count) && 
 			(g_load.texture_png_loaded == g_load.texture_png_count) && 
 			(g_load.shader_js_loaded == g_load.shader_js_count);
+			
+		all_assets_loaded = true;
 	}
 	
 	console.log("Load Complete");
