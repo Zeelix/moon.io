@@ -244,7 +244,7 @@ function Load()
 	let all_assets_loaded = false;
 	while(!all_assets_loaded)
 	{
-		if(shaders_1_loaded)
+		if(shaders_1_downloaded_status)
 		{
 			g_assets.shaders_js_1 = shaders_1_promise;
 			
@@ -296,7 +296,7 @@ function Load()
 			g_load.shader_js_loaded++;
 		}
 		
-		if(sm_asset_1_loaded && shaders_1_loaded)
+		if(sm_asset_1_downloaded_status && shaders_1_downloaded_status)
 		{
 			g_assets.static_mesh_js_1 = sm_asset_1_promise;
 			
