@@ -356,7 +356,7 @@ function Load()
 	//
 	
 	var counter = 0;
-	while(((!hi) || (counter > 1000)))
+	while(((!hi) && (counter < 1000)))
 	{
 		counter++;
 		
@@ -364,7 +364,7 @@ function Load()
 		console.log('Loading PNG...');
 	}
 	
-	if(counter >1000)
+	if(counter >= 1000)
 	{
 		console.log('timeout');
 	}
