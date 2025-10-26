@@ -47,8 +47,8 @@ var g_gl_ext = {
 	WEBGL_multi_draw: 0
 };
 const g_load = {
-	atomic_buffer_counters = new SharedArrayBuffer(6 * 4), // 6 int32's
-	view_buffer_counters = [];
+	atomic_buffer_counters: new SharedArrayBuffer(6 * 4), // 6 int32's
+	view_buffer_counters: null,
 	
 	static_mesh_js_count: 1,
 	texture_png_count: 1,
