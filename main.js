@@ -276,7 +276,7 @@ function Init()
 	g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
 	
 	var each_asset_loaded = [false];
-	const texture_url = './moon_de.png';
+	const texture_url = './moon_d.png';
 	const moon_diffuse = g_gl.createTexture();
 	g_gl.bindTexture(g_gl.TEXTURE_2D, moon_diffuse);
 	g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, 1, 1, 0, g_gl.RGBA, g_gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
