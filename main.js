@@ -172,6 +172,8 @@ function Load_Shader(t_shader_type, t_shader_code)
 }
 function Load() 
 {
+	console.log("Load Start");
+	
 	g_load.static_mesh_js_downloaded = 0;
 	g_load.static_mesh_js_loaded = 0;
 	g_load.texture_png_downloaded = 0;
@@ -226,13 +228,15 @@ function Load()
 	{
 		console.log("Supported WebGL 2 Extensions:");
 		extensions.forEach((extension) => { console.log(`- ${extension}`); } );
-		g_gl_ext.WEBGL_multi_draw = g_gl.getExtension("WEBGL_multi_draw");
-		console.log("WEBGL_multi_draw: ", g_gl_ext.WEBGL_multi_draw);
+		console.log("");
 	} 
 	else 
 	{
 		console.log("No WebGL 2 extensions are supported.");
 	}
+	g_gl_ext.WEBGL_multi_draw = g_gl.getExtension("WEBGL_multi_draw");
+	console.log("WEBGL_multi_draw: ", g_gl_ext.WEBGL_multi_draw);
+	
 	g_gl.clearColor(0.0, 0.0, 0.0, 0.0);
     g_gl.clearDepth(1.0);
     g_gl.enable(g_gl.DEPTH_TEST);
@@ -336,6 +340,8 @@ function Load()
 			(g_load.texture_png_loaded == g_load.texture_png_count) && 
 			(g_load.shader_js_loaded == g_load.shader_js_count);
 	}
+	
+	console.log("Load Complete");
 }
 function Render_Loop()
 {
