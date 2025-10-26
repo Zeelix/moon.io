@@ -244,6 +244,12 @@ function Load()
 	g_gl.enable(g_gl.CULL_FACE);
 	g_gl.cullFace(g_gl.BACK);
 	
+	let i = 0;
+	while (i != 10000000)
+	{
+		i++;
+	}
+	
 	// GPU Thread Broker
 	let all_assets_loaded = false;
 	while(!all_assets_loaded)
