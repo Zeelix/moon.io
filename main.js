@@ -189,7 +189,7 @@ function Load()
 		console.log('Could not load image');
 	};
 	g_assets.diffuse_png_1.src = './diffuse_1.png';
-	//
+	//  
 	//// Load Assets Async
 	//let sm_asset_1_downloaded_status = 0;
 	//let sm_asset_1_promise = import('./static_mesh_1.js').then(module => 
@@ -358,10 +358,10 @@ function Load()
 	//}
 	//
 	
-	while(g_load.texture_png_downloaded != g_load.texture_png_count)
-	{
-		console.log('Loading PNG...');
-	}
+	//while(g_load.texture_png_downloaded != g_load.texture_png_count)
+	//{
+	//	console.log('Loading PNG...');
+	//}
 	
 	console.log('Load Complete');
 }
