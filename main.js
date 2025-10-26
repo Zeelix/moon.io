@@ -1,6 +1,7 @@
 // IMPORTS
 import { e_sm_vs_code, e_sm_fs_code } from './shaders.js'
 import { e_asset_sm_cube_vertices, e_asset_sm_cube_indices, e_asset_sm_moon_vertices, e_asset_sm_moon_indices } from './assets.js'
+//import { e_asset_sm_debug_camera_vertices, e_asset_sm_debug_camera_indices } from './assets.js'
 
 // HTML elements
 const html_fps = document.querySelector("#html_fps");
@@ -29,8 +30,19 @@ var g_gpu = {
 		uniform_sampler_diffuse: -1,
 		vbo: -1,
 		ebo: -1,
+		
 		vertex_count: 0,
-		element_count: 0
+		element_count: 0,
+		asset_vram_data: {
+			moon_base_vertex: -1,
+			moon_element_offset: -1,
+			
+			debug_camera_base_vertex: -1,
+			debug_element_offset: -1,
+			
+			cube_base_vertex: -1,
+			cube_element_offset: -1,
+		}
 	}
 };
 var g_gl_ext = {
