@@ -174,13 +174,17 @@ function Load()
 	g_load.texture_png_loaded = 0;
 	g_load.shader_js_compiled = 0;
 	
-	var hi = true;
+	var hi = false;
+	
 	// Load Textures Async
-	//g_assets.diffuse_png_1 = new Image();
-	//g_assets.diffuse_png_1.onload = () => {
-	//	hi = 1;
-	//};
-	//g_assets.diffuse_png_1.src = 'diffuse_1.png';
+	g_assets.diffuse_png_1 = new Image();
+	g_assets.diffuse_png_1.onload = () => {
+		hi = true;
+	};
+	g_assets.diffuse_png_1.onerror = () => {
+		hi = true;
+	};
+	g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
 	//  
 	//// Load Assets Async
@@ -351,9 +355,18 @@ function Load()
 	//}
 	//
 	
-	while(!hi)
+	var counter = 0;
+	while(((!hi) || (counter > 1000)))
 	{
+		counter++;
+		
+		
 		console.log('Loading PNG...');
+	}
+	
+	if(counter >1000)
+	{
+		console.log('timeout');
 	}
 	
 	console.log('Load Complete');
