@@ -398,8 +398,8 @@ function Game_Update_And_Render(t_delta_t)
 		
 		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0], g_zp_vec3);
 		mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1], g_xp_vec3);
-		g_player_actor.pos[0] = 0.0;
-		g_player_actor.pos[1] = 0.0;
+		//g_player_actor.pos[0] = 0.0;
+		//g_player_actor.pos[1] = 0.0;
 	}
 	//mat4.mul(moon_model, rotation, g_player_actor.pos[1]);
 	//moon_model = mat4.copy(g_moon_local.rotation);
