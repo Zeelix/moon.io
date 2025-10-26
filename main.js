@@ -297,6 +297,7 @@ function Load()
 			g_gpu.static_mesh.vbo = g_gl.createBuffer();
 			g_gpu.static_mesh.ebo = g_gl.createBuffer();
 			
+			console.log("Loaded Shader1 JS");
 			g_load.shader_js_loaded++;
 		}
 		
@@ -321,6 +322,7 @@ function Load()
 			g_gl.bufferData(g_gl.ARRAY_BUFFER, g_assets.static_mesh_js_1.e_pooled_vertices, g_gl.STATIC_DRAW);
 			g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, g_assets.static_mesh_js_1.e_pooled_indices, g_gl.STATIC_DRAW);
 			
+			console.log("Loaded StaticMesh1 JS");
 			g_load.static_mesh_js_loaded++;
 		}
 		
@@ -334,6 +336,7 @@ function Load()
 			g_gl.activeTexture(g_gl.TEXTURE0);
 			g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
 			
+			console.log("Loaded Diffuse PNG");
 			g_load.texture_png_loaded++;
 		}
 		
