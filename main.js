@@ -250,85 +250,86 @@ function Load()
 	g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
 	// Load Assets Async
-	g_assets.shaders_js_1 = import('./static_mesh_1.js').then(module => 
+	const shaders_js_1_promise = import('./static_mesh_1.js');
+	shaders_js_1_promise.then(module => 
 	{
 		console.log('Downloaded static_mesh_1.js');
-		g_load.program_js_downloaded++;
+		//g_load.program_js_downloaded++;
 		
 		module.Init();
-		
-		console.log('static_mesh_1 Compile Start');
-		
-		// Compile Shaders
-		const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, module.vs_code);
-		const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, module.fs_code);
-		g_gpu.static_mesh.program_id = g_gl.createProgram();
-		g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
-		g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
-		g_gl.linkProgram(g_gpu.static_mesh.program_id);
-		if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) 
-		{
-			alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
-			return null;
-		}
-		g_gl.useProgram(g_gpu.static_mesh.program_id);
-	
-		console.log('static_mesh_1 Attrib Start');
-	
-		// Attributes
-		g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
-		g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
-		g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
-		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
-		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
-		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
-		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
-		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
-		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
-		
-		console.log('static_mesh_1 Uniform Start');
-		
-		// Uniforms
-		g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
-		g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
-		g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
-		g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
-		g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
-		g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
-		g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
-		g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
-		
-		g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
-		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
-		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
-		g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
-		g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
-		
-		console.log('static_mesh_1 Buffer Start');
-		
-		// Buffers
-		g_gpu.static_mesh.vbo = g_gl.createBuffer();
-		g_gpu.static_mesh.ebo = g_gl.createBuffer();
-		g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
-		g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
-		
-		if(!g_gl_ext.WEBGL_multi_draw)
-		{
-			// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
-			alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
-			return null;
-		}
-		
-		console.log('static_mesh_1 BufferData Start');
-		
-		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices_length;
-		g_gpu.static_mesh.element_count = module.e_pooled_indices_length;
-		
-		g_gl.bufferData(g_gl.ARRAY_BUFFER, module.e_pooled_vertices, g_gl.STATIC_DRAW);
-		g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, module.e_pooled_indices, g_gl.STATIC_DRAW);
-		
-		console.log('Compiled Static-Mesh');
-		g_load.program_js_compiled++;
+		//
+		//console.log('static_mesh_1 Compile Start');
+		//
+		//// Compile Shaders
+		//const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, module.vs_code);
+		//const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, module.fs_code);
+		//g_gpu.static_mesh.program_id = g_gl.createProgram();
+		//g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
+		//g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
+		//g_gl.linkProgram(g_gpu.static_mesh.program_id);
+		//if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) 
+		//{
+		//	alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
+		//	return null;
+		//}
+		//g_gl.useProgram(g_gpu.static_mesh.program_id);
+		//
+		//console.log('static_mesh_1 Attrib Start');
+		//
+		//// Attributes
+		//g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
+		//g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
+		//g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
+		//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
+		//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
+		//g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
+		//g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
+		//g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
+		//g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
+		//
+		//console.log('static_mesh_1 Uniform Start');
+		//
+		//// Uniforms
+		//g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
+		//g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
+		//g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
+		//g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
+		//g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
+		//g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
+		//g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
+		//g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
+		//
+		//g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
+		//g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
+		//g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
+		//g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
+		//g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
+		//
+		//console.log('static_mesh_1 Buffer Start');
+		//
+		//// Buffers
+		//g_gpu.static_mesh.vbo = g_gl.createBuffer();
+		//g_gpu.static_mesh.ebo = g_gl.createBuffer();
+		//g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
+		//g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
+		//
+		//if(!g_gl_ext.WEBGL_multi_draw)
+		//{
+		//	// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
+		//	alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
+		//	return null;
+		//}
+		//
+		//console.log('static_mesh_1 BufferData Start');
+		//
+		//g_gpu.static_mesh.vertex_count = module.e_pooled_vertices_length;
+		//g_gpu.static_mesh.element_count = module.e_pooled_indices_length;
+		//
+		//g_gl.bufferData(g_gl.ARRAY_BUFFER, module.e_pooled_vertices, g_gl.STATIC_DRAW);
+		//g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, module.e_pooled_indices, g_gl.STATIC_DRAW);
+		//
+		//console.log('Compiled Static-Mesh');
+		//g_load.program_js_compiled++;
 		
     }).catch(() => 
 	{
