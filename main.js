@@ -49,9 +49,11 @@ const g_load = {
 	
 	load_complete: false,
 	
-	static_mesh_js_loaded: 0,
+	texture_png_downloaded: 0,
+	program_js_downloaded: 0,
+	
 	texture_png_loaded: 0,
-	shader_js_compiled: 0,
+	program_js_compiled: 0,
 };
 const g_assets = {
 	static_mesh_js_1: null,
@@ -177,17 +179,51 @@ function Load_Shader(t_shader_type, t_shader_code)
     }
     return shader;
 }
-
-// Example usage:
-async function myAsyncOperation() {
-  console.log("Starting async operation...");
-  await new Promise(resolve => setTimeout(resolve, 4000)); // Simulate a long-running task
-  console.log("Async operation finished.");
-  return "Data from async operation";
-}
+const Load_Shaders = () => 
+{
+	
+};
 function Load() 
 {
 	console.log('Load Start');
+	
+	// Callbacks
+	document.addEventListener('keydown', CB_Key_Pressed);
+	document.addEventListener('keyup', CB_Key_Released);
+	document.addEventListener('wheel', CB_Mouse_Wheel);
+	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
+	html_canvas.addEventListener('click', CB_Mouse_Click);
+	
+	// GL Render-Context
+    g_gl = html_canvas.getContext('webgl');
+    if (!g_gl) {
+        alert('Unable to initialize WebGL. Your browser or machine may not support it.');
+        return;
+    }
+	const extensions = g_gl.getSupportedExtensions();
+	if (extensions && extensions.length > 0) 
+	{
+		console.log("Supported WebGL 2 Extensions:");
+		extensions.forEach((extension) => { console.log(`- ${extension}`); } );
+		console.log("");
+	} 
+	else 
+	{
+		console.log("No WebGL 2 extensions are supported.");
+	}
+	g_gl_ext.WEBGL_multi_draw = g_gl.getExtension("WEBGL_multi_draw");
+	console.log("WEBGL_multi_draw: ", g_gl_ext.WEBGL_multi_draw);
+	
+	g_gl.clearColor(0.0, 0.0, 0.0, 0.0);
+    g_gl.clearDepth(1.0);
+    g_gl.enable(g_gl.DEPTH_TEST);
+    g_gl.depthFunc(g_gl.LEQUAL);
+	g_gl.enable(g_gl.CULL_FACE);
+	g_gl.cullFace(g_gl.BACK);
+	
+	g_load.static_mesh_js_downloaded = 0;
+	g_load.texture_png_downloaded = 0;
+	g_load.shader_js_downloaded = 0;
 	
 	g_load.static_mesh_js_loaded = 0;
 	g_load.texture_png_loaded = 0;
@@ -195,184 +231,99 @@ function Load()
 	
 	// Load Textures Async
 	g_assets.diffuse_png_1 = new Image();
-	g_assets.diffuse_png_1.onload = () => {
-		console.log('LOADED IMAGE');
-		g_load.texture_png_loaded++;
-	};
-	g_assets.diffuse_png_1.onerror = () => {
-		console.log('ERROR LOADING IMAGE');
+	g_assets.diffuse_png_1.onload = () => 
+	{
+		console.log("Downloaded diffuse_1.png");
+		g_load.texture_png_downloaded++;
+		
+		g_gpu.static_mesh.tex_diffuse = g_gl.createTexture();
+		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
+		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, g_assets.diffuse_png_1);
+		g_gl.generateMipmap(g_gl.TEXTURE_2D);
+		g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
+		g_gl.activeTexture(g_gl.TEXTURE0);
+		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
+		
+		console.log("Loaded diffuse_1.png");
 		g_load.texture_png_loaded++;
 	};
 	g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
-	//  
-	//// Load Assets Async
-	//let sm_asset_1_downloaded_status = 0;
-	//let sm_asset_1_promise = import('./static_mesh_1.js').then(module => 
-	//{
-	//	module.Init();
-	//	sm_asset_1_downloaded_status = 1;
-	//	g_load.static_mesh_js_downloaded++;
-    //}).catch(() => 
-	//{
-	//	sm_asset_1_downloaded_status = 2;
-	//});
-	//
-	//// Load Shaders Async
-	//let shaders_1_downloaded_status = 0;
-	//let shaders_1_promise = import('./shaders_1.js').then(() => 
-	//{
-	//	shaders_1_downloaded_status = 1;
-	//	g_load.shader_js_downloaded++;
-    //}).catch(() => 
-	//{
-	//	shaders_1_downloaded_status = 2;
-	//});
-	//
-	//// Callbacks
-	//document.addEventListener('keydown', CB_Key_Pressed);
-	//document.addEventListener('keyup', CB_Key_Released);
-	//document.addEventListener('wheel', CB_Mouse_Wheel);
-	//html_canvas.addEventListener('mousemove', CB_Mouse_Move);
-	//html_canvas.addEventListener('click', CB_Mouse_Click);
-	//
-	//// GL Render-Context
-    //g_gl = html_canvas.getContext('webgl');
-    //if (!g_gl) {
-    //    alert('Unable to initialize WebGL. Your browser or machine may not support it.');
-    //    return;
-    //}
-	//const extensions = g_gl.getSupportedExtensions();
-	//if (extensions && extensions.length > 0) 
-	//{
-	//	console.log("Supported WebGL 2 Extensions:");
-	//	extensions.forEach((extension) => { console.log(`- ${extension}`); } );
-	//	console.log("");
-	//} 
-	//else 
-	//{
-	//	console.log("No WebGL 2 extensions are supported.");
-	//}
-	//g_gl_ext.WEBGL_multi_draw = g_gl.getExtension("WEBGL_multi_draw");
-	//console.log("WEBGL_multi_draw: ", g_gl_ext.WEBGL_multi_draw);
-	//
-	//g_gl.clearColor(0.0, 0.0, 0.0, 0.0);
-    //g_gl.clearDepth(1.0);
-    //g_gl.enable(g_gl.DEPTH_TEST);
-    //g_gl.depthFunc(g_gl.LEQUAL);
-	//g_gl.enable(g_gl.CULL_FACE);
-	//g_gl.cullFace(g_gl.BACK);
-	//
-	//let i = 0;
-	//while (i != 100)
-	//{
-	//	i++;
-	//}
+	// Load Assets Async
+	g_assets.shaders_js_1 = import('./static_mesh_1.js').then(module => 
+	{
+		console.log('Downloaded static_mesh_1.png');
+		g_load.program_js_downloaded++;
+		
+		module.Init();
+		
+		// Compile Shaders
+		const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, module.vs_code);
+		const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, module.fs_code);
+		g_gpu.static_mesh.program_id = g_gl.createProgram();
+		g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
+		g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
+		g_gl.linkProgram(g_gpu.static_mesh.program_id);
+		if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) 
+		{
+			alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
+			return null;
+		}
+		g_gl.useProgram(g_gpu.static_mesh.program_id);
 	
-	// GPU Thread Broker
-	//let all_assets_loaded = false;
-	//while(!all_assets_loaded)
-	//{
-	//	if(shaders_1_downloaded_status)
-	//	{
-	//		g_assets.shaders_js_1 = shaders_1_promise;
-	//		
-	//		// Compile Shaders
-	//		const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, g_assets.shaders_js_1.vs_code);
-	//		const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, g_assets.shaders_js_1.fs_code);
-	//		g_gpu.static_mesh.program_id = g_gl.createProgram();
-	//		g_gl.attachShader(g_gpu.static_mesh.program_id, sm_vs);
-	//		g_gl.attachShader(g_gpu.static_mesh.program_id, sm_fs);
-	//		g_gl.linkProgram(g_gpu.static_mesh.program_id);
-	//		if (!g_gl.getProgramParameter(g_gpu.static_mesh.program_id, g_gl.LINK_STATUS)) 
-	//		{
-	//			alert('Unable to initialize the shader program: ' + g_gl.getProgramInfoLog(g_gpu.static_mesh.program_id));
-	//			return null;
-	//		}
-	//		g_gl.useProgram(g_gpu.static_mesh.program_id);
-	//
-	//		// Attributes
-	//		g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
-	//		g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
-	//		g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
-	//		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
-	//		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
-	//		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
-	//		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
-	//		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
-	//		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
-	//		
-	//		// Uniforms
-	//		g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
-	//		g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
-	//		g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
-	//		g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
-	//		g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
-	//		g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
-	//		g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
-	//		g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
-	//		
-	//		g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
-	//		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
-	//		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
-	//		g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
-	//		g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
-	//		
-	//		// Buffers
-	//		g_gpu.static_mesh.vbo = g_gl.createBuffer();
-	//		g_gpu.static_mesh.ebo = g_gl.createBuffer();
-	//		
-	//		console.log("Loaded Shader1 JS");
-	//		g_load.shader_js_loaded++;
-	//	}
-	//	
-	//	if(sm_asset_1_downloaded_status && shaders_1_downloaded_status)
-	//	{
-	//		g_assets.static_mesh_js_1 = sm_asset_1_promise;
-	//		
-	//		if(!g_gl_ext.WEBGL_multi_draw)
-	//		{
-	//			// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
-	//			alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
-	//			return null;
-	//		}
-	//		
-	//		g_gl.useProgram(g_gpu.static_mesh.program_id);
-	//		g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
-	//		g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
-	//		
-	//		g_gpu.static_mesh.vertex_count = g_assets.static_mesh_js_1.e_pooled_vertices_length;
-	//		g_gpu.static_mesh.element_count = g_assets.static_mesh_js_1.e_pooled_indices_length;
-	//		
-	//		g_gl.bufferData(g_gl.ARRAY_BUFFER, g_assets.static_mesh_js_1.e_pooled_vertices, g_gl.STATIC_DRAW);
-	//		g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, g_assets.static_mesh_js_1.e_pooled_indices, g_gl.STATIC_DRAW);
-	//		
-	//		console.log("Loaded StaticMesh1 JS");
-	//		g_load.static_mesh_js_loaded++;
-	//	}
-	//	
-	//	if(g_assets.diffuse_png_1.complete)
-	//	{
-	//		g_gpu.static_mesh.tex_diffuse = g_gl.createTexture();
-	//		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
-	//		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, g_assets.diffuse_png_1);
-	//		g_gl.generateMipmap(g_gl.TEXTURE_2D);
-	//		g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
-	//		g_gl.activeTexture(g_gl.TEXTURE0);
-	//		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
-	//		
-	//		console.log("Loaded Diffuse PNG");
-	//		g_load.texture_png_loaded++;
-	//	}
-	//	
-	//	all_assets_loaded = 
-	//		(g_load.static_mesh_js_loaded == g_load.static_mesh_js_count) && 
-	//		(g_load.texture_png_loaded == g_load.texture_png_count) && 
-	//		(g_load.shader_js_loaded == g_load.shader_js_count);
-	//		
-	//	all_assets_loaded = true;
-	//}
-	//
+		// Attributes
+		g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
+		g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
+		g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
+		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_pos, 3, g_gl.FLOAT, false, sm_vbo_stride, 0);
+		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_tex, 2, g_gl.FLOAT, false, sm_vbo_stride, 3*4);
+		g_gl.vertexAttribPointer(g_gpu.static_mesh.attrib_nrm, 3, g_gl.FLOAT, false, sm_vbo_stride, 5*4);
+		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
+		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
+		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
+		
+		// Uniforms
+		g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
+		g_gpu.static_mesh.uniform_mvi = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvi');
+		g_gpu.static_mesh.uniform_toon_num_bands = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_num_bands');
+		g_gpu.static_mesh.uniform_toon_stride = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_toon_stride');
+		g_gpu.static_mesh.uniform_object_color = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_object_color');
+		g_gpu.static_mesh.uniform_light_dir = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_dir');
+		g_gpu.static_mesh.uniform_light_amb = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_light_amb');
+		g_gpu.static_mesh.uniform_sampler_diffuse = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_diffuse');
+		
+		g_gl.uniform3f(g_gpu.static_mesh.uniform_object_color, 0.0, 0.635, 1.0);
+		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_num_bands, 4.0);
+		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
+		g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
+		g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
+		
+		// Buffers
+		g_gpu.static_mesh.vbo = g_gl.createBuffer();
+		g_gpu.static_mesh.ebo = g_gl.createBuffer();
+		g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
+		g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
+		
+		if(!g_gl_ext.WEBGL_multi_draw)
+		{
+			// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
+			alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
+			return null;
+		}
+		
+		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices_length;
+		g_gpu.static_mesh.element_count = module.e_pooled_indices_length;
+		
+		g_gl.bufferData(g_gl.ARRAY_BUFFER, module.e_pooled_vertices, g_gl.STATIC_DRAW);
+		g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, module.e_pooled_indices, g_gl.STATIC_DRAW);
+		
+		console.log('Compiled Static-Mesh');
+		g_load.program_js_compiled++;
+		
+    }).catch(() => 
+	{
+		
+	});
 }
 //function Render_Loop()
 //{
