@@ -276,6 +276,12 @@ function Load()
 		
 		console.log('static_mesh_1 Attrib Start');
 		
+		// Buffers
+		g_gpu.static_mesh.vbo = g_gl.createBuffer();
+		g_gpu.static_mesh.ebo = g_gl.createBuffer();
+		g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
+		g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
+		
 		// Attributes
 		const sm_vbo_stride = 8 * 4; // 8 floats
 		
@@ -309,12 +315,6 @@ function Load()
 		
 		console.log('static_mesh_1 Buffer Start');
 		
-		// Buffers
-		g_gpu.static_mesh.vbo = g_gl.createBuffer();
-		g_gpu.static_mesh.ebo = g_gl.createBuffer();
-		g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
-		g_gl.bindBuffer(g_gl.ELEMENT_ARRAY_BUFFER, g_gpu.static_mesh.ebo);
-		
 		if(!g_gl_ext.WEBGL_multi_draw)
 		{
 			// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
@@ -326,11 +326,11 @@ function Load()
 		
 		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices_length;
 		g_gpu.static_mesh.element_count = module.e_pooled_indices_length;
-		
 		g_gl.bufferData(g_gl.ARRAY_BUFFER, module.e_pooled_vertices, g_gl.STATIC_DRAW);
 		g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, module.e_pooled_indices, g_gl.STATIC_DRAW);
 		
 		console.log('Compiled Static-Mesh');
+		
 		g_load.program_js_compiled++;
 		
     }).catch((error) => 
