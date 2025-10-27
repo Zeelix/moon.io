@@ -1,5 +1,5 @@
 export var e_pooled_vertices_length = 0;
-export var e_pooled_vertices = [];
+export var e_pooled_vertices = null;
 //export var e_pooled_indices_length = 0;
 //export var e_pooled_indices = [];
 //export var e_models = {
@@ -40,7 +40,7 @@ export function Init()
 	e_pooled_vertices_length = cube_vertices_raw.length + moon_smooth_vertices_raw.length + moon_flat_vertices_raw;
 	e_pooled_vertices = new Float32Array(e_pooled_vertices_length);
 	//
-	const vertices_offset = 0;
+	var vertices_offset = 0;
 	//
 	e_pooled_vertices.set(cube_vertices_raw, vertices_offset);
 	//e_models.vertex_offsets[0] = vertices_offset;
