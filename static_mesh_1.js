@@ -52,7 +52,7 @@ export function Init()
 	e_pooled_indices_length = cube_indices_raw.length + moon_smooth_indices_raw.length + moon_flat_indices_raw.length;
 	e_pooled_indices = new Uint16Array(e_pooled_indices_length);
 	
-	const indices_offset = 0;
+	var indices_offset = 0;
 	
 	e_pooled_indices.set(cube_indices_raw, indices_offset);
 	e_models.index_offsets[0] = indices_offset;
