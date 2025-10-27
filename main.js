@@ -331,9 +331,9 @@ function Load()
 		//console.log('Compiled Static-Mesh');
 		//g_load.program_js_compiled++;
 		
-    }).catch(() => 
+    }).catch((error) => 
 	{
-		
+		console.log('caught error:', error);
 	});
 }
 //function Render_Loop()
