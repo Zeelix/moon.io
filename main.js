@@ -1,10 +1,6 @@
 const html_fps = document.querySelector("#html_fps");
 const html_canvas = document.querySelector('#html_canvas');
 
-const Clamp = (value, min, max) => {
-  return Math.min(Math.max(value, min), max);
-};
-
 // GLOBALS
 const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
 const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
@@ -50,6 +46,8 @@ const g_load = {
 	static_mesh_js_count: 1,
 	texture_png_count: 1,
 	shader_js_count: 1,
+	
+	load_complete: false,
 	
 	static_mesh_js_loaded: 0,
 	texture_png_loaded: 0,
@@ -116,6 +114,19 @@ var g_player_camera = {
 };
 
 // Functions
+const Clamp = (t_value, t_min, t_max) => 
+{
+  return Math.min(Math.max(t_value, t_min), t_max);
+};
+function Timeout(t_ms, t_message = 'Operation timed out') 
+{
+  return new Promise((_, reject) => { setTimeout(() => { reject(new Error(t_message)); }, t_ms); });
+}
+async function Async_With_Timeout(t_func, t_ms)
+{
+  try { const result = await Promise.race([ t_func(), Timeout(t_ms) ]); return result; } 
+  catch (error) { throw error; }
+}
 window.requestAnimFrame = ( function() {
     return  window.requestAnimationFrame || 
             window.webkitRequestAnimationFrame ||  
@@ -166,6 +177,14 @@ function Load_Shader(t_shader_type, t_shader_code)
     }
     return shader;
 }
+
+// Example usage:
+async function myAsyncOperation() {
+  console.log("Starting async operation...");
+  await new Promise(resolve => setTimeout(resolve, 4000)); // Simulate a long-running task
+  console.log("Async operation finished.");
+  return "Data from async operation";
+}
 function Load() 
 {
 	console.log('Load Start');
@@ -174,17 +193,15 @@ function Load()
 	g_load.texture_png_loaded = 0;
 	g_load.shader_js_compiled = 0;
 	
-	var hi = false;
-	
 	// Load Textures Async
 	g_assets.diffuse_png_1 = new Image();
 	g_assets.diffuse_png_1.onload = () => {
 		console.log('LOADED IMAGE');
-		hi = true;
+		g_load.texture_png_loaded++;
 	};
 	g_assets.diffuse_png_1.onerror = () => {
 		console.log('ERROR LOADING IMAGE');
-		hi = true;
+		g_load.texture_png_loaded++;
 	};
 	g_assets.diffuse_png_1.src = 'diffuse_1.png';
 	
@@ -356,22 +373,6 @@ function Load()
 	//	all_assets_loaded = true;
 	//}
 	//
-	
-	var counter = 0;
-	while(((!hi) && (counter < 10000)))
-	{
-		counter++;
-		
-		
-		console.log('Loading PNG...');
-	}
-	
-	if(counter >= 10000)
-	{
-		console.log('timeout');
-	}
-	
-	console.log('Load Complete');
 }
 //function Render_Loop()
 //{
