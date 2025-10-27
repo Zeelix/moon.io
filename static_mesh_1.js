@@ -37,7 +37,7 @@ export function Init()
 	console.log('static_mesh_1.js -> Init Start');
 	
 	// Vertices
-	e_pooled_vertices_length = cube_vertices_raw.length + moon_smooth_vertices_raw.length + moon_flat_vertices_raw;
+	e_pooled_vertices_length = cube_vertices_raw.length + moon_smooth_vertices_raw.length + moon_flat_vertices_raw.length;
 	e_pooled_vertices = new Float32Array(e_pooled_vertices_length);
 	//
 	var vertices_offset = 0;
