@@ -252,10 +252,12 @@ function Load()
 	// Load Assets Async
 	g_assets.shaders_js_1 = import('./static_mesh_1.js').then(module => 
 	{
-		console.log('Downloaded static_mesh_1.png');
+		console.log('Downloaded static_mesh_1.js');
 		g_load.program_js_downloaded++;
 		
 		module.Init();
+		
+		console.log('static_mesh_1 Compile Start');
 		
 		// Compile Shaders
 		const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, module.vs_code);
@@ -271,6 +273,8 @@ function Load()
 		}
 		g_gl.useProgram(g_gpu.static_mesh.program_id);
 	
+		console.log('static_mesh_1 Attrib Start');
+	
 		// Attributes
 		g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
 		g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
@@ -281,6 +285,8 @@ function Load()
 		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_pos);
 		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_tex);
 		g_gl.enableVertexAttribArray(g_gpu.static_mesh.attrib_nrm);
+		
+		console.log('static_mesh_1 Uniform Start');
 		
 		// Uniforms
 		g_gpu.static_mesh.uniform_mvp = g_gl.getUniformLocation(g_gpu.static_mesh.program_id, 'u_mvp');
@@ -298,6 +304,8 @@ function Load()
 		g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
 		g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
 		
+		console.log('static_mesh_1 Buffer Start');
+		
 		// Buffers
 		g_gpu.static_mesh.vbo = g_gl.createBuffer();
 		g_gpu.static_mesh.ebo = g_gl.createBuffer();
@@ -310,6 +318,8 @@ function Load()
 			alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
 			return null;
 		}
+		
+		console.log('static_mesh_1 BufferData Start');
 		
 		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices_length;
 		g_gpu.static_mesh.element_count = module.e_pooled_indices_length;
