@@ -179,7 +179,7 @@ function Load_Shader(t_shader_type, t_shader_code)
 }
 const Check_Game_Is_Loaded = () => 
 {
-	g_load.load_complete = 
+	g_load.complete = 
 	(g_load.texture_png_loaded == g_load.texture_png_count) &&
 	(g_load.program_js_compiled == g_load.program_js_count);
 };
