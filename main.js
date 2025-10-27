@@ -277,6 +277,8 @@ function Load()
 		console.log('static_mesh_1 Attrib Start');
 		
 		// Attributes
+		const sm_vbo_stride = 8 * 4; // 8 floats
+		
 		g_gpu.static_mesh.attrib_pos = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_pos');
 		g_gpu.static_mesh.attrib_tex = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_tex');
 		g_gpu.static_mesh.attrib_nrm = g_gl.getAttribLocation(g_gpu.static_mesh.program_id, 'in_nrm');
