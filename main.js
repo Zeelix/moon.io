@@ -506,7 +506,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	
 	// Draw cube
 	//g_gl.drawElements(g_gl.TRIANGLES, 36, g_gl.UNSIGNED_SHORT, 0);
-	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[0], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[0]);
+	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
 }
 
 Load();
