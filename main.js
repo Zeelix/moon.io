@@ -258,8 +258,6 @@ function Load()
 		console.log('Downloaded static_mesh_1.js');
 		g_load.program_js_downloaded++;
 		
-		module.Init();
-		
 		// Compile Shaders
 		const sm_vs = Load_Shader(g_gl.VERTEX_SHADER, module.vs_code);
 		const sm_fs = Load_Shader(g_gl.FRAGMENT_SHADER, module.fs_code);
@@ -316,14 +314,15 @@ function Load()
 			return null;
 		}
 		
-		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices_length;
-		g_gpu.static_mesh.element_count = module.e_pooled_indices_length;
+		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices.length;
+		g_gpu.static_mesh.element_count = module.e_pooled_indices.length;
 		g_gl.bufferData(g_gl.ARRAY_BUFFER, module.e_pooled_vertices, g_gl.STATIC_DRAW);
 		g_gl.bufferData(g_gl.ELEMENT_ARRAY_BUFFER, module.e_pooled_indices, g_gl.STATIC_DRAW);
 		
 		console.log('Compiled static_mesh_1.js');
 		g_load.program_js_compiled++;
 		
+		g_assets.static_mesh_js_1 = module;
 		Check_Game_Is_Loaded();
 		
     }).catch((error) => 
@@ -505,7 +504,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, moon_mvi);
 	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
 	
-	g_gl.drawElements(g_gl.TRIANGLES, g_gpu.static_mesh.element_count, g_gl.UNSIGNED_SHORT, 0);
+	// Draw cube
+	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[0], g_gl.UNSIGNED_SHORT, g_assets.static_mesh_js_1.e_pooled_index_offsets[0]);
 }
 
 Load();
