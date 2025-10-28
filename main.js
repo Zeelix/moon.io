@@ -240,7 +240,7 @@ function Load()
 		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
 		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, g_assets.diffuse_png_1);
 		g_gl.generateMipmap(g_gl.TEXTURE_2D);
-		g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
+		//g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 		g_gl.activeTexture(g_gl.TEXTURE0);
 		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
 		
@@ -505,7 +505,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
 	
 	// Draw cube
-	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
+	g_gl.drawElements(g_gl.TRIANGLES, 36, g_gl.UNSIGNED_SHORT, 0);
+	//g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
 }
 
 Load();
