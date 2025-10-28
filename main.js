@@ -238,9 +238,9 @@ function Load()
 		
 		g_gpu.static_mesh.tex_diffuse = g_gl.createTexture();
 		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
+		g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 		g_gl.texImage2D(g_gl.TEXTURE_2D, 0, g_gl.RGBA, g_gl.RGBA, g_gl.UNSIGNED_BYTE, g_assets.diffuse_png_1);
 		g_gl.generateMipmap(g_gl.TEXTURE_2D);
-		//g_gl.pixelStorei(g_gl.UNPACK_FLIP_Y_WEBGL, true);
 		g_gl.activeTexture(g_gl.TEXTURE0);
 		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
 		
