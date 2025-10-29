@@ -85,7 +85,8 @@ var g_player_actor = {
 	velocity: vec2.fromValues(0.0, 0.0),
 	accel: vec2.fromValues(0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
-	speed: 0.5
+	speed: 0.5,
+	friction: 1.0
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
@@ -428,6 +429,20 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		vec2.scale(user_input_vec2, user_input_vec2, g_player_actor.speed * t_delta_t);
 	}
 	
+	var delta_accel = vec2.create();
+	vec2.scale(delta_accel, g_player.velocity, -g_player.friction); 
+	vec2.add(g_player_actor.accel, g_player_actor.accel, delta_accel);
+	
+	var delta_velocity_from_accel = vec2.create();
+	vec2.scale(delta_velocity_from_accel, g_player_actor.accel, t_delta_t);
+	var delta_velocity_from_impulse = vec2.create();
+	vec2.scale(delta_velocity_from_impulse, user_input_vec2, g_player_actor.speed * t_delta_t);
+	vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity);
+	
+	var delta_pos = vec2.create();
+	vec2.scale(delta_pos, g_player_actor.velocity, t_delta_t);
+	vec2.add(g_player_actor.pos, g_player_actor.pos, delta_pos);
+	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 		
@@ -469,10 +484,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, moon_mvi);
 	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
 	
-	// Draw cube
-	//g_gl.drawElements(g_gl.TRIANGLES, 36, g_gl.UNSIGNED_SHORT, 0);
 	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
-	
 	
 	var actor_mvp = mat4.create();
 	var actor_mv = mat4.create();
