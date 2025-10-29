@@ -498,7 +498,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var non_op_quat = quat.create();
 	const actor_mvi = mat3.create();
 	
-	mat4.fromRotationTranslationScale(actor_model, g_moon_local.non_op_quat, actor_translate, actor_scale);
+	mat4.fromRotationTranslationScale(actor_model, non_op_quat, actor_translate, actor_scale);
 	mat4.mul(actor_mvp, g_player_camera.view_proj, actor_model);
 	mat4.mul(actor_mv, g_player_camera.view, actor_model);
 	mat3.normalFromMat4(actor_mvi, actor_mv);
