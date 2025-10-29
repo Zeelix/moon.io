@@ -503,7 +503,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(g_player_actor.pos, [1,0]));
 	}
 	
-	mat4.fromRotationTranslationScale(actor_model, non_op_quat, actor_translate, actor_scale);
+	mat4.fromRotationTranslationScale(actor_model, actor_quat, actor_translate, actor_scale);
 	mat4.mul(actor_mvp, g_player_camera.view_proj, actor_model);
 	mat4.mul(actor_mv, g_player_camera.view, actor_model);
 	mat3.normalFromMat4(actor_mvi, actor_mv);
