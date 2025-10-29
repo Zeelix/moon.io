@@ -72,7 +72,7 @@ var g_user_mouse = {
 } 
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	radius: 5.0,
+	radius: 10.0,
 	rotation_mat4: mat4.create(),
 	rotation_quat: quat.create()
 };
@@ -433,8 +433,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 		
 	var moon_model = mat4.create();
-	var moon_scale = vec3.fromValues(5, 5, 5);
-	var moon_translate = vec3.fromValues(0, -5, 0);
+	var moon_scale = vec3.fromValues(g_moon_local.radius, g_moon_local.radius, g_moon_local.radius);
+	var moon_translate = vec3.fromValues(0, -g_moon_local.radius, 0);
 	
 	let temp_quat = quat.create();
 	quat.setAxisAngle(temp_quat, [1,0,0], g_player_actor.pos[1]);
