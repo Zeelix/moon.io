@@ -72,7 +72,7 @@ var g_user_mouse = {
 } 
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
-	radius: 10.0,
+	radius: 7.0,
 	rotation_mat4: mat4.create(),
 	rotation_quat: quat.create()
 };
