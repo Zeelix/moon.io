@@ -69,7 +69,7 @@ var g_user_mouse = {
 	y_movement_px: 0,
 	x_movement_n: 0.0,
 	y_movement_n: 0.0
-}
+} 
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
 	radius: 5.0,
@@ -93,7 +93,7 @@ var g_player_camera = {
 	actor_follow_theta: 0.0,
 	actor_focal_height: 0.0,
 	zoom_sensitivity: 0.002,
-	zoom_max: 100.0,
+	zoom_max: 80.0,
 	zoom_min: 0.8,
 	actor_follow_height_max: 1.0,
 	actor_follow_height_min: 0.0,
@@ -306,13 +306,6 @@ function Load()
 		g_gl.uniform1f(g_gpu.static_mesh.uniform_toon_stride, 0.10); 
 		g_gl.uniform1f(g_gpu.static_mesh.uniform_light_amb, 0.15);
 		g_gl.uniform1i(g_gpu.static_mesh.uniform_sampler_diffuse, 0);
-		
-		if(!g_gl_ext.WEBGL_multi_draw)
-		{
-			// Perform index compression on client's PC (Slow loading), extend indices from uint16 to uint32 if index-count is out-of-range
-			alert('WEBGL_multi_draw is not supported on this browser, need code for index asset compression (which will be added!)');
-			return null;
-		}
 		
 		g_gpu.static_mesh.vertex_count = module.e_pooled_vertices.length;
 		g_gpu.static_mesh.element_count = module.e_pooled_indices.length;
