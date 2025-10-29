@@ -455,7 +455,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(1, 1, 1);
 	var moon_translate = vec3.fromValues(0, -1, 0);
-	//mat4.translate(moon_model, moon_model, moon_translate);
 	
 	let temp_quat = quat.create();
 	quat.setAxisAngle(temp_quat, [1,0,0], g_player_actor.pos[1]);
@@ -478,14 +477,22 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	}
 	//mat4.mul(moon_model, rotation, g_player_actor.pos[1]);
 	//moon_model = mat4.copy(g_moon_local.rotation);
-	//mat4.scale(moon_model, moon_model, moon_scale);
+	//
 	
 	mat4.fromQuat(g_moon_local.rotation_mat4, g_moon_local.rotation_quat);
 	
 	var moon_mvp = mat4.create();
 	var moon_mv = mat4.create();
-	mat4.mul(moon_mvp, g_player_camera.view_proj, g_moon_local.rotation_mat4); // usually model 
-	mat4.mul(moon_mv, g_player_camera.view, g_moon_local.rotation_mat4); // usually model
+	
+	//mat4.scale(moon_model, moon_model, moon_scale);
+	//mat4.translate(moon_model, moon_model, moon_translate);
+	
+	mat4.fromRotationTranslationScale(moon_model, g_moon_local.rotation_quat, moon_translate, moon_scale);
+	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model); // usually model 
+	mat4.mul(moon_mv, g_player_camera.view, moon_model); // usually model
+	
+	//mat4.mul(moon_mvp, g_player_camera.view_proj, g_moon_local.rotation_mat4); // usually model 
+	//mat4.mul(moon_mv, g_player_camera.view, g_moon_local.rotation_mat4); // usually model
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
