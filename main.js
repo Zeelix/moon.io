@@ -89,7 +89,7 @@ var g_player_actor = {
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
 	actor_follow_distance: 5.0,
-	actor_follow_height: 0.0, // 0.2
+	actor_follow_height: 1.0, // 0.2
 	actor_follow_theta: 0.0,
 	actor_focal_height: 0.0,
 	zoom_sensitivity: 0.002,
