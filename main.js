@@ -383,7 +383,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	const sin_dist = Math.sin(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
-	g_player_camera.pos = vec3.fromValues(0.0, g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance/3.0);
+	g_player_camera.pos = vec3.fromValues(0.0, g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance/1.8);
 	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
 	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_zero_vec3, g_player_camera.global_up_u);
 	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
