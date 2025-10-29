@@ -458,9 +458,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		g_player_actor.pos[0] = 0.0;
 		g_player_actor.pos[1] = 0.0;
 	}
-
-	mat4.fromQuat(g_moon_local.rotation_mat4, g_moon_local.rotation_quat);
-	quat.setAxisAngle(temp_quat, vec3.fromValues(g_player_actor.pos, dtheta);
+	
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
 	var moon_mvp = mat4.create();
