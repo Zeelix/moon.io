@@ -82,8 +82,9 @@ var g_space = {
 }
 var g_player_actor = {
 	pos: vec2.fromValues(0.0, 0.0),
+	velocity: vec2.fromValues(0.0, 0.0),
+	accel: vec2.fromValues(0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
-	dir_s: vec3.fromValues(0.0, 0.0, -0.5),
 	speed: 0.5
 };
 var g_player_camera = {	
@@ -397,36 +398,34 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	vec3.cross(g_player_camera.local_up_u, camera_dir_u_inv, g_player_camera.right_u);
 	
 	// Update Actor
-	var actor_is_moving = false;
-	var actor_proj_vec2 = vec2.fromValues(0.0, 0.0);
+	var user_is_moving = false;
+	var user_input_vec2 = vec2.fromValues(0.0, 0.0);
 	
 	if(g_user_held_keys['w'])
 	{
-		actor_is_moving = true;
-		vec2.add(actor_proj_vec2, actor_proj_vec2, g_yp_vec2);
+		user_is_moving = true;
+		vec2.add(user_input_vec2, user_input_vec2, g_yp_vec2);
 	}
 	if(g_user_held_keys['s'])
 	{
-		actor_is_moving = true;
-		vec2.add(actor_proj_vec2, actor_proj_vec2, g_yn_vec2);
+		user_is_moving = true;
+		vec2.add(user_input_vec2, user_input_vec2, g_yn_vec2);
 	}
 	if(g_user_held_keys['d'])
 	{
-		actor_is_moving = true;
-		vec2.add(actor_proj_vec2, actor_proj_vec2, g_xp_vec2);
+		user_is_moving = true;
+		vec2.add(user_input_vec2, user_input_vec2, g_xp_vec2);
 	}
 	if(g_user_held_keys['a'])
 	{
-		actor_is_moving = true;
-		vec2.add(actor_proj_vec2, actor_proj_vec2, g_xn_vec2);
+		user_is_moving = true;
+		vec2.add(user_input_vec2, user_input_vec2, g_xn_vec2);
 	}
 	
-	if(actor_is_moving)
+	if(user_is_moving)
 	{
-		vec3.normalize(actor_proj_vec2, actor_proj_vec2);
-		//vec2.rotate(actor_proj_vec2, actor_proj_vec2, g_zero_vec2, g_player_camera.actor_follow_theta);
-		vec2.scale(actor_proj_vec2, actor_proj_vec2, g_player_actor.speed * t_delta_t);
-		vec2.add(g_player_actor.pos, g_player_actor.pos, actor_proj_vec2);
+		vec3.normalize(user_input_vec2, user_input_vec2);
+		vec2.scale(user_input_vec2, user_input_vec2, g_player_actor.speed * t_delta_t);
 	}
 	
 	// Render
@@ -437,16 +436,14 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var moon_translate = vec3.fromValues(0, -g_moon_local.radius, 0);
 	
 	let temp_quat = quat.create();
-	quat.setAxisAngle(temp_quat, [1,0,0], g_player_actor.pos[1]);
+	quat.setAxisAngle(temp_quat, [1,0,0], user_input_vec2[1]);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
 	quat.setAxisAngle(temp_quat, [0,1,0], dtheta);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
-	quat.setAxisAngle(temp_quat, [0,0,1], g_player_actor.pos[0]);
+	quat.setAxisAngle(temp_quat, [0,0,1], user_input_vec2[0]);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
-	
-	//quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
 	var moon_mvp = mat4.create();
 	var moon_mv = mat4.create();
@@ -485,9 +482,9 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var actor_quat = quat.create();
 	const actor_mvi = mat3.create();
 	
-	if(vec2.len(g_player_actor.pos) != 0)
+	if(user_is_moving)
 	{
-		quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(g_player_actor.pos, [1,0]));
+		quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(user_input_vec2, [1,0]));
 	}
 	
 	mat4.fromRotationTranslationScale(actor_model, actor_quat, actor_translate, actor_scale);
@@ -499,9 +496,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
 	
 	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[0], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[0]);
-	
-	g_player_actor.pos[0] = 0.0;
-	g_player_actor.pos[1] = 0.0;
 }
 
 Load();
