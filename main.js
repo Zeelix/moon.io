@@ -390,16 +390,9 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
 	g_player_camera.pos = vec3.fromValues(0.0, g_player_camera.actor_follow_height, g_player_camera.actor_follow_distance);
-	//g_player_camera.pos = vec3.fromValues(sin_dist, g_player_camera.actor_follow_height, cos_dist);
 	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
 	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_zero_vec3, g_player_camera.global_up_u);
 	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
-	
-	//var camera_dir_flat_s_inv = vec3.create();
-	//var actor_follow_height_vec3 = vec3.fromValues(0, g_player_camera.actor_follow_height, 0);
-	//vec3.rotateY(g_player_camera.dir_flat_u, g_zn_vec3, g_zero_vec3, g_player_camera.actor_follow_theta);
-	//vec3.scale(camera_dir_flat_s_inv, g_player_camera.dir_flat_u, -g_player_camera.actor_follow_distance);
-	//vec3.add(g_player_camera.pos, camera_dir_flat_s_inv, actor_follow_height_vec3);
 	
 	var camera_dir_u_inv = vec3.create();
 	vec3.sub(g_player_camera.dir_u, g_zero_vec3, g_player_camera.pos);
@@ -440,18 +433,12 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		vec3.normalize(actor_proj_vec2, actor_proj_vec2);
 		//vec2.rotate(actor_proj_vec2, actor_proj_vec2, g_zero_vec2, g_player_camera.actor_follow_theta);
 		vec2.scale(actor_proj_vec2, actor_proj_vec2, g_player_actor.speed * t_delta_t);
-		// TODO(ED1): replace g_player_actor.pos from 3D representation to 2D surface, wrapped around the moon (uv)
-		//vec3.scale(g_player_actor.dir_u, g_player_camera.right_u, actor_proj_vec2[0]);
-		//vec3.scaleAndAdd(g_player_actor.dir_u, g_player_actor.dir_u, g_player_camera.dir_flat_u, actor_proj_vec2[1]);
-		//vec3.normalize(g_player_actor.dir_u, g_player_actor.dir_u);
-		//vec3.scale(g_player_actor.dir_s, g_player_actor.dir_u, g_player_actor.speed * t_delta_t);
-		//vec3.add(g_player_actor.pos, g_player_actor.pos, g_player_actor.dir_s);
 		vec2.add(g_player_actor.pos, g_player_actor.pos, actor_proj_vec2);
 	}
 	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
-	
+		
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(5, 5, 5);
 	var moon_translate = vec3.fromValues(0, -5, 0);
@@ -466,33 +453,22 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	quat.setAxisAngle(temp_quat, [0,0,1], g_player_actor.pos[0]);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
-	//mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, dtheta, g_yp_vec3);
 	if(vec2.len(g_player_actor.pos) != 0)
 	{
-		
-		//mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[0], g_zp_vec3);
-		//mat4.rotate(g_moon_local.rotation, g_moon_local.rotation, g_player_actor.pos[1], g_xp_vec3);
 		g_player_actor.pos[0] = 0.0;
 		g_player_actor.pos[1] = 0.0;
 	}
-	//mat4.mul(moon_model, rotation, g_player_actor.pos[1]);
-	//moon_model = mat4.copy(g_moon_local.rotation);
-	//
-	
+
 	mat4.fromQuat(g_moon_local.rotation_mat4, g_moon_local.rotation_quat);
+	quat.setAxisAngle(temp_quat, vec3.fromValues(g_player_actor.pos, dtheta);
+	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
 	var moon_mvp = mat4.create();
 	var moon_mv = mat4.create();
 	
-	//mat4.scale(moon_model, moon_model, moon_scale);
-	//mat4.translate(moon_model, moon_model, moon_translate);
-	
 	mat4.fromRotationTranslationScale(moon_model, g_moon_local.rotation_quat, moon_translate, moon_scale);
-	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model); // usually model 
-	mat4.mul(moon_mv, g_player_camera.view, moon_model); // usually model
-	
-	//mat4.mul(moon_mvp, g_player_camera.view_proj, g_moon_local.rotation_mat4); // usually model 
-	//mat4.mul(moon_mv, g_player_camera.view, g_moon_local.rotation_mat4); // usually model
+	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model);
+	mat4.mul(moon_mv, g_player_camera.view, moon_model);
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
@@ -514,6 +490,25 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	// Draw cube
 	//g_gl.drawElements(g_gl.TRIANGLES, 36, g_gl.UNSIGNED_SHORT, 0);
 	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
+	
+	
+	var actor_mvp = mat4.create();
+	var actor_mv = mat4.create();
+	var actor_model = mat4.create();
+	var actor_scale = vec3.fromValues(0.2, 0.2, 0.2);
+	var actor_translate = vec3.fromValues(0, 0.2, 0);
+	var non_op_quat = quat.create();
+	const actor_mvi = mat3.create();
+	
+	mat4.fromRotationTranslationScale(actor_model, g_moon_local.non_op_quat, actor_translate, actor_scale);
+	mat4.mul(actor_mvp, g_player_camera.view_proj, actor_model);
+	mat4.mul(actor_mv, g_player_camera.view, actor_model);
+	mat3.normalFromMat4(actor_mvi, actor_mv);
+	
+	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, actor_mvp);
+    g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
+	
+	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[0], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[0]);
 }
 
 Load();
