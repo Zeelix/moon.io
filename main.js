@@ -118,7 +118,7 @@ var g_player_camera = {
 	actor_follow_pitch_min: 1.0,
 	
 	fov_d_sensitivity: 0.2,
-	fov_d: 40.0,
+	fov_d: 30.0,
 	fov_d_max: 90.0,
 	fov_d_min: 10.0,
 	
