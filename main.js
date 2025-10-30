@@ -88,8 +88,8 @@ var g_player_actor = {
 	velocity: vec2.fromValues(0.0, 0.0),
 	accel: vec2.fromValues(0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
-	speed: 20.0,
-	friction: 6
+	speed: 16.0,
+	friction: 8
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
