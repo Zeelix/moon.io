@@ -504,10 +504,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var actor_quat = quat.create();
 	const actor_mvi = mat3.create();
 	
-	if(user_is_moving)
-	{
-		quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(user_input_vec2, [1,0]));
-	}
+	quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(g_player_actor.velocity, [1,0]));
 	
 	mat4.fromRotationTranslationScale(actor_model, actor_quat, actor_translate, actor_scale);
 	mat4.mul(actor_mvp, g_player_camera.view_proj, actor_model);
