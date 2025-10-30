@@ -550,8 +550,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	vec3.normalize(local_light_dir, local_light_dir);
 	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
-
-	
 	var actor_mvp = mat4.create();
 	var actor_mv = mat4.create();
 	var actor_model = mat4.create();
