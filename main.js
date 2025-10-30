@@ -516,8 +516,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	vec2.scale(delta_pos, g_player_actor.velocity, t_delta_t);
 	vec2.add(g_player_actor.pos, g_player_actor.pos, delta_pos);
 	
-	// Render
-	
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(g_moon_local.radius, g_moon_local.radius, g_moon_local.radius);
 	var moon_translate = vec3.fromValues(0, -g_moon_local.radius, 0);
@@ -552,13 +550,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	vec3.normalize(local_light_dir, local_light_dir);
 	vec3.transformMat3(local_light_dir, local_light_dir, light_vi);
 	
-	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, moon_mvp);
-    g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, moon_mvi);
-	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
-	
-	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
-	
-	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
+
 	
 	var actor_mvp = mat4.create();
 	var actor_mv = mat4.create();
@@ -569,17 +561,24 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	const actor_mvi = mat3.create();
 	
 	vec3.add(actor_translate, actor_translate, vec3.fromValues(0.0, g_player_actor.jump_height, 0.0));
-	
 	quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(g_player_actor.velocity, [1,0]));
-	
 	mat4.fromRotationTranslationScale(actor_model, actor_quat, actor_translate, actor_scale);
 	mat4.mul(actor_mvp, g_player_camera.view_proj, actor_model);
 	mat4.mul(actor_mv, g_player_camera.view, actor_model);
 	mat3.normalFromMat4(actor_mvi, actor_mv);
 	
+	// Render
+	
+	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
+	
+	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
+	
+	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, moon_mvp);
+    g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, moon_mvi);
+	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
+	
 	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, actor_mvp);
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, actor_mvi);
-	
 	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[0], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[0]);
 }
 
