@@ -102,15 +102,21 @@ var g_player_actor = {
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
 	actor_follow_distance: 5.0,
-	actor_follow_height: 1.0, // 0.2
+	actor_follow_pitch: 45.0,
 	actor_follow_theta: 0.0,
 	actor_focal_height: 0.0,
-	zoom_sensitivity: 0.002,
-	zoom_max: 80.0,
-	zoom_min: 0.8,
-	actor_follow_height_max: 1.0,
-	actor_follow_height_min: 0.0,
+	
+	actor_follow_distance_sensitivity: 0.002,
+	
+	actor_follow_distance_max: 80.0,
+	actor_follow_distance_min: 0.8,
+	actor_follow_pitch_max: 89.0,
+	actor_follow_pitch_min: 1.0,
+	
 	fov_d: 40.0,
+	fov_d_max: 90.0,
+	fov_d_min: 10.0,
+	
 	near: 0.1,
 	far: 100.0,
 	mouse_sensitivity_x: 2.0,
@@ -174,8 +180,8 @@ function CB_Mouse_Click(event)
 }
 function CB_Mouse_Wheel(event)
 {
-	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.zoom_sensitivity;
-	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.zoom_min, g_player_camera.zoom_max);
+	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.actor_follow_distance_sensitivity;
+	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance_min, g_player_camera.actor_follow_distance_max);
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
@@ -434,6 +440,11 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	{
 		user_is_moving = true;
 		vec2.add(user_input_vec2, user_input_vec2, g_xn_vec2);
+	}
+	
+	if(g_user_held_keys['ArrowLeft'])
+	{
+		
 	}
 	
 	if(user_is_moving)
