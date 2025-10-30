@@ -89,7 +89,13 @@ var g_player_actor = {
 	accel: vec2.fromValues(0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
 	speed: 16.0,
-	friction: 8
+	friction: 8,
+	
+	jump_height: 0.0,
+	jump_power: 1.0,
+	jump_grounded: false,
+	jump_velocity: 0.0,
+	jump_acceleration: -1
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
@@ -433,6 +439,24 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		vec3.normalize(user_input_vec2, user_input_vec2);
 		vec2.scale(user_input_vec2, user_input_vec2, g_player_actor.speed * t_delta_t);
 	}
+	
+	g_player_actor.jump_velocity = g_player_actor.jump_velocity + g_player_actor.jump_acceleration * t_delta_t;
+	g_player_actor.jump_height = Math.max(g_player_actor.jump_height + g_player_actor.jump_velocity * t_delta_t, 0.0);
+	g_player_actor.jump_grounded = (g_player_actor.jump_height < 0.1);
+	
+	if(g_user_held_keys[' '])
+	{
+		if(g_player_actor.jump_grounded)
+		{
+			g_player_actor.jump_grounded = false;
+			g_player_actor.jump_velocity = g_player_actor.jump_power;
+		}
+	}
+	
+	jump_height: 0.0,
+	jump_power: 1.0,
+	jump_velocity: 0.0,
+	jump_acceleration: -1
 	
 	//var delta_accel = vec2.create();
 	//vec2.scale(delta_accel, g_player_actor.velocity, -g_player_actor.friction); 
