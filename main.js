@@ -451,13 +451,13 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var moon_translate = vec3.fromValues(0, -g_moon_local.radius, 0);
 	
 	let temp_quat = quat.create();
-	quat.setAxisAngle(temp_quat, [1,0,0], user_input_vec2[1]);
+	quat.setAxisAngle(temp_quat, [1,0,0], delta_pos[1]);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
 	quat.setAxisAngle(temp_quat, [0,1,0], dtheta);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
-	quat.setAxisAngle(temp_quat, [0,0,1], user_input_vec2[0]);
+	quat.setAxisAngle(temp_quat, [0,0,1], delta_pos[0]);
 	quat.multiply(g_moon_local.rotation_quat, temp_quat, g_moon_local.rotation_quat);
 	
 	var moon_mvp = mat4.create();
