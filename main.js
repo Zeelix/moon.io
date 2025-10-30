@@ -103,16 +103,17 @@ var g_player_actor = {
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
-	actor_follow_distance: 5.0,
-	actor_follow_pitch: 45.0,
+	
 	actor_follow_theta: 0.0,
 	actor_focal_height: 0.0,
 	
 	actor_follow_distance_sensitivity: 0.002,
+	actor_follow_distance: 5.0,
 	actor_follow_distance_max: 80.0,
 	actor_follow_distance_min: 0.8,
 	
 	actor_follow_pitch_sensitivity: 0.8,
+	actor_follow_pitch: 45.0,
 	actor_follow_pitch_max: 89.0,
 	actor_follow_pitch_min: 1.0,
 	
@@ -410,7 +411,14 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	const sin_dist = Math.sin(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
-	g_player_camera.pos = vec3.fromValues(0.0, g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance/1.8);
+	
+	var actor_follow_pitch_r = (Math.PI/180.0) * actor_follow_pitch;
+	
+	const actor_sin_dist = Math.sin(actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
+	const actor_cos_dist = Math.cos(actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
+	
+	g_player_camera.pos = vec3.fromValues(0.0, actor_sin_dist, actor_cos_dist);
+	
 	mat4.perspective(g_player_camera.proj, fov_r, proj_aspect, g_player_camera.near, g_player_camera.far);
 	mat4.lookAt(g_player_camera.view, g_player_camera.pos, g_zero_vec3, g_player_camera.global_up_u);
 	mat4.mul(g_player_camera.view_proj, g_player_camera.proj, g_player_camera.view);
