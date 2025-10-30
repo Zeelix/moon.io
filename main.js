@@ -453,11 +453,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		}
 	}
 	
-	jump_height: 0.0,
-	jump_power: 1.0,
-	jump_velocity: 0.0,
-	jump_acceleration: -1
-	
 	//var delta_accel = vec2.create();
 	//vec2.scale(delta_accel, g_player_actor.velocity, -g_player_actor.friction); 
 	//vec2.add(g_player_actor.accel, g_player_actor.accel, delta_accel);
