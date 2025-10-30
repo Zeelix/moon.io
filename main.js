@@ -3,6 +3,7 @@ const g_version = "0.0.1";
 const html_fps = document.querySelector("#html_fps");
 const html_fovd = document.querySelector("#html_fovd");
 const html_pitch = document.querySelector("#html_pitch");
+const html_zoom = document.querySelector("#html_zoom");
 const html_version = document.querySelector("#html_version");
 const html_canvas = document.querySelector('#html_canvas');
 
@@ -348,6 +349,7 @@ function Load()
 	});
 	
 	html_version.textContent = g_version;
+	
 }
 function Render_Loop()
 {
@@ -379,6 +381,7 @@ function Render_Loop()
   
   html_fovd.textContent = g_player_camera.fov_d;
   html_pitch.textContent = g_player_camera.actor_follow_pitch;
+  html_zoom.textContent = g_player_camera.actor_follow_distance;
 }
 function Game_Update_And_Render_SceneLoad(t_delta_t)
 {
