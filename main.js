@@ -411,8 +411,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	const sin_dist = Math.sin(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
-	
-	var actor_follow_pitch_r = (Math.PI/180.0) * actor_follow_pitch;
+	var actor_follow_pitch_r = (Math.PI/180.0) * g_player_camera.actor_follow_pitch;
 	
 	const actor_sin_dist = Math.sin(g_player_camera.actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
 	const actor_cos_dist = Math.cos(g_player_camera.actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
