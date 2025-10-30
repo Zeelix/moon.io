@@ -444,6 +444,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	vec2.scale(delta_pos, g_player_actor.velocity, t_delta_t);
 	vec2.add(g_player_actor.pos, g_player_actor.pos, delta_pos);
 	
+	g_player_actor.accel = vec2.fromValues(0.0, 0.0);
+	
 	// Render
 	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 		
