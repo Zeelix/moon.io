@@ -109,7 +109,7 @@ var g_player_camera = {
 	actor_focal_height: 0.0,
 	
 	actor_follow_distance_sensitivity: 0.002,
-	actor_follow_distance: 5.0,
+	actor_follow_distance: 12.0,
 	actor_follow_distance_max: 80.0,
 	actor_follow_distance_min: 0.8,
 	
