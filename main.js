@@ -95,7 +95,9 @@ var g_player_actor = {
 	jump_power: 1.8,
 	jump_grounded: false,
 	jump_velocity: 0.0,
-	jump_acceleration: -1
+	jump_acceleration: -1,
+	
+	//pos_leash: vec2.fromValues(0.0, 0.0)
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
@@ -108,7 +110,7 @@ var g_player_camera = {
 	zoom_min: 0.8,
 	actor_follow_height_max: 1.0,
 	actor_follow_height_min: 0.0,
-	fov_d: 90.0,
+	fov_d: 40.0,
 	near: 0.1,
 	far: 100.0,
 	mouse_sensitivity_x: 2.0,
@@ -453,30 +455,22 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		}
 	}
 	
-	//var delta_accel = vec2.create();
-	//vec2.scale(delta_accel, g_player_actor.velocity, -g_player_actor.friction); 
-	//vec2.add(g_player_actor.accel, g_player_actor.accel, delta_accel);
-	
 	vec2.scale(g_player_actor.accel, g_player_actor.velocity, -g_player_actor.friction); 
 	
 	var delta_velocity_from_accel = vec2.create();
 	vec2.scale(delta_velocity_from_accel, g_player_actor.accel, t_delta_t);
+	vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity_from_accel);
 	
 	var delta_velocity_from_impulse = vec2.create();
 	vec2.scale(delta_velocity_from_impulse, user_input_vec2, g_player_actor.speed * t_delta_t);
 	vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity_from_impulse);
 	
-	vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity_from_accel);
-	
-	
 	var delta_pos = vec2.create();
 	vec2.scale(delta_pos, g_player_actor.velocity, t_delta_t);
 	vec2.add(g_player_actor.pos, g_player_actor.pos, delta_pos);
 	
-	g_player_actor.accel = vec2.fromValues(0.0, 0.0);
-	
 	// Render
-	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
+	
 		
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(g_moon_local.radius, g_moon_local.radius, g_moon_local.radius);
@@ -515,6 +509,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	g_gl.uniformMatrix4fv(g_gpu.static_mesh.uniform_mvp, false, moon_mvp);
     g_gl.uniformMatrix3fv(g_gpu.static_mesh.uniform_mvi, false, moon_mvi);
 	g_gl.uniform3fv(g_gpu.static_mesh.uniform_light_dir, local_light_dir);
+	
+	g_gl.clear(g_gl.COLOR_BUFFER_BIT| g_gl.DEPTH_BUFFER_BIT);
 	
 	g_gl.drawElements(g_gl.TRIANGLES, g_assets.static_mesh_js_1.e_pooled_index_counts[1], g_gl.UNSIGNED_SHORT, 2*g_assets.static_mesh_js_1.e_pooled_index_offsets[1]);
 	
