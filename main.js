@@ -414,8 +414,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	
 	var actor_follow_pitch_r = (Math.PI/180.0) * actor_follow_pitch;
 	
-	const actor_sin_dist = Math.sin(actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
-	const actor_cos_dist = Math.cos(actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
+	const actor_sin_dist = Math.sin(g_player_camera.actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
+	const actor_cos_dist = Math.cos(g_player_camera.actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
 	
 	g_player_camera.pos = vec3.fromValues(0.0, actor_sin_dist, actor_cos_dist);
 	
