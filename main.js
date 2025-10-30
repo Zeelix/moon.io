@@ -91,7 +91,7 @@ var g_player_actor = {
 	velocity: vec2.fromValues(0.0, 0.0),
 	accel: vec2.fromValues(0.0, 0.0),
 	dir_u: vec3.fromValues(0.0, 0.0, -1.0),
-	speed: 16.0,
+	speed: 32.0, // 16.0
 	friction: 8,
 	
 	jump_height: 0.0,
