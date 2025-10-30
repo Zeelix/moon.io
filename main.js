@@ -258,7 +258,7 @@ function Load()
 	g_assets.diffuse_png_1 = new Image();
 	g_assets.diffuse_png_1.onload = () => 
 	{
-		console.log("Downloaded diffuse_1.png");
+		console.log("Downloaded diffuse_2.png");
 		g_load.texture_png_downloaded++;
 		
 		g_gpu.static_mesh.tex_diffuse = g_gl.createTexture();
@@ -269,7 +269,7 @@ function Load()
 		g_gl.activeTexture(g_gl.TEXTURE0);
 		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
 		
-		console.log("Loaded diffuse_1.png");
+		console.log("Loaded diffuse_2.png");
 		g_load.texture_png_loaded++;
 		
 		Check_Game_Is_Loaded();
