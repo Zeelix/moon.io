@@ -107,12 +107,14 @@ var g_player_camera = {
 	actor_focal_height: 0.0,
 	
 	actor_follow_distance_sensitivity: 0.002,
-	
 	actor_follow_distance_max: 80.0,
 	actor_follow_distance_min: 0.8,
+	
+	actor_follow_pitch_sensitivity: 0.02,
 	actor_follow_pitch_max: 89.0,
 	actor_follow_pitch_min: 1.0,
 	
+	fov_d_sensitivity: 0.02,
 	fov_d: 40.0,
 	fov_d_max: 90.0,
 	fov_d_min: 10.0,
@@ -444,7 +446,24 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	
 	if(g_user_held_keys['ArrowLeft'])
 	{
-		
+		g_player_camera.fov_d += g_player_camera.fov_d_sensitivity;
+		g_player_camera.fov_d = Clamp(g_player_camera.fov_d, g_player_camera.fov_d_min, g_player_camera.fov_d_max);
+	}
+	if(g_user_held_keys['ArrowRight'])
+	{
+		g_player_camera.fov_d -= g_player_camera.fov_d_sensitivity;
+		g_player_camera.fov_d = Clamp(g_player_camera.fov_d, g_player_camera.fov_d_min, g_player_camera.fov_d_max);
+	}
+	
+	if(g_user_held_keys['ArrowUp'])
+	{
+		g_player_camera.actor_follow_pitch += g_player_camera.actor_follow_pitch_sensitivity;
+		g_player_camera.actor_follow_pitch = Clamp(g_player_camera.actor_follow_pitch, g_player_camera.actor_follow_pitch_min, g_player_camera.actor_follow_pitch_max);
+	}
+	if(g_user_held_keys['ArrowDown'])
+	{
+		g_player_camera.actor_follow_pitch -= g_player_camera.actor_follow_pitch_sensitivity;
+		g_player_camera.actor_follow_pitch = Clamp(g_player_camera.actor_follow_pitch, g_player_camera.actor_follow_pitch_min, g_player_camera.actor_follow_pitch_max);
 	}
 	
 	if(user_is_moving)
