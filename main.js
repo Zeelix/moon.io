@@ -430,7 +430,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	}
 	
 	var delta_accel = vec2.create();
-	vec2.scale(delta_accel, g_player.velocity, -g_player.friction); 
+	vec2.scale(delta_accel, g_player_actor.velocity, -g_player_actor.friction); 
 	vec2.add(g_player_actor.accel, g_player_actor.accel, delta_accel);
 	
 	var delta_velocity_from_accel = vec2.create();
