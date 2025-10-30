@@ -92,10 +92,10 @@ var g_player_actor = {
 	friction: 8,
 	
 	jump_height: 0.0,
-	jump_power: 1.0,
+	jump_power: 1.8,
 	jump_grounded: false,
 	jump_velocity: 0.0,
-	jump_acceleration: -3
+	jump_acceleration: -1
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
@@ -519,7 +519,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var actor_mv = mat4.create();
 	var actor_model = mat4.create();
 	var actor_scale = vec3.fromValues(0.2, 0.5, 0.2);
-	var actor_translate = vec3.fromValues(0, 0.2, 0);
+	var actor_translate = vec3.fromValues(0, 0.3, 0);
 	var actor_quat = quat.create();
 	const actor_mvi = mat3.create();
 	
