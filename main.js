@@ -462,12 +462,9 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var delta_velocity_from_accel = vec2.create();
 	vec2.scale(delta_velocity_from_accel, g_player_actor.accel, t_delta_t);
 	
-	if(g_player_actor.jump_grounded)
-	{
-		var delta_velocity_from_impulse = vec2.create();
-		vec2.scale(delta_velocity_from_impulse, user_input_vec2, g_player_actor.speed * t_delta_t);
-		vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity_from_impulse);
-	}
+	var delta_velocity_from_impulse = vec2.create();
+	vec2.scale(delta_velocity_from_impulse, user_input_vec2, g_player_actor.speed * t_delta_t);
+	vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity_from_impulse);
 	
 	vec2.add(g_player_actor.velocity, g_player_actor.velocity, delta_velocity_from_accel);
 	
