@@ -1,6 +1,8 @@
 const g_version = "0.0.1";
 
 const html_fps = document.querySelector("#html_fps");
+const html_fovd = document.querySelector("#html_fovd");
+const html_pitch = document.querySelector("#html_pitch");
 const html_version = document.querySelector("#html_version");
 const html_canvas = document.querySelector('#html_canvas');
 
@@ -110,11 +112,11 @@ var g_player_camera = {
 	actor_follow_distance_max: 80.0,
 	actor_follow_distance_min: 0.8,
 	
-	actor_follow_pitch_sensitivity: 0.02,
+	actor_follow_pitch_sensitivity: 0.8,
 	actor_follow_pitch_max: 89.0,
 	actor_follow_pitch_min: 1.0,
 	
-	fov_d_sensitivity: 0.02,
+	fov_d_sensitivity: 0.2,
 	fov_d: 40.0,
 	fov_d_max: 90.0,
 	fov_d_min: 10.0,
@@ -373,6 +375,9 @@ function Render_Loop()
   
   g_user_mouse.x_movement_px = 0.0;
   g_user_mouse.y_movement_px = 0.0;
+  
+  html_fovd.textContent = g_player_camera.fov_d;
+  html_pitch.textContent = g_player_camera.actor_follow_pitch;
 }
 function Game_Update_And_Render_SceneLoad(t_delta_t)
 {
@@ -501,7 +506,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	
 	// Render
 	
-		
 	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(g_moon_local.radius, g_moon_local.radius, g_moon_local.radius);
 	var moon_translate = vec3.fromValues(0, -g_moon_local.radius, 0);
