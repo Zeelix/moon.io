@@ -274,7 +274,7 @@ function Load()
 		
 		Check_Game_Is_Loaded();
 	};
-	g_assets.diffuse_png_1.src = 'diffuse_1.png';
+	g_assets.diffuse_png_1.src = 'diffuse_2.png';
 	
 	// Load Assets Async
 	const shaders_js_1_promise = import('./static_mesh_1.js');
