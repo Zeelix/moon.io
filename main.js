@@ -442,7 +442,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	
 	g_player_actor.jump_velocity = g_player_actor.jump_velocity + g_player_actor.jump_acceleration * t_delta_t;
 	g_player_actor.jump_height = Math.max(g_player_actor.jump_height + g_player_actor.jump_velocity * t_delta_t, 0.0);
-	g_player_actor.jump_grounded = (g_player_actor.jump_height < 0.1);
+	g_player_actor.jump_grounded = (g_player_actor.jump_height < 0.02);
 	
 	if(g_user_held_keys[' '])
 	{
@@ -518,7 +518,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var actor_mvp = mat4.create();
 	var actor_mv = mat4.create();
 	var actor_model = mat4.create();
-	var actor_scale = vec3.fromValues(0.2, 0.5, 0.2);
+	var actor_scale = vec3.fromValues(0.2, 0.4, 0.2);
 	var actor_translate = vec3.fromValues(0, 0.3, 0);
 	var actor_quat = quat.create();
 	const actor_mvi = mat3.create();
