@@ -379,9 +379,11 @@ function Render_Loop()
   g_user_mouse.x_movement_px = 0.0;
   g_user_mouse.y_movement_px = 0.0;
   
-  html_fovd.textContent = g_player_camera.fov_d;
-  html_pitch.textContent = g_player_camera.actor_follow_pitch;
-  html_zoom.textContent = g_player_camera.actor_follow_distance;
+  
+  // To truncate towards negative infinity (e.g., 0.818181 becomes 0.81)
+  html_fovd.textContent = String(Math.floor(g_player_camera.fov_d * Math.pow(10, 1)) / Math.pow(10, 1));
+  html_pitch.textContent = String(Math.floor(g_player_camera.actor_follow_pitch * Math.pow(10, 1)) / Math.pow(10, 1));
+  html_zoom.textContent = String(Math.floor(g_player_camera.actor_follow_distance * Math.pow(10, 1)) / Math.pow(10, 1));
 }
 function Game_Update_And_Render_SceneLoad(t_delta_t)
 {
