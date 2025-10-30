@@ -349,7 +349,6 @@ function Load()
 	});
 	
 	html_version.textContent = g_version;
-	
 }
 function Render_Loop()
 {
@@ -379,8 +378,6 @@ function Render_Loop()
   g_user_mouse.x_movement_px = 0.0;
   g_user_mouse.y_movement_px = 0.0;
   
-  
-  // To truncate towards negative infinity (e.g., 0.818181 becomes 0.81)
   html_fovd.textContent = String(Math.floor(g_player_camera.fov_d * Math.pow(10, 1)) / Math.pow(10, 1));
   html_pitch.textContent = String(Math.floor(g_player_camera.actor_follow_pitch * Math.pow(10, 1)) / Math.pow(10, 1));
   html_zoom.textContent = String(Math.floor(g_player_camera.actor_follow_distance * Math.pow(10, 1)) / Math.pow(10, 1));
@@ -417,7 +414,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	const cos_dist = Math.cos(g_player_camera.actor_follow_theta) * g_player_camera.actor_follow_distance;
 	
 	var actor_follow_pitch_r = (Math.PI/180.0) * g_player_camera.actor_follow_pitch;
-	
 	const actor_sin_dist = Math.sin(actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
 	const actor_cos_dist = Math.cos(actor_follow_pitch_r) * g_player_camera.actor_follow_distance;
 	
@@ -471,7 +467,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		g_player_camera.fov_d -= g_player_camera.fov_d_sensitivity;
 		g_player_camera.fov_d = Clamp(g_player_camera.fov_d, g_player_camera.fov_d_min, g_player_camera.fov_d_max);
 	}
-	
 	if(g_user_held_keys['ArrowUp'])
 	{
 		g_player_camera.actor_follow_pitch += g_player_camera.actor_follow_pitch_sensitivity;
