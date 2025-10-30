@@ -95,7 +95,7 @@ var g_player_actor = {
 	jump_power: 1.0,
 	jump_grounded: false,
 	jump_velocity: 0.0,
-	jump_acceleration: -1
+	jump_acceleration: -3
 };
 var g_player_camera = {	
 	global_up_u: vec3.fromValues(0.0, 1.0, 0.0),
@@ -522,6 +522,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var actor_translate = vec3.fromValues(0, 0.2, 0);
 	var actor_quat = quat.create();
 	const actor_mvi = mat3.create();
+	
+	vec3.add(actor_translate, actor_translate, vec3.fromValues(0.0, g_player_actor.jump_height, 0.0));
 	
 	quat.setAxisAngle(actor_quat, [0,1,0], vec2.angle(g_player_actor.velocity, [1,0]));
 	
