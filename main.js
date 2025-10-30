@@ -1,4 +1,7 @@
+const g_version = "0.0.1";
+
 const html_fps = document.querySelector("#html_fps");
+const html_version = document.querySelector("#html_version");
 const html_canvas = document.querySelector('#html_canvas');
 
 // GLOBALS
@@ -324,6 +327,8 @@ function Load()
 	{
 		console.log('uncaught exception thrown: ', error);
 	});
+	
+	html_version.textContent = g_version;
 }
 function Render_Loop()
 {
