@@ -8,18 +8,18 @@ const html_version = document.querySelector("#html_version");
 const html_canvas = document.querySelector('#html_canvas');
 
 // GLOBALS
-constg_xp_vec2 = vec2.fromValues(1.0,0.0);
-constg_xn_vec2 = vec2.fromValues(-1.0,0.0);
-constg_yp_vec2 = vec2.fromValues(0.0,1.0);
-constg_yn_vec2 = vec2.fromValues(0.0,-1.0);
-constg_zero_vec2 = vec2.fromValues(0.0,0.0);
-constg_xp_vec3 = vec3.fromValues(1.0,0.0,0.0);
-constg_xn_vec3 = vec3.fromValues(-1.0,0.0,0.0);
-constg_yp_vec3 = vec3.fromValues(0.0,1.0,0.0);
-constg_yn_vec3 = vec3.fromValues(0.0,-1.0,0.0);
-constg_zp_vec3 = vec3.fromValues(0.0,0.0,1.0);
-constg_zn_vec3 = vec3.fromValues(0.0,0.0,-1.0);
-constg_zero_vec3 = vec3.fromValues(0.0,0.0,0.0);
+const g_xp_vec2 = vec2.fromValues(1.0,0.0);
+const g_xn_vec2 = vec2.fromValues(-1.0,0.0);
+const g_yp_vec2 = vec2.fromValues(0.0,1.0);
+const g_yn_vec2 = vec2.fromValues(0.0,-1.0);
+const g_zero_vec2 = vec2.fromValues(0.0,0.0);
+const g_xp_vec3 = vec3.fromValues(1.0,0.0,0.0);
+const g_xn_vec3 = vec3.fromValues(-1.0,0.0,0.0);
+const g_yp_vec3 = vec3.fromValues(0.0,1.0,0.0);
+const g_yn_vec3 = vec3.fromValues(0.0,-1.0,0.0);
+const g_zp_vec3 = vec3.fromValues(0.0,0.0,1.0);
+const g_zn_vec3 = vec3.fromValues(0.0,0.0,-1.0);
+const g_zero_vec3 = vec3.fromValues(0.0,0.0,0.0);
 const g_2pi = Math.PI * 2.0;
 
 var g_gl;
