@@ -162,6 +162,10 @@ var g_space = {
 	light_theta_current: 0.0,
 	light_theta_speed: 0.0 // 0.4
 }
+const g_player_actor_modes = Object.freeze({
+	MOVE: 'MOVE',
+	BUILD: 'BUILD'
+});
 var g_player_actor = {
 	pos: vec2.fromValues(0.0, 0.0),
 	velocity: vec2.fromValues(0.0, 0.0),
@@ -175,6 +179,8 @@ var g_player_actor = {
 	jump_grounded: false,
 	jump_velocity: 0.0,
 	jump_acceleration: -1,
+	
+	mode: g_player_actor_modes.MOVE,
 	
 	//pos_leash: vec2.fromValues(0.0, 0.0)
 };
