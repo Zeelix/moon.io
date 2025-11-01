@@ -8,18 +8,18 @@ const html_version = document.querySelector("#html_version");
 const html_canvas = document.querySelector('#html_canvas');
 
 // GLOBALS
-const g_xp_vec2 = vec2.fromValues(1.0, 0.0);
-const g_xn_vec2 = vec2.fromValues(-1.0, 0.0);
-const g_yp_vec2 = vec2.fromValues(0.0, 1.0);
-const g_yn_vec2 = vec2.fromValues(0.0, -1.0);
-const g_zero_vec2 = vec2.fromValues(0.0, 0.0);
-const g_xp_vec3 = vec3.fromValues(1.0, 0.0, 0.0);
-const g_xn_vec3 = vec3.fromValues(-1.0, 0.0, 0.0);
-const g_yp_vec3 = vec3.fromValues(0.0, 1.0, 0.0);
-const g_yn_vec3 = vec3.fromValues(0.0, -1.0, 0.0);
-const g_zp_vec3 = vec3.fromValues(0.0, 0.0, 1.0);
-const g_zn_vec3 = vec3.fromValues(0.0, 0.0, -1.0);
-const g_zero_vec3 = vec3.fromValues(0.0, 0.0, 0.0);
+constg_xp_vec2 = vec2.fromValues(1.0,0.0);
+constg_xn_vec2 = vec2.fromValues(-1.0,0.0);
+constg_yp_vec2 = vec2.fromValues(0.0,1.0);
+constg_yn_vec2 = vec2.fromValues(0.0,-1.0);
+constg_zero_vec2 = vec2.fromValues(0.0,0.0);
+constg_xp_vec3 = vec3.fromValues(1.0,0.0,0.0);
+constg_xn_vec3 = vec3.fromValues(-1.0,0.0,0.0);
+constg_yp_vec3 = vec3.fromValues(0.0,1.0,0.0);
+constg_yn_vec3 = vec3.fromValues(0.0,-1.0,0.0);
+constg_zp_vec3 = vec3.fromValues(0.0,0.0,1.0);
+constg_zn_vec3 = vec3.fromValues(0.0,0.0,-1.0);
+constg_zero_vec3 = vec3.fromValues(0.0,0.0,0.0);
 const g_2pi = Math.PI * 2.0;
 
 var g_gl;
@@ -68,6 +68,82 @@ var g_frame_time = {
 	counter: 0,
 	timer_last: new Date(),
 	fps: 0
+};
+var g_ico_collider = {
+	surface_normals: [
+		vec3.fromValues(0.1876,-0.7947,0.5774),
+		vec3.fromValues(0.6071,-0.7947,0.0),
+		vec3.fromValues(-0.4911,-0.7947,0.3568),
+		vec3.fromValues(-0.4911,-0.7947,-0.3568),
+		vec3.fromValues(0.1876,-0.7947,-0.5774),
+		vec3.fromValues(0.9822,-0.1876,0.0),
+		vec3.fromValues(0.3035,-0.1876,0.9342),
+		vec3.fromValues(-0.7946,-0.1876,0.5774),
+		vec3.fromValues(-0.7946,-0.1876,-0.5774),
+		vec3.fromValues(0.3035,-0.1876,-0.9342),
+		vec3.fromValues(0.7946,0.1876,0.5774),
+		vec3.fromValues(-0.3035,0.1876,0.9342),
+		vec3.fromValues(-0.9822,0.1876,0.0),
+		vec3.fromValues(-0.3035,0.1876,-0.9342),
+		vec3.fromValues(0.7946,0.1876,-0.5774),
+		vec3.fromValues(0.4911,0.7947,0.3568),
+		vec3.fromValues(-0.1876,0.7947,0.5774),
+		vec3.fromValues(-0.6071,0.7947,0.0),
+		vec3.fromValues(-0.1876,0.7947,-0.5774),
+		vec3.fromValues(0.4911,0.7947,-0.3568)
+	],
+	change_of_base_j: [
+		vec3.fromValues(1.118062218,0,0.363268364),
+		vec3.fromValues(-0.618021006,-1,0),
+		vec3.fromValues(0,0,1.175502527),
+		vec3.fromValues(-1.118067979,0,0.363270235),
+		vec3.fromValues(-0.690919605,0,-0.951016599),
+		vec3.fromValues(0.309023486,-0.618046972,-0.951112802),
+		vec3.fromValues(1,-0.618067979,0),
+		vec3.fromValues(0.30899624,-0.61799248,0.951028945),
+		vec3.fromValues(-0.809021162,-0.618093633,0.587780559),
+		vec3.fromValues(-0.808980839,-0.618062827,-0.587751264),
+		vec3.fromValues(0.809021162,0.618093633,-0.587780559),
+		vec3.fromValues(0.808980839,0.618062827,0.587751264),
+		vec3.fromValues(-0.309023486,0.618046972,0.951112802),
+		vec3.fromValues(-1,0.618067979,0),
+		vec3.fromValues(-0.30899624,0.61799248,-0.951028945),
+		vec3.fromValues(1.118067979,0,-0.363270235),
+		vec3.fromValues(0.690919605,0,0.951016599),
+		vec3.fromValues(-0.690989497,0,0.951112802),
+		vec3.fromValues(-1.118062218,0,-0.363268364),
+		vec3.fromValues(0,0,-1.175502527)
+	],
+	change_of_base_k: [
+		vec3.fromValues(-0.690919605,0,0.951016599),
+		vec3.fromValues(0.690989497,0,-0.951112802),
+		vec3.fromValues(-1.118067979,0,-0.363270235),
+		vec3.fromValues(0,0,-1.175502527),
+		vec3.fromValues(1.118062218,0,-0.363268364),
+		vec3.fromValues(0.618046972,1.000042014,0),
+		vec3.fromValues(0.191019161,1.000005152,0.587751264),
+		vec3.fromValues(-0.500024922,1.000049844,0.363248386),
+		vec3.fromValues(-0.500024922,1.000049844,-0.363248386),
+		vec3.fromValues(0.191019161,1.000005152,-0.587751264),
+		vec3.fromValues(-0.30899624,0.61799248,0.951028945),
+		vec3.fromValues(-1,0.618067979,0),
+		vec3.fromValues(-0.309023486,0.618046972,-0.951112802),
+		vec3.fromValues(0.808980839,0.618062827,-0.587751264),
+		vec3.fromValues(0.809021162,0.618093633,0.587780559),
+		vec3.fromValues(-0.5,1,-0.363230281),
+		vec3.fromValues(0.191018177,1,-0.587748236),
+		vec3.fromValues(0.618021006,1,0),
+		vec3.fromValues(0.191018177,1,0.587748236),
+		vec3.fromValues(-0.5,1,0.363230281)
+	],
+	k_offset: [0,9,17,24,30,35,39,42,44],
+	
+	//find N such that dot(surface_normals[N], S) is min
+	//calculate j = dot(change_of_base_j[N], S)
+	//calculate k = dot(change_of_base_k[N], S)
+	//calculate K = floor(8*k + 0.5);
+	//calculate I = floor((j * (8-K)) + 0.5);
+	//calculate n = k_offset[K] + I;
 };
 var g_user_held_keys = {}
 var g_user_mouse = {
