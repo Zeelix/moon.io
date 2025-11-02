@@ -349,7 +349,7 @@ function CB_Mouse_Move(event)
 			// ray_dir_model
 			
 			const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
-			const sphere_radius = 1.0;
+			const sphere_radius = g_moon_local.radius; // was 1
 			
 			// Vector from ray origin to sphere center
 			const oc = vec3.create();
@@ -372,8 +372,8 @@ function CB_Mouse_Move(event)
 			
 			// Find the smallest positive t value
 			let t = t0;
-			if (t > 0) t = t1; // was <
-			if (t > 0)         // was <
+			if (t < 0) t = t1; // was <
+			if (t < 0)         // was <
 			{
 				console.log('No collision(t miss): t0=', t0, ', t1=', t1);
 				return null; // No valid intersection in front of the ray origin
