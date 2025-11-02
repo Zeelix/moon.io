@@ -319,11 +319,16 @@ function CB_Mouse_Move(event)
 			var ray_dir_vec3 = vec3.create();
 			
 			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
-			mat4.invert(g_moon_local.model_inv, g_moon_local.model);
+			
+			const moon_model_inv_mat4 = mat4.create();
+			const moon_quat_inv = quat.create();
+			quat.invert(moon_quat_inv, g_moon_local.rotation_quat);
+			mat4.fromQuat(moon_model_inv_mat4, moon_quat_inv);
+			mat4.translate(moon_model_inv_mat4, moon_model_inv_mat4, vec3.negate(vec3.create(), vec3.fromValues(0.0, -g_moon_local.radius, 0.0)));
 			
 			vec3.transformMat4(ray_dir_vec3, ndc_vec3, g_player_camera.view_proj_inv); // Calculate ray of origin at camera, dir is vec3
-			vec3.transformMat4(ray_dir_vec3, ray_dir_vec3, g_moon_local.model_inv);
-			vec3.transformMat4(ray_origin_vec3, g_player_camera.pos, g_moon_local.model_inv);
+			vec3.transformMat4(ray_dir_vec3, ray_dir_vec3, moon_model_inv_mat4);
+			vec3.transformMat4(ray_origin_vec3, g_player_camera.pos, moon_model_inv_mat4);
 			vec3.normalize(ray_dir_vec3, ray_dir_vec3);
 			
 			const a = vec3.dot(ray_dir_vec3, ray_dir_vec3);
