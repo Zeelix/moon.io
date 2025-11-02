@@ -331,13 +331,24 @@ function CB_Mouse_Move(event)
 			vec3.transformMat4(ray_origin_vec3, g_player_camera.pos, moon_model_inv_mat4);
 			vec3.normalize(ray_dir_vec3, ray_dir_vec3);
 			
+			console.log('Ray-Pos(Model-Space) x=', ray_origin_vec3[0], ', y=', ray_origin_vec3[1], ', z=', ray_origin_vec3[2]);
+			console.log('Ray-Dir(Model-Space) x=', ray_dir_vec3[0], ', y=', ray_dir_vec3[1], ', z=', ray_dir_vec3[2]);
+			
 			const a = vec3.dot(ray_dir_vec3, ray_dir_vec3);
 			const b = 2 * vec3.dot(ray_origin_vec3, ray_dir_vec3);
 			const c = vec3.dot(ray_origin_vec3, ray_origin_vec3) - (g_moon_local.radius * g_moon_local.radius);
 			
 			const discriminant = b * b - 4 * a * c;
 			
-			if (discriminant < 0) {
+			console.log('a = ', a);
+			console.log('b = ', b);
+			console.log('c = ', c);
+			console.log('D = ', discriminant);
+			
+			if (discriminant < 0) 
+			{
+				console.log('D < 0');
+				
 				// No intersection
 				return null;
 			}
@@ -349,7 +360,10 @@ function CB_Mouse_Move(event)
 			if (t1 >= 0) t = t1;
 			if (t2 >= 0 && t2 < t) t = t2;
 			
-			if (t === Infinity) {
+			if (t === Infinity) 
+			{
+				console.log('t -> no solution found');
+				
 				// Intersection behind ray origin or no valid intersection
 				return null;
 			}
