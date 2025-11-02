@@ -389,17 +389,18 @@ function CB_Mouse_Move(event)
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 			if(build_snap_type == g_building_type.Pt)
 			{
-				var lowest_index = -1;
-				var lowest_dot_product = Infinity;
+				var closest_surface_index = -1;
+				var highest_dot_product = -1.0;
 				for(let i = 0; i < 20; i++)
 				{
 					var dot = vec3.dot(intersect_point, g_ico_collider.surface_normals[i]);
-					if(dot < lowest_dot_product)
+					if(dot > highest_dot_product)
 					{
-						lowest_index = i;
+						closest_surface_index = i;
+						highest_dot_product = dot;
 					}
 				}
-				console.log('Surface index: ', lowest_index, ' with dot ', lowest_dot_product);
+				console.log('Surface index: ', closest_surface_index, ' with dot ', highest_dot_product);
 				
 				//calculate the view projection inverse of the camera
 				//calculate the user mouse ray in world-space, collide with sphere surface to get S
