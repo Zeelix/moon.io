@@ -326,8 +326,8 @@ function CB_Mouse_Move(event)
 			vec4.transformMat4(ray_origin_world, ray_origin_ndc, g_player_camera.view_proj_inv);
 			vec4.transformMat4(ray_dir_world, ray_dir_ndc, g_player_camera.view_proj_inv);
 			
-			vec3.scale(ray_origin_world, ray_origin_world, 1 / ray_origin_world[3]);
-			vec3.scale(ray_dir_world, ray_dir_world, 1 / ray_dir_world[3]);
+			vec4.scale(ray_origin_world, ray_origin_world, 1 / ray_origin_world[3]);
+			vec4.scale(ray_dir_world, ray_dir_world, 1 / ray_dir_world[3]);
 			
 			vec3.subtract(ray_dir_world, ray_dir_world, ray_origin_world);
 			vec3.normalize(ray_dir_world, ray_dir_world);
