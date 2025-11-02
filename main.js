@@ -313,31 +313,47 @@ function CB_Mouse_Move(event)
 		{
 			var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
 			var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
-			var ndc_vec3 = vec3.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0);
-			
-			var ray_origin_vec3 = vec3.create();
-			var ray_dir_vec3 = vec3.create();
+			var ndc_vec4_far = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
+			var ndc_vec4_near = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
 			
 			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
 			
+			vec4.transformMat4(ndc_vec4_far, ndc_vec4_far, g_player_camera.view_proj_inv);
+			vec4.transformMat4(ndc_vec4_near, ndc_vec4_near, g_player_camera.view_proj_inv);
+			
+			const ndc_vec3_far_world = vec3.fromValues(
+				ndc_vec4_near[0] / ndc_vec4_near[3],
+				ndc_vec4_near[1] / ndc_vec4_near[3],
+				ndc_vec4_near[2] / ndc_vec4_near[3]
+			);
+			const ndc_vec3_near_world = vec3.fromValues(
+				ndc_vec4_far[0] / ndc_vec4_far[3],
+				ndc_vec4_far[1] / ndc_vec4_far[3],
+				ndc_vec4_far[2] / ndc_vec4_far[3]
+			);
+			const ray_dir = vec3.create();
+			vec3.subtract(ray_dir, ndc_vec3_far_world, ndc_vec3_near_world);
+			vec3.normalize(ray_dir, ray_dir);
+			
+			const ray_origin = vec3.fromValues(ndc_vec3_near_world[0], ndc_vec3_near_world[1], ndc_vec3_near_world[2]);
+			
 			const moon_model_inv_mat4 = mat4.create();
 			const moon_quat_inv = quat.create();
+			
 			quat.invert(moon_quat_inv, g_moon_local.rotation_quat);
 			mat4.fromQuat(moon_model_inv_mat4, moon_quat_inv);
 			mat4.translate(moon_model_inv_mat4, moon_model_inv_mat4, vec3.fromValues(0.0, g_moon_local.radius, 0.0));
 			
-			vec3.transformMat4(ray_dir_vec3, ndc_vec3, g_player_camera.view_proj_inv); // Calculate ray of origin at camera, dir is vec3
-			vec3.normalize(ray_dir_vec3, ray_dir_vec3);
-			vec3.transformMat4(ray_dir_vec3, ray_dir_vec3, moon_model_inv_mat4);
-			vec3.transformMat4(ray_origin_vec3, g_player_camera.pos, moon_model_inv_mat4);
-			vec3.normalize(ray_dir_vec3, ray_dir_vec3);
+			vec3.transformMat4(ray_dir, ray_dir, moon_model_inv_mat4);
+			vec3.transformMat4(ray_origin, g_player_camera.pos, moon_model_inv_mat4);
+			vec3.normalize(ray_dir, ray_dir);
 			
-			console.log('Ray-Pos(Model-Space) x=', ray_origin_vec3[0], ', y=', ray_origin_vec3[1], ', z=', ray_origin_vec3[2]);
-			console.log('Ray-Dir(Model-Space) x=', ray_dir_vec3[0], ', y=', ray_dir_vec3[1], ', z=', ray_dir_vec3[2]);
+			console.log('Ray-Pos(Model-Space) x=', ray_origin[0], ', y=', ray_origin[1], ', z=', ray_origin[2]);
+			console.log('Ray-Dir(Model-Space) x=', ray_dir[0], ', y=', ray_dir[1], ', z=', ray_dir[2]);
 			
-			const a = vec3.dot(ray_dir_vec3, ray_dir_vec3);
-			const b = 2 * vec3.dot(ray_origin_vec3, ray_dir_vec3);
-			const c = vec3.dot(ray_origin_vec3, ray_origin_vec3) - (g_moon_local.radius * g_moon_local.radius);
+			const a = vec3.dot(ray_dir, ray_dir);
+			const b = 2 * vec3.dot(ray_origin, ray_dir);
+			const c = vec3.dot(ray_origin, ray_origin) - (g_moon_local.radius * g_moon_local.radius);
 			
 			const discriminant = b * b - 4 * a * c;
 			
@@ -375,7 +391,7 @@ function CB_Mouse_Move(event)
 			}
 			
 			const intersection_point = vec3.create();
-			vec3.scaleAndAdd(intersection_point, ray_origin_vec3, ray_dir_vec3, t);
+			vec3.scaleAndAdd(intersection_point, ray_origin, ray_dir, t);
 			console.log('Collided! x=', intersection_point[0], ', y=', intersection_point[1], ', z=', intersection_point[2]);
 			
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
