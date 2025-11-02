@@ -481,11 +481,12 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 {
 	if(g_user_held_keys['b'])
 	{
-		const time_delta_last_b_ms = Date.now().getTime() - g_user_key_timers.last_b_press_time.getTime();
+		var time_now = Date.now();
+		const time_delta_last_b_ms = time_now - g_user_key_timers.last_b_press_time;
 		
 		if (html_canvas.pointerLockElement && (time_delta_last_b_ms >= 1000)) 
 		{
-			last_b_press_time = Date.now();
+			last_b_press_time = time_now;
 			html_canvas.exitPointerLock();
 		}
 	}
