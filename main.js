@@ -372,6 +372,11 @@ function CB_Mouse_Move(event)
 			vec3.scaleAndAdd(intersection_point, ray_origin_vec3, ray_dir_vec3, t);
 			console.log('Collided! x=', intersection_point[0], ', y=', intersection_point[1], ', z=', intersection_point[2]);
 			
+			if(g_frame_time.counter % 60 == 0)
+			{
+				console.clear();
+			}
+			
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 			if(build_snap_type == g_building_type.Pt)
 			{
