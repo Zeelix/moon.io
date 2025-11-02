@@ -311,88 +311,59 @@ function CB_Mouse_Move(event)
 	{
 		if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
 		{
+			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
+			mat4.invert(g_moon_local.model_inv, g_moon_local.model);
+			
 			var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
 			var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
-			var ndc_vec4_far = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
-			var ndc_vec4_near = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
 			
-			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
+			var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
+			var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
 			
-			vec4.transformMat4(ndc_vec4_far, ndc_vec4_far, g_player_camera.view_proj_inv);
-			vec4.transformMat4(ndc_vec4_near, ndc_vec4_near, g_player_camera.view_proj_inv);
+			var ray_origin_world = vec4.create();
+			var ray_dir_world = vec4.create();
 			
-			const ndc_vec3_far_world = vec3.fromValues(
-				ndc_vec4_near[0] / ndc_vec4_near[3],
-				ndc_vec4_near[1] / ndc_vec4_near[3],
-				ndc_vec4_near[2] / ndc_vec4_near[3]
-			);
-			const ndc_vec3_near_world = vec3.fromValues(
-				ndc_vec4_far[0] / ndc_vec4_far[3],
-				ndc_vec4_far[1] / ndc_vec4_far[3],
-				ndc_vec4_far[2] / ndc_vec4_far[3]
-			);
-			const ray_dir = vec3.create();
-			vec3.subtract(ray_dir, ndc_vec3_far_world, ndc_vec3_near_world);
-			vec3.normalize(ray_dir, ray_dir);
+			vec4.transformMat4(ray_origin_world, ray_origin_ndc, g_player_camera.view_proj_inv);
+			vec4.transformMat4(ray_dir_world, ray_dir_ndc, g_player_camera.view_proj_inv);
 			
-			const ray_origin = vec3.fromValues(ndc_vec3_near_world[0], ndc_vec3_near_world[1], ndc_vec3_near_world[2]);
+			vec3.scale(ray_origin_world, ray_origin_world, 1 / ray_origin_world[3]);
+			vec3.scale(ray_dir_world, ray_dir_world, 1 / ray_dir_world[3]);
 			
-			const moon_model_inv_mat4 = mat4.create();
-			const moon_quat_inv = quat.create();
+			vec3.subtract(ray_dir_world, ray_dir_world, ray_origin_world);
+			vec3.normalize(ray_dir_world, ray_dir_world);
 			
-			quat.invert(moon_quat_inv, g_moon_local.rotation_quat);
-			mat4.fromQuat(moon_model_inv_mat4, moon_quat_inv);
-			mat4.translate(moon_model_inv_mat4, moon_model_inv_mat4, vec3.fromValues(0.0, g_moon_local.radius, 0.0));
+			// ray_dir_world, ray_origin_world
 			
-			vec3.transformMat4(ray_dir, ray_dir, moon_model_inv_mat4);
-			vec3.transformMat4(ray_origin, g_player_camera.pos, moon_model_inv_mat4);
-			vec3.normalize(ray_dir, ray_dir);
+			var ray_origin_model = vec3.create();
+			var ray_dir_model = vec3.create();
 			
-			console.log('Ray-Pos(Model-Space) x=', ray_origin[0], ', y=', ray_origin[1], ', z=', ray_origin[2]);
-			console.log('Ray-Dir(Model-Space) x=', ray_dir[0], ', y=', ray_dir[1], ', z=', ray_dir[2]);
+			vec3.transformMat4(ray_origin_model, ray_origin_world, g_moon_local.model_inv);
+			vec3.transformMat4(ray_dir_model, ray_dir_world, g_moon_local.model_inv);
+			vec3.normalize(ray_dir_model, ray_dir_model);
 			
-			const a = vec3.dot(ray_dir, ray_dir);
-			const b = 2 * vec3.dot(ray_origin, ray_dir);
-			const c = vec3.dot(ray_origin, ray_origin) - (g_moon_local.radius * g_moon_local.radius);
+			// ray_dir_model
 			
-			const discriminant = b * b - 4 * a * c;
+			const L = vec3.create();
+			vec3.subtract(L, vec3.fromValues(0.0, 0.0, 0.0), ray_origin_model);
 			
-			console.log('a = ', a);
-			console.log('b = ', b);
-			console.log('c = ', c);
-			console.log('D = ', discriminant);
+			const tca = vec3.dot(L, ray_origin_model);
+			if (tca < 0) return null; // Sphere is behind ray origin
 			
-			if(g_frame_time.counter % 60 == 0)
-			{
-				console.clear();
-			}
+			const d2 = vec3.dot(L, L) - (tca * tca);
+			if (d2 > 1.0) return null; // No intersection
 			
-			if (discriminant < 0) 
-			{
-				console.log('D < 0');
-				
-				// No intersection
-				return null;
-			}
+			const thc = Math.sqrt(1.0 - d2);
+			const t0 = tca - thc;
+			const t1 = tca + thc;
 			
-			const t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
-			const t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
+			let t = t0;
+			if (t < 0) t = t1; // Use the second intersection if the first is behind the ray origin
+			if (t < 0) return null; // No valid intersection
 			
-			let t = Infinity;
-			if (t1 >= 0) t = t1;
-			if (t2 >= 0 && t2 < t) t = t2;
+			const intersect_point = vec3.create();
+			vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
 			
-			if (t === Infinity) 
-			{
-				console.log('t -> no solution found');
-				
-				// Intersection behind ray origin or no valid intersection
-				return null;
-			}
-			
-			const intersection_point = vec3.create();
-			vec3.scaleAndAdd(intersection_point, ray_origin, ray_dir, t);
-			console.log('Collided! x=', intersection_point[0], ', y=', intersection_point[1], ', z=', intersection_point[2]);
+			console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
 			
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 			if(build_snap_type == g_building_type.Pt)
