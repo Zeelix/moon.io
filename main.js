@@ -397,7 +397,7 @@ function CB_Mouse_Move(event)
 					if(dot > highest_dot_product)
 					{
 						closest_surface_index = i;
-						highest_dot_product = dot;//
+						highest_dot_product = dot;
 					}
 				}
 				console.log('Surface index: ', closest_surface_index, ' with dot ', highest_dot_product);
