@@ -487,7 +487,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		if ((document.pointerLockElement === html_canvas) && (time_delta_last_b_ms >= 1000)) 
 		{
 			g_user_key_timers.last_b_press_time = time_now;
-			html_canvas.exitPointerLock();
+			document.exitPointerLock();
 		}
 	}
 	
