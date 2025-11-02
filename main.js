@@ -317,11 +317,8 @@ function CB_Mouse_Move(event)
 			var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
 			var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
 			
-			//var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
-			//var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
-			
-			var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
-			var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
+			var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
+			var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
 			
 			var ray_origin_world = vec4.create();
 			var ray_dir_world = vec4.create();
@@ -380,13 +377,15 @@ function CB_Mouse_Move(event)
 			}
 			
 			const sqrt_discriminant = Math.sqrt(discriminant);
-			const t0 = (-b - sqrt_discriminant) / (2 * a);
-			const t1 = (-b + sqrt_discriminant) / (2 * a);
+			//const t0 = (-b - sqrt_discriminant) / (2 * a);
+			//const t1 = (-b + sqrt_discriminant) / (2 * a);
+			const t0 = (-b - sqrt_discriminant) / (-2 * a);
+			const t1 = (-b + sqrt_discriminant) / (-2 * a);
 			
 			// Find the smallest positive t value
 			let t = t0;
-			if (t < 0) t = t1; // was <
-			if (t < 0)         // was <
+			if (t < 0) t = t1;
+			if (t < 0)
 			{
 				console.log('No collision(t miss): t0=', t0, ', t1=', t1);
 				return null; // No valid intersection in front of the ray origin
