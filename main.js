@@ -343,7 +343,9 @@ function CB_Mouse_Move(event)
 			vec3.transformMat4(ray_origin_model, ray_origin_world, g_moon_local.model_inv);
 			vec3.transformMat4(ray_end_world, ray_end_world, g_moon_local.model_inv);
 			
-			vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
+			//vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
+			vec3.subtract(ray_dir_model, ray_origin_model, ray_end_world);
+			
 			vec3.normalize(ray_dir_model, ray_dir_model);
 			
 			// ray_dir_model
@@ -353,7 +355,7 @@ function CB_Mouse_Move(event)
 			
 			// Vector from ray origin to sphere center
 			const oc = vec3.create();
-			vec3.subtract(oc, sphere_center_model, ray_origin_model); // L in your code is P-A, where P is center, A is origin
+			vec3.subtract(oc, sphere_center_model, ray_origin_model);
 			
 			const a = vec3.dot(ray_dir_model, ray_dir_model); // Should be 1.0 if ray_dir_model is normalized
 			const b = 2.0 * vec3.dot(oc, ray_dir_model); // Note: oc dot ray_dir_model is L dot Dir
