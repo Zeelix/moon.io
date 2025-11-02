@@ -153,7 +153,8 @@ var g_user_mouse = {
 	x_movement_px: 0,
 	y_movement_px: 0,
 	x_movement_n: 0.0,
-	y_movement_n: 0.0
+	y_movement_n: 0.0,
+	wheel_delta_y_px: 0
 } 
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
@@ -251,6 +252,26 @@ function CB_Key_Pressed(event)
 {
 	if(event.repeat) return;
 	g_user_held_keys[event.key] = true;
+	
+	// Need this here to be able to use requestPointerLock instead of GameUpdateAndRender (Security implementation)
+	if(g_user_held_keys['b'])
+	{
+		var time_now = Date.now();
+		const time_delta_last_b_ms = time_now - g_user_key_timers.last_b_press_time;
+		
+		if(time_delta_last_b_ms >= 1000)
+		{
+			g_user_key_timers.last_b_press_time = time_now;
+			if (document.pointerLockElement === html_canvas) 
+			{
+				document.exitPointerLock();
+			}
+			else
+			{
+				html_canvas.requestPointerLock();
+			}
+		}
+	}
 }
 function CB_Key_Released(event)
 {
@@ -276,8 +297,7 @@ function CB_Mouse_Click(event)
 }
 function CB_Mouse_Wheel(event)
 {
-	g_player_camera.actor_follow_distance += event.deltaY * g_player_camera.actor_follow_distance_sensitivity;
-	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance_min, g_player_camera.actor_follow_distance_max);
+	g_user_mouse.wheel_delta_y_px += event.deltaY;
 }
 function Load_Shader(t_shader_type, t_shader_code)
 {
@@ -467,6 +487,7 @@ function Render_Loop()
   
   g_user_mouse.x_movement_px = 0.0;
   g_user_mouse.y_movement_px = 0.0;
+  g_user_mouse.wheel_delta_y_px = 0.0;
   
   html_fovd.textContent = String(Math.floor(g_player_camera.fov_d * Math.pow(10, 1)) / Math.pow(10, 1));
   html_pitch.textContent = String(Math.floor(g_player_camera.actor_follow_pitch * Math.pow(10, 1)) / Math.pow(10, 1));
@@ -478,18 +499,9 @@ function Game_Update_And_Render_SceneLoad(t_delta_t)
 }
 
 function Game_Update_And_Render_SceneGame(t_delta_t) 
-{
-	if(g_user_held_keys['b'])
-	{
-		var time_now = Date.now();
-		const time_delta_last_b_ms = time_now - g_user_key_timers.last_b_press_time;
-		
-		if ((document.pointerLockElement === html_canvas) && (time_delta_last_b_ms >= 1000)) 
-		{
-			g_user_key_timers.last_b_press_time = time_now;
-			document.exitPointerLock();
-		}
-	}
+{	
+	g_player_camera.actor_follow_distance += g_user_mouse.wheel_delta_y_px * g_player_camera.actor_follow_distance_sensitivity;
+	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance_min, g_player_camera.actor_follow_distance_max);
 	
 	// Update World
 	var space_light_dir = vec3.create();
