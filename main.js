@@ -153,7 +153,9 @@ var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
 	radius: 7.0,
 	rotation_mat4: mat4.create(),
-	rotation_quat: quat.create()
+	rotation_quat: quat.create(),
+	model: mat4.create(),
+	model_inv: mat4.create()
 };
 var g_space = {
 	light_theta_current: 0.0,
@@ -238,7 +240,8 @@ var g_player_camera = {
 	local_up_u: vec3.fromValues(0.0, 0.0, 1.0),
 	proj: mat4.create(),
 	view: mat4.create(),
-	view_proj: mat4.create()
+	view_proj: mat4.create(),
+	view_proj_inv: mat4.create()
 };
 
 // Functions
@@ -308,8 +311,49 @@ function CB_Mouse_Move(event)
 	{
 		if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
 		{
-			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
+			var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
+			var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
+			var ndc_vec3 = vec3.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0);
 			
+			var ray_origin_vec3 = vec3.create();
+			var ray_dir_vec3 = vec3.create();
+			
+			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
+			mat4.invert(g_moon_local.model_inv, g_moon_local.model);
+			
+			vec3.transformMat4(ray_dir_vec3, ndc_vec3, g_player_camera.view_proj_inv); // Calculate ray of origin at camera, dir is vec3
+			vec3.transformMat4(ray_dir_vec3, ray_dir_vec3, g_moon_local.model_inv);
+			vec3.transformMat4(ray_origin_vec3, g_player_camera.pos, g_moon_local.model_inv);
+			vec3.normalize(ray_dir_vec3, ray_dir_vec3);
+			
+			const a = vec3.dot(ray_dir_vec3, ray_dir_vec3);
+			const b = 2 * vec3.dot(ray_origin_vec3, ray_dir_vec3);
+			const c = vec3.dot(ray_origin_vec3, ray_origin_vec3) - (g_moon_local.radius * g_moon_local.radius);
+			
+			const discriminant = b * b - 4 * a * c;
+			
+			if (discriminant < 0) {
+				// No intersection
+				return null;
+			}
+			
+			const t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
+			const t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
+			
+			let t = Infinity;
+			if (t1 >= 0) t = t1;
+			if (t2 >= 0 && t2 < t) t = t2;
+			
+			if (t === Infinity) {
+				// Intersection behind ray origin or no valid intersection
+				return null;
+			}
+			
+			const intersection_point = vec3.create();
+			vec3.scaleAndAdd(intersection_point, ray_origin_vec3, ray_dir_vec3, t);
+			console.log('Collided! x=', intersection_point[0], ', y=', intersection_point[1], ', z=', intersection_point[2]);
+			
+			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 			if(build_snap_type == g_building_type.Pt)
 			{
 				//calculate the view projection inverse of the camera
@@ -321,11 +365,12 @@ function CB_Mouse_Move(event)
 				//calculate I = floor((j * (8-K)) + 0.5);
 				//calculate n = k_offset[K] + I;
 				
-				var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
-				var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
+
 				
-				console.log('ndcX:', ndc_mouse_x);
-				console.log('ndcY:', ndc_mouse_y);
+				
+				
+				//console.log('ndcX:', ndc_mouse_x);
+				//console.log('ndcY:', ndc_mouse_y);
 			}
 		}
 	}
@@ -667,7 +712,6 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	vec2.scale(delta_pos, g_player_actor.velocity, t_delta_t);
 	vec2.add(g_player_actor.pos, g_player_actor.pos, delta_pos);
 	
-	var moon_model = mat4.create();
 	var moon_scale = vec3.fromValues(g_moon_local.radius, g_moon_local.radius, g_moon_local.radius);
 	var moon_translate = vec3.fromValues(0, -g_moon_local.radius, 0);
 	
@@ -684,9 +728,9 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 	var moon_mvp = mat4.create();
 	var moon_mv = mat4.create();
 	
-	mat4.fromRotationTranslationScale(moon_model, g_moon_local.rotation_quat, moon_translate, moon_scale);
-	mat4.mul(moon_mvp, g_player_camera.view_proj, moon_model);
-	mat4.mul(moon_mv, g_player_camera.view, moon_model);
+	mat4.fromRotationTranslationScale(g_moon_local.model, g_moon_local.rotation_quat, moon_translate, moon_scale);
+	mat4.mul(moon_mvp, g_player_camera.view_proj, g_moon_local.model);
+	mat4.mul(moon_mv, g_player_camera.view, g_moon_local.model);
 	
 	g_gl.useProgram(g_gpu.static_mesh.program_id);
 	g_gl.bindBuffer(g_gl.ARRAY_BUFFER, g_gpu.static_mesh.vbo);
