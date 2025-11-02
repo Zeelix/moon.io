@@ -349,7 +349,7 @@ function CB_Mouse_Move(event)
 			// ray_dir_model
 			
 			const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
-			const sphere_radius = 1.0; // was 1
+			const sphere_radius = 1.0;
 			
 			// Vector from ray origin to sphere center
 			const oc = vec3.create();
@@ -360,6 +360,15 @@ function CB_Mouse_Move(event)
 			const c = vec3.dot(oc, oc) - sphere_radius * sphere_radius;
 			
 			const discriminant = b * b - 4 * a * c;
+			
+			console.log('a=', a);
+			console.log('b=', b);
+			console.log('c=', c);
+			console.log('D=', discriminant);
+			console.log('ray_origin_world=', ray_origin_world);
+			console.log('ray_dir_world=', ray_dir_world);
+			console.log('ray_origin_model=', ray_origin_model);
+			console.log('ray_dir_model=', ray_dir_model);
 			
 			if (discriminant < 0) {
 				console.log('No collision(D<0): D=', discriminant);
