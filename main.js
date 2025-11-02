@@ -145,6 +145,9 @@ var g_ico_collider = {
 	//calculate I = floor((j * (8-K)) + 0.5);
 	//calculate n = k_offset[K] + I;
 };
+var g_user_key_timers = = 
+	last_b_press_time: new Date()
+};
 var g_user_held_keys = {}
 var g_user_mouse = {
 	x_movement_px: 0,
@@ -260,6 +263,11 @@ function CB_Mouse_Move(event)
 	{
 		g_user_mouse.x_movement_px = g_user_mouse.x_movement_px + event.movementX;
 		g_user_mouse.y_movement_px = g_user_mouse.y_movement_px + event.movementY;
+	}
+	else
+	{
+		console.log('cX:', event.clientX);
+		console.log('cY:', event.clientY);
 	}
 }
 function CB_Mouse_Click(event)
@@ -471,6 +479,17 @@ function Game_Update_And_Render_SceneLoad(t_delta_t)
 
 function Game_Update_And_Render_SceneGame(t_delta_t) 
 {
+	if(g_user_held_keys['b'])
+	{
+		const time_delta_last_b_ms = Date.now().getTime() - g_user_key_timers.last_b_press_time.getTime();
+		
+		if (html_canvas.pointerLockElement && (time_delta_last_b_ms >= 1000)) 
+		{
+			last_b_press_time = Date.now();
+			html_canvas.exitPointerLock();
+		}
+	}
+	
 	// Update World
 	var space_light_dir = vec3.create();
 	vec3.rotateY(space_light_dir, g_xp_vec3, g_zero_vec3, g_space.light_theta_current);
