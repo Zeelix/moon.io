@@ -145,7 +145,7 @@ var g_ico_collider = {
 	//calculate I = floor((j * (8-K)) + 0.5);
 	//calculate n = k_offset[K] + I;
 };
-var g_user_key_timers = = 
+var g_user_key_timers = {
 	last_b_press_time: new Date()
 };
 var g_user_held_keys = {}
