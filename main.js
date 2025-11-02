@@ -372,8 +372,8 @@ function CB_Mouse_Move(event)
 			
 			// Find the smallest positive t value
 			let t = t0;
-			if (t < 0) t = t1;
-			if (t < 0) 
+			if (t > 0) t = t1; // was <
+			if (t > 0)         // was <
 			{
 				console.log('No collision(t miss): t0=', t0, ', t1=', t1);
 				return null; // No valid intersection in front of the ray origin
