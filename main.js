@@ -349,7 +349,7 @@ function CB_Mouse_Move(event)
 			// ray_dir_model
 			
 			const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
-			const sphere_radius = g_moon_local.radius; // was 1
+			const sphere_radius = 1.0; // was 1
 			
 			// Vector from ray origin to sphere center
 			const oc = vec3.create();
