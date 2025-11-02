@@ -337,32 +337,45 @@ function CB_Mouse_Move(event)
 			var ray_origin_model = vec3.create();
 			var ray_dir_model = vec3.create();
 			
+			var ray_end_world = vec3.create();
+			vec3.add(ray_end_world, ray_origin_world, ray_dir_world);
+			
 			vec3.transformMat4(ray_origin_model, ray_origin_world, g_moon_local.model_inv);
-			vec3.transformMat4(ray_dir_model, ray_dir_world, g_moon_local.model_inv);
+			vec3.transformMat4(ray_end_world, ray_end_world, g_moon_local.model_inv);
+			
+			vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
 			vec3.normalize(ray_dir_model, ray_dir_model);
 			
 			// ray_dir_model
 			
-			const L = vec3.create();
-			vec3.subtract(L, vec3.fromValues(0.0, 0.0, 0.0), ray_origin_model);
+			const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
+			const sphere_radius = 1.0;
 			
-			const tca = vec3.dot(L, ray_origin_model);
-			if (tca < 0) return null; // Sphere is behind ray origin
+			// Vector from ray origin to sphere center
+			const oc = vec3.create();
+			vec3.subtract(oc, sphere_center_model, ray_origin_model); // L in your code is P-A, where P is center, A is origin
 			
-			const d2 = vec3.dot(L, L) - (tca * tca);
-			if (d2 > 1.0) return null; // No intersection
+			const a = vec3.dot(ray_dir_model, ray_dir_model); // Should be 1.0 if ray_dir_model is normalized
+			const b = 2.0 * vec3.dot(oc, ray_dir_model); // Note: oc dot ray_dir_model is L dot Dir
+			const c = vec3.dot(oc, oc) - sphere_radius * sphere_radius;
 			
-			const thc = Math.sqrt(1.0 - d2);
-			const t0 = tca - thc;
-			const t1 = tca + thc;
+			const discriminant = b * b - 4 * a * c;
 			
+			if (discriminant < 0) {
+				return null; // No intersection
+			}
+			
+			const sqrt_discriminant = Math.sqrt(discriminant);
+			const t0 = (-b - sqrt_discriminant) / (2 * a);
+			const t1 = (-b + sqrt_discriminant) / (2 * a);
+			
+			// Find the smallest positive t value
 			let t = t0;
-			if (t < 0) t = t1; // Use the second intersection if the first is behind the ray origin
-			if (t < 0) return null; // No valid intersection
+			if (t < 0) t = t1;
+			if (t < 0) return null; // No valid intersection in front of the ray origin
 			
 			const intersect_point = vec3.create();
 			vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
-			
 			console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
 			
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
