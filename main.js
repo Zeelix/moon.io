@@ -324,7 +324,7 @@ function CB_Mouse_Move(event)
 			const moon_quat_inv = quat.create();
 			quat.invert(moon_quat_inv, g_moon_local.rotation_quat);
 			mat4.fromQuat(moon_model_inv_mat4, moon_quat_inv);
-			mat4.translate(moon_model_inv_mat4, moon_model_inv_mat4, vec3.negate(vec3.create(), vec3.fromValues(0.0, -g_moon_local.radius, 0.0)));
+			mat4.translate(moon_model_inv_mat4, moon_model_inv_mat4, vec3.fromValues(0.0, g_moon_local.radius, 0.0));
 			
 			vec3.transformMat4(ray_dir_vec3, ndc_vec3, g_player_camera.view_proj_inv); // Calculate ray of origin at camera, dir is vec3
 			vec3.transformMat4(ray_dir_vec3, ray_dir_vec3, moon_model_inv_mat4);
