@@ -320,8 +320,12 @@ function CB_Mouse_Move(event)
 				//calculate K = floor(8*k + 0.5);
 				//calculate I = floor((j * (8-K)) + 0.5);
 				//calculate n = k_offset[K] + I;
-				console.log('cX:', event.clientX);
-				console.log('cY:', event.clientY);
+				
+				var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
+				var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
+				
+				console.log('ndcX:', ndc_mouse_x);
+				console.log('ndcY:', ndc_mouse_y);
 			}
 		}
 	}
