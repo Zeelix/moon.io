@@ -397,7 +397,7 @@ function CB_Mouse_Move(event)
 					if(dot > highest_dot_product)
 					{
 						closest_surface_index = i;
-						highest_dot_product = dot;//
+						highest_dot_product = dot;
 					}
 				}
 				console.log('Surface index: ', closest_surface_index, ' with dot ', highest_dot_product);
@@ -501,7 +501,7 @@ function Load()
 	g_assets.diffuse_png_1 = new Image();
 	g_assets.diffuse_png_1.onload = () => 
 	{
-		console.log("Downloaded diffuse_2.png");
+		console.log("Downloaded diffuse_3.png");
 		g_load.texture_png_downloaded++;
 		
 		g_gpu.static_mesh.tex_diffuse = g_gl.createTexture();
@@ -512,12 +512,12 @@ function Load()
 		g_gl.activeTexture(g_gl.TEXTURE0);
 		g_gl.bindTexture(g_gl.TEXTURE_2D, g_gpu.static_mesh.tex_diffuse);
 		
-		console.log("Loaded diffuse_2.png");
+		console.log("Loaded diffuse_3.png");
 		g_load.texture_png_loaded++;
 		
 		Check_Game_Is_Loaded();
 	};
-	g_assets.diffuse_png_1.src = 'diffuse_2.png';
+	g_assets.diffuse_png_1.src = 'diffuse_3.png';
 	
 	// Load Assets Async
 	const shaders_js_1_promise = import('./static_mesh_1.js');
