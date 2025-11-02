@@ -361,18 +361,7 @@ function CB_Mouse_Move(event)
 			const c = vec3.dot(oc, oc) - sphere_radius * sphere_radius;
 			
 			const discriminant = b * b - 4 * a * c;
-			
-			console.log('a=', a);
-			console.log('b=', b);
-			console.log('c=', c);
-			console.log('D=', discriminant);
-			console.log('ray_origin_world=', ray_origin_world);
-			console.log('ray_dir_world=', ray_dir_world);
-			console.log('ray_origin_model=', ray_origin_model);
-			console.log('ray_dir_model=', ray_dir_model);
-			
 			if (discriminant < 0) {
-				console.log('No collision(D<0): D=', discriminant);
 				return null; // No intersection
 			}
 			
@@ -400,6 +389,18 @@ function CB_Mouse_Move(event)
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 			if(build_snap_type == g_building_type.Pt)
 			{
+				var lowest_index = -1;
+				var lowest_dot_product = Infinity;
+				for(let i = 0; i < 20; i++)
+				{
+					var dot = vec3.dot(intersect_point, g_ico_collider.surface_normals[i]);
+					if(dot < lowest_dot_product)
+					{
+						lowest_index = i;
+					}
+				}
+				console.log('Surface index: ', lowest_index, ' with dot ', lowest_dot_product);
+				
 				//calculate the view projection inverse of the camera
 				//calculate the user mouse ray in world-space, collide with sphere surface to get S
 				//find N such that dot(surface_normals[N], S) is min
