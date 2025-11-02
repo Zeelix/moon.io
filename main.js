@@ -308,16 +308,21 @@ function CB_Mouse_Move(event)
 	{
 		if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
 		{
-			//calculate the view projection inverse of the camera
-			//calculate the user mouse ray in world-space, collide with sphere surface to get S
-			//find N such that dot(surface_normals[N], S) is min
-			//calculate j = dot(change_of_base_j[N], S)
-			//calculate k = dot(change_of_base_k[N], S)
-			//calculate K = floor(8*k + 0.5);
-			//calculate I = floor((j * (8-K)) + 0.5);
-			//calculate n = k_offset[K] + I;
-			console.log('cX:', event.clientX);
-			console.log('cY:', event.clientY);
+			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
+			
+			if(build_snap_type == g_building_type.Pt)
+			{
+				//calculate the view projection inverse of the camera
+				//calculate the user mouse ray in world-space, collide with sphere surface to get S
+				//find N such that dot(surface_normals[N], S) is min
+				//calculate j = dot(change_of_base_j[N], S)
+				//calculate k = dot(change_of_base_k[N], S)
+				//calculate K = floor(8*k + 0.5);
+				//calculate I = floor((j * (8-K)) + 0.5);
+				//calculate n = k_offset[K] + I;
+				console.log('cX:', event.clientX);
+				console.log('cY:', event.clientY);
+			}
 		}
 	}
 }
