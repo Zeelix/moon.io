@@ -343,8 +343,7 @@ function CB_Mouse_Move(event)
 			vec3.transformMat4(ray_origin_model, ray_origin_world, g_moon_local.model_inv);
 			vec3.transformMat4(ray_end_world, ray_end_world, g_moon_local.model_inv);
 			
-			//vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
-			vec3.subtract(ray_dir_model, ray_origin_model, ray_end_world);
+			vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
 			
 			vec3.normalize(ray_dir_model, ray_dir_model);
 			
