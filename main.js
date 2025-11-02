@@ -383,8 +383,10 @@ function CB_Mouse_Move(event)
 			const t1 = (-b + sqrt_discriminant) / (-2 * a);
 			
 			// Find the smallest positive t value
-			let t = t0;
-			if (t < 0) t = t1;
+			//let t = t0;
+			//if (t < 0) t = t1;
+			let t = t1;
+			if (t < 0) t = t0;
 			if (t < 0)
 			{
 				console.log('No collision(t miss): t0=', t0, ', t1=', t1);
