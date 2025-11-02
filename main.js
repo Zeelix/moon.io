@@ -317,8 +317,11 @@ function CB_Mouse_Move(event)
 			var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
 			var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
 			
-			var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
-			var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
+			//var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
+			//var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
+			
+			var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
+			var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
 			
 			var ray_origin_world = vec4.create();
 			var ray_dir_world = vec4.create();
