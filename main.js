@@ -184,7 +184,7 @@ var g_player_actor = {
 	jump_velocity: 0.0,
 	jump_acceleration: -1,
 	
-	mode: g_player_actor_modes.MOVE,
+	movement_mode: g_player_actor_modes.MOVE,
 	
 	//pos_leash: vec2.fromValues(0.0, 0.0)
 };
@@ -264,10 +264,12 @@ function CB_Key_Pressed(event)
 			g_user_key_timers.last_b_press_time = time_now;
 			if (document.pointerLockElement === html_canvas) 
 			{
+				g_player_actor.movement_mode = g_player_actor_modes.BUILD;
 				document.exitPointerLock();
 			}
 			else
 			{
+				g_player_actor.movement_mode = g_player_actor_modes.MOVE;
 				html_canvas.requestPointerLock();
 			}
 		}
@@ -287,13 +289,19 @@ function CB_Mouse_Move(event)
 	}
 	else
 	{
-		console.log('cX:', event.clientX);
-		console.log('cY:', event.clientY);
+		if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
+		{
+			console.log('cX:', event.clientX);
+			console.log('cY:', event.clientY);
+		}
 	}
 }
 function CB_Mouse_Click(event)
 {
-	html_canvas.requestPointerLock();
+	if(g_player_actor.movement_mode == g_player_actor_modes.MOVE)
+	{
+		html_canvas.requestPointerLock();
+	}
 }
 function CB_Mouse_Wheel(event)
 {
