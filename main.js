@@ -362,6 +362,7 @@ function CB_Mouse_Move(event)
 			const discriminant = b * b - 4 * a * c;
 			
 			if (discriminant < 0) {
+				console.log('No collision(D<0): D=', discriminant);
 				return null; // No intersection
 			}
 			
@@ -372,7 +373,11 @@ function CB_Mouse_Move(event)
 			// Find the smallest positive t value
 			let t = t0;
 			if (t < 0) t = t1;
-			if (t < 0) return null; // No valid intersection in front of the ray origin
+			if (t < 0) 
+			{
+				console.log('No collision(t miss): t0=', t0, ', t1=', t1);
+				return null; // No valid intersection in front of the ray origin
+			}
 			
 			const intersect_point = vec3.create();
 			vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
