@@ -309,6 +309,15 @@ function CB_Mouse_Move(event)
 	}
 	else
 	{
+		//calculate the view projection inverse of the camera
+		//calculate the user mouse ray in world-space, collide with sphere surface to get S
+		//find N such that dot(surface_normals[N], S) is min
+		//calculate j = dot(change_of_base_j[N], S)
+		//calculate k = dot(change_of_base_k[N], S)
+		//calculate K = floor(8*k + 0.5);
+		//calculate I = floor((j * (8-K)) + 0.5);
+		//calculate n = k_offset[K] + I;
+		
 		if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
 		{
 			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
@@ -332,8 +341,6 @@ function CB_Mouse_Move(event)
 			vec3.subtract(ray_dir_world, ray_dir_world, ray_origin_world);
 			vec3.normalize(ray_dir_world, ray_dir_world);
 			
-			// ray_dir_world, ray_origin_world
-			
 			var ray_origin_model = vec3.create();
 			var ray_dir_model = vec3.create();
 			
@@ -346,45 +353,38 @@ function CB_Mouse_Move(event)
 			vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
 			
 			vec3.normalize(ray_dir_model, ray_dir_model);
-			
-			// ray_dir_model
-			
+
 			const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
 			const sphere_radius = 1.0;
 			
-			// Vector from ray origin to sphere center
 			const oc = vec3.create();
 			vec3.subtract(oc, sphere_center_model, ray_origin_model);
 			
-			const a = vec3.dot(ray_dir_model, ray_dir_model); // Should be 1.0 if ray_dir_model is normalized
-			const b = 2.0 * vec3.dot(oc, ray_dir_model); // Note: oc dot ray_dir_model is L dot Dir
+			const a = vec3.dot(ray_dir_model, ray_dir_model);
+			const b = 2.0 * vec3.dot(oc, ray_dir_model); 
 			const c = vec3.dot(oc, oc) - sphere_radius * sphere_radius;
 			
 			const discriminant = b * b - 4 * a * c;
 			if (discriminant < 0) {
-				return null; // No intersection
+				//console.log('No collision(D < 0): D=', discriminant);
+				return null;
 			}
 			
 			const sqrt_discriminant = Math.sqrt(discriminant);
-			//const t0 = (-b - sqrt_discriminant) / (2 * a);
-			//const t1 = (-b + sqrt_discriminant) / (2 * a);
 			const t0 = (-b - sqrt_discriminant) / (-2 * a);
 			const t1 = (-b + sqrt_discriminant) / (-2 * a);
 			
-			// Find the smallest positive t value
-			//let t = t0;
-			//if (t < 0) t = t1;
 			let t = t1;
 			if (t < 0) t = t0;
 			if (t < 0)
 			{
-				console.log('No collision(t miss): t0=', t0, ', t1=', t1);
-				return null; // No valid intersection in front of the ray origin
+				//console.log('No collision(t miss): t0=', t0, ', t1=', t1);
+				return null;
 			}
 			
 			const intersect_point = vec3.create();
 			vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
-			console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
+			//console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
 			
 			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 			if(build_snap_type == g_building_type.Pt)
@@ -400,23 +400,14 @@ function CB_Mouse_Move(event)
 						highest_dot_product = dot;
 					}
 				}
-				console.log('Surface index: ', closest_surface_index, ' with dot ', highest_dot_product);
 				
-				//calculate the view projection inverse of the camera
-				//calculate the user mouse ray in world-space, collide with sphere surface to get S
-				//find N such that dot(surface_normals[N], S) is min
-				//calculate j = dot(change_of_base_j[N], S)
-				//calculate k = dot(change_of_base_k[N], S)
-				//calculate K = floor(8*k + 0.5);
-				//calculate I = floor((j * (8-K)) + 0.5);
-				//calculate n = k_offset[K] + I;
+				var j = vec3.dot(intersect_point, g_ico_collider.change_of_base_j[closest_surface_index]);
+				var k = vec3.dot(intersect_point, g_ico_collider.change_of_base_k[closest_surface_index]);
+				var K = Math.floor(8*k + 0.5);
+				var I = Math.floor((j * (8-K)) + 0.5);
+				var n = g_ico_collider.k_offset[K] + I;
 				
-
-				
-				
-				
-				//console.log('ndcX:', ndc_mouse_x);
-				//console.log('ndcY:', ndc_mouse_y);
+				console.log('PT(', closest_surface_index, ',', n, ')');
 			}
 		}
 	}
