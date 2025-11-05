@@ -71,7 +71,7 @@ var g_frame_time = {
 };
 var g_ico_collider = {
 	surface_normals: [
-		vec3.fromValues(0.4911,0.7947,-0.3568)    // T19
+		vec3.fromValues(0.4911,0.7947,-0.3568),   // T19
 		vec3.fromValues(0.4911,0.7947,0.3568),    // T15
 		vec3.fromValues(-0.1876,0.7947,0.5774),   // T16
 		vec3.fromValues(-0.6071,0.7947,0.0),      // T17
@@ -93,7 +93,7 @@ var g_ico_collider = {
 		vec3.fromValues(-0.4911,-0.7947,-0.3568), // T3
 	],
 	change_of_base_j: [
-		vec3.fromValues(0,0,-1.175502527)                        // T19
+		vec3.fromValues(0,0,-1.175502527),                       // T19
 		vec3.fromValues(1.118067979,0,-0.363270235),             // T15
 		vec3.fromValues(0.690919605,0,0.951016599),              // T16
 		vec3.fromValues(-0.690989497,0,0.951112802),             // T17
@@ -120,7 +120,7 @@ var g_ico_collider = {
 		
 	],
 	change_of_base_k: [
-		vec3.fromValues(-0.5,1,0.363230281)                      // T19
+		vec3.fromValues(-0.5,1,0.363230281),                     // T19
 		vec3.fromValues(-0.5,1,-0.363230281),                    // T15
 		vec3.fromValues(0.191018177,1,-0.587748236),             // T16
 		vec3.fromValues(0.618021006,1,0),                        // T17
@@ -145,9 +145,6 @@ var g_ico_collider = {
 	k_offset: [0,9,17,24,30,35,39,42,44],
 	point_ring_counts: [1,5,10,15,20,25,30,35,40,40,40,40,40,40,40,40,40,35,30,25,20,15,10,5,1],
 	point_ring_offsets: [0,1,6,16,31,51,76,106,141,181,221,261,301,341,381,421,461,501,536,566,591,611,626,636,641,642],
-	vertex_positions_1: [
-	                   //  1 5 10 15 20 25 30  35  40  40  40  40  40  40  40  40  40  35  30  25  20  15  10  5   1
-					   
 };
 var g_user_key_timers = {
 	last_b_press_time: new Date()
