@@ -1,0 +1,4 @@
+# Force .js files to use CRLF endings in the working directory
+*.js text eol=crlf
+# Ensure BUILD_INFO.txt also uses CRLF endings
+BUILD_INFO.txt text eol=crlf
