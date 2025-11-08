@@ -435,11 +435,9 @@ function CB_Mouse_Move(event)
 				
 				if(closest_surface_index != -1)
 				{
-					
-					
-					var bay_i = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8 + 0.5), 0, 7);
-					var bay_j = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8 + 0.5), 0, 7);
-					var bay_k = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8 + 0.5), 0, 7);
+					var bay_i = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
+					var bay_j = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7);
+					var bay_k = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7);
 					
 					//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
 					//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
