@@ -446,7 +446,7 @@ function CB_Mouse_Move(event)
 					g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
 					g_ico_collider.face_index_buffer_view.setUint8(2, bay_k);
 					
-					var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0);
+					var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0, true);
 					var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
 					
 					//var bay_i_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
