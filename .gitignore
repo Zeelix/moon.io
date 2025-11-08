@@ -1,0 +1,2 @@
+# Ignore the pre-commit hook log file
+hook_log.txt
