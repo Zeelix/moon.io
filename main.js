@@ -508,8 +508,8 @@ function Load()
 	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
 	html_canvas.addEventListener('click', CB_Mouse_Click);
 	
-	g_g_ico_collider.face_index_buffer_view = new DataView(g_g_ico_collider.face_index_buffer);
-	g_g_ico_collider.face_index_buffer_view.setUint8(3,0);
+	g_ico_collider.face_index_buffer_view = new DataView(g_g_ico_collider.face_index_buffer);
+	g_ico_collider.face_index_buffer_view.setUint8(3,0);
 	
 	// GL Render-Context
     g_gl = html_canvas.getContext('webgl');
