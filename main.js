@@ -1,4 +1,4 @@
- // Test 5 $BUILD$
+ // Test 6 $BUILD$
 
 const g_version = "0.0.1";
 
