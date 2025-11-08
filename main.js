@@ -159,6 +159,9 @@ var g_ico_collider = {
 		vec3.fromValues( 0.0000, 0.0000,-1.1755) //1,5,6[3]
 	],
 	
+	face_index_buffer: new ArrayBuffer(4),
+	face_index_buffer_view: null, 
+	
 	// Key = A | (B << 3) | (C << 6), Value is face index [0,63], Value = face_index_lookup[Key]
 	// A = floor(8*i), B = floor(8*j), C = floor(8*k)
 	face_index_lookup: [7,14,21,28,35,42,49,56,6,13,20,27,34,41,48,70,77,84,91,98,105,112,69,76,83,90,97,104,133,140,147,154,161,168,132,139,146,153,160,196,203,210,217,224,195,202,209,216,259,266,273,280,258,265,272,322,329,336,321,328,385,384,448],
@@ -166,8 +169,6 @@ var g_ico_collider = {
 	k_offset: [0,9,17,24,30,35,39,42,44],
 	point_ring_counts: [1,5,10,15,20,25,30,35,40,40,40,40,40,40,40,40,40,35,30,25,20,15,10,5,1],
 	point_ring_offsets: [0,1,6,16,31,51,76,106,141,181,221,261,301,341,381,421,461,501,536,566,591,611,626,636,641,642],
-	
-	
 };
 var g_user_key_timers = {
 	last_b_press_time: new Date()
@@ -434,16 +435,25 @@ function CB_Mouse_Move(event)
 				
 				if(closest_surface_index != -1)
 				{
-					var bay_i = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
-					var bay_j = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7);
-					var bay_k = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7);
+					
+					
+					var bay_i = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8 + 0.5), 0, 7);
+					var bay_j = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8 + 0.5), 0, 7);
+					var bay_k = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8 + 0.5), 0, 7);
 					console.log('V(', bay_i, ',', bay_j, ',', bay_k, ')');
+					
+					face_index_buffer_view.setUint8(0, bay_i);
+					face_index_buffer_view.setUint8(1, bay_j);
+					face_index_buffer_view.setUint8(2, bay_k);
+					
+					var closest_subface_key = face_index_buffer_view.getUint32(0);
+					var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
 					
 					//var bay_i_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
 					//var bay_j_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7) << 3;
 					//var bay_k_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7) << 6;
 					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(bay_i_v | bay_j_v | bay_k_v);
-					//console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
+					console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
 				}
 				
 				// Lines
@@ -497,6 +507,9 @@ function Load()
 	document.addEventListener('wheel', CB_Mouse_Wheel);
 	html_canvas.addEventListener('mousemove', CB_Mouse_Move);
 	html_canvas.addEventListener('click', CB_Mouse_Click);
+	
+	g_g_ico_collider.face_index_buffer_view = new DataView(g_g_ico_collider.face_index_buffer);
+	g_g_ico_collider.face_index_buffer_view.setUint8(3,0);
 	
 	// GL Render-Context
     g_gl = html_canvas.getContext('webgl');
