@@ -164,7 +164,7 @@ var g_ico_collider = {
 	
 	// Key = A | (B << 3) | (C << 6), Value is face index [0,63], Value = face_index_lookup[Key]
 	// A = floor(8*i), B = floor(8*j), C = floor(8*k)
-	face_index_lookup: [7,14,21,28,35,42,49,56,6,13,20,27,34,41,48,70,77,84,91,98,105,112,69,76,83,90,97,104,133,140,147,154,161,168,132,139,146,153,160,196,203,210,217,224,195,202,209,216,259,266,273,280,258,265,272,322,329,336,321,328,385,384,448],
+	face_index_lookup: [7,14,21,28,35,42,49,56,6,13,20,27,34,41,48,70,77,84,91,98,105,112,69,76,83,90,97,104,133,140,147,154,161,168,132,139,146,153,160,196,203,210,217,224,195,202,209,216,259,266,273,280,258,265,272,322,329,336,321,328,385,392,384,448],
 	
 	k_offset: [0,9,17,24,30,35,39,42,44],
 	point_ring_counts: [1,5,10,15,20,25,30,35,40,40,40,40,40,40,40,40,40,35,30,25,20,15,10,5,1],
@@ -441,12 +441,14 @@ function CB_Mouse_Move(event)
 					var bay_j = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8 + 0.5), 0, 7);
 					var bay_k = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8 + 0.5), 0, 7);
 					
+					//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
+					//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
+					//g_ico_collider.face_index_buffer_view.setUint8(2, bay_k);
 					
-					g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
-					g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
-					g_ico_collider.face_index_buffer_view.setUint8(2, bay_k);
+					//var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0, true);
+					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
 					
-					var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0, true);
+					var closest_subface_key = bay_i + 8*bay_j + 64*bay_k;
 					var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
 					
 					//var bay_i_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
