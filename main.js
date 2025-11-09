@@ -435,9 +435,12 @@ function CB_Mouse_Move(event)
 				
 				if(closest_surface_index != -1)
 				{
-					var bay_i = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
-					var bay_j = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7);
-					var bay_k = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7);
+					var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
+					var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
+					var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
+					var closest_subface_key = 0;
+					var closest_subface_index = 0;
+					
 					
 					//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
 					//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
@@ -446,8 +449,8 @@ function CB_Mouse_Move(event)
 					//var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0, true);
 					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
 					
-					var closest_subface_key = bay_i + 8*bay_j + 64*bay_k;
-					var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
+					//var closest_subface_key = bay_i + 8*bay_j + 64*bay_k;
+					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
 					
 					//var bay_i_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
 					//var bay_j_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7) << 3;
