@@ -480,9 +480,9 @@ function CB_Mouse_Move(event)
 					var j_opp = vec3.create();
 					var k_opp = vec3.create();
 					
-					vec3.add(i_opp, g_ico_collider.face_edge_normals[edge_face_index_2], g_ico_collider.face_edge_normals[edge_face_index_3);
-					vec3.add(j_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3);
-					vec3.add(k_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_2);
+					vec3.add(i_opp, g_ico_collider.face_edge_normals[edge_face_index_2], g_ico_collider.face_edge_normals[edge_face_index_3]);
+					vec3.add(j_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3]);
+					vec3.add(k_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_2]);
 					
 					vec3.normalize(i_opp, i_opp);
 					vec3.normalize(j_opp, j_opp);
