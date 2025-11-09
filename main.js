@@ -92,6 +92,43 @@ var g_ico_collider = {
 		vec3.fromValues(-0.49111782,-0.79464776, 0.35684483),//1,3,5[2]
 		vec3.fromValues(-0.49111782,-0.79464776,-0.35684483) //1,5,6[3]
 	],
+	face_edge_normals: [
+		vec3.fromValues( 0.00000000,-1.00000000, 0.00000000),
+		vec3.fromValues( 0.72360000,-0.44720000, 0.52570000),
+		vec3.fromValues(-0.27640000,-0.44720000, 0.85070000),
+		vec3.fromValues( 0.72360000,-0.44720000,-0.52570000),
+		vec3.fromValues(-0.89440000,-0.44720000, 0.00000000),
+		vec3.fromValues(-0.27640000,-0.44720000,-0.85070000),
+		vec3.fromValues( 0.89440000, 0.44720000, 0.00000000),
+		vec3.fromValues( 0.27640000, 0.44720000, 0.85070000),
+		vec3.fromValues(-0.72360000, 0.44720000, 0.52570000),
+		vec3.fromValues(-0.72360000, 0.44720000,-0.52570000),
+		vec3.fromValues( 0.27640000, 0.44720000,-0.85070000),
+		vec3.fromValues( 0.00000000, 1.00000000, 0.00000000)
+	],
+	face_edge_normal_indexes: [
+		1,2,3,
+		2,1,4,
+		1,3,5,
+		1,5,6,
+		1,6,4,
+		2,4,7,
+		3,2,8,
+		5,3,9,
+		6,5,10,
+		4,6,11,
+		2,7,8,
+		3,8,9,
+		5,9,10,
+		6,10,11,
+		4,11,7,
+		8,7,12,
+		9,8,12,
+		10,9,12,
+		11,10,12,
+		7,11,12
+	],
+	
 	face_change_of_base_i: [
 		vec3.fromValues( 1.11806798, 0.00000000, 0.36327024),//7,11,12[19]
 		vec3.fromValues( 0.00000000, 0.00000000, 1.17550253),//8,7,12[15]
@@ -435,12 +472,21 @@ function CB_Mouse_Move(event)
 				
 				if(closest_surface_index != -1)
 				{
+					var edge_face_index_1 = face_edge_normal_indexes[(closest_surface_index * 3) - 1];
+					var edge_face_index_2 = face_edge_normal_indexes[(closest_surface_index * 3)];
+					var edge_face_index_3 = face_edge_normal_indexes[(closest_surface_index * 3) + 1];
+					
+					var t1 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_1]))) / Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])));
+					var t2 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_3]))) / Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])));
+					
 					var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
 					var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
 					var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
 					var closest_subface_key = 0;
 					var closest_subface_index = 0;
 					
+					
+					console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> T(', t1, ',', t2, ')');
 					
 					//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
 					//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
@@ -456,7 +502,7 @@ function CB_Mouse_Move(event)
 					//var bay_j_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7) << 3;
 					//var bay_k_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7) << 6;
 					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(bay_i_v | bay_j_v | bay_k_v);
-					console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> ', closest_subface_key,'FC(', closest_surface_index, ',', closest_subface_index, ')');
+					//console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> ', closest_subface_key,'FC(', closest_surface_index, ',', closest_subface_index, ')');
 					//console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
 				}
 				
