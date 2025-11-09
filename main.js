@@ -476,9 +476,21 @@ function CB_Mouse_Move(event)
 					var edge_face_index_2 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3) + 1] - 1;
 					var edge_face_index_3 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3) + 2] - 1;
 					
-					var T1 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_1])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_2]));
-					var T2 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3]));
-					var T3 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_3])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3]));
+					var i_opp = vec3.create();
+					var j_opp = vec3.create();
+					var k_opp = vec3.create();
+					
+					vec3.add(i_opp, g_ico_collider.face_edge_normals[edge_face_index_2], g_ico_collider.face_edge_normals[edge_face_index_3);
+					vec3.add(j_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3);
+					vec3.add(k_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_2);
+					
+					vec3.normalize(i_opp, i_opp);
+					vec3.normalize(j_opp, j_opp);
+					vec3.normalize(k_opp, k_opp);
+					
+					var T1 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_1])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_1], i_opp));
+					var T2 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_2], j_opp));
+					var T3 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_3])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_3], k_opp));
 					
 					var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
 					var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
@@ -487,7 +499,7 @@ function CB_Mouse_Move(event)
 					var closest_subface_index = 0;
 					
 					
-					console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> T(', T1, ',', T2, ')');
+					console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> T(', T1, ',', T2, ',', T3, ')');
 					
 					//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
 					//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
