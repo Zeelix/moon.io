@@ -216,7 +216,9 @@ var g_user_mouse = {
 	y_movement_px: 0,
 	x_movement_n: 0.0,
 	y_movement_n: 0.0,
-	wheel_delta_y_px: 0
+	wheel_delta_y_px: 0,
+	x_client_px: 0,
+	y_client_py: 0
 } 
 var g_moon_local = {
 	pos: vec3.fromValues(0.0, 0.0, 0.0),
@@ -371,163 +373,13 @@ function CB_Key_Released(event)
 }
 function CB_Mouse_Move(event)
 {
+	g_user_mouse.x_client_px = event.clientX;
+	g_user_mouse.y_client_py = event.clientY;
+	
 	if (document.pointerLockElement === html_canvas) 
 	{
 		g_user_mouse.x_movement_px = g_user_mouse.x_movement_px + event.movementX;
 		g_user_mouse.y_movement_px = g_user_mouse.y_movement_px + event.movementY;
-	}
-	else
-	{
-		//calculate the view projection inverse of the camera
-		//calculate the user mouse ray in world-space, collide with sphere surface to get S
-		//find N such that dot(surface_normals[N], S) is min
-		//calculate j = dot(change_of_base_j[N], S)
-		//calculate k = dot(change_of_base_k[N], S)
-		//calculate K = floor(8*k + 0.5);
-		//calculate I = floor((j * (8-K)) + 0.5);
-		//calculate n = k_offset[K] + I;
-		
-		if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
-		{
-			mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
-			mat4.invert(g_moon_local.model_inv, g_moon_local.model);
-			
-			var ndc_mouse_x = (event.clientX / html_canvas.clientWidth) * 2 - 1;
-			var ndc_mouse_y = -((event.clientY / html_canvas.clientHeight) * 2 - 1);
-			
-			var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
-			var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
-			
-			var ray_origin_world = vec4.create();
-			var ray_dir_world = vec4.create();
-			
-			vec4.transformMat4(ray_origin_world, ray_origin_ndc, g_player_camera.view_proj_inv);
-			vec4.transformMat4(ray_dir_world, ray_dir_ndc, g_player_camera.view_proj_inv);
-			
-			vec4.scale(ray_origin_world, ray_origin_world, 1 / ray_origin_world[3]);
-			vec4.scale(ray_dir_world, ray_dir_world, 1 / ray_dir_world[3]);
-			
-			vec3.subtract(ray_dir_world, ray_dir_world, ray_origin_world);
-			vec3.normalize(ray_dir_world, ray_dir_world);
-			
-			var ray_origin_model = vec3.create();
-			var ray_dir_model = vec3.create();
-			
-			var ray_end_world = vec3.create();
-			vec3.add(ray_end_world, ray_origin_world, ray_dir_world);
-			
-			vec3.transformMat4(ray_origin_model, ray_origin_world, g_moon_local.model_inv);
-			vec3.transformMat4(ray_end_world, ray_end_world, g_moon_local.model_inv);
-			
-			vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
-			
-			vec3.normalize(ray_dir_model, ray_dir_model);
-
-			const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
-			const sphere_radius = 1.0;
-			
-			const oc = vec3.create();
-			vec3.subtract(oc, sphere_center_model, ray_origin_model);
-			
-			const a = vec3.dot(ray_dir_model, ray_dir_model);
-			const b = 2.0 * vec3.dot(oc, ray_dir_model); 
-			const c = vec3.dot(oc, oc) - sphere_radius * sphere_radius;
-			
-			const discriminant = b * b - 4 * a * c;
-			if (discriminant < 0) {
-				//console.log('No collision(D < 0): D=', discriminant);
-				return null;
-			}
-			
-			const sqrt_discriminant = Math.sqrt(discriminant);
-			const t0 = (-b - sqrt_discriminant) / (-2 * a);
-			const t1 = (-b + sqrt_discriminant) / (-2 * a);
-			
-			let t = t1;
-			if (t < 0) t = t0;
-			if (t < 0)
-			{
-				//console.log('No collision(t miss): t0=', t0, ', t1=', t1);
-				return null;
-			}
-			
-			const intersect_point = vec3.create();
-			vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
-			//console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
-			
-			var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
-			if(build_snap_type == g_building_type.Pt)
-			{
-				var closest_surface_index = -1;
-				var highest_dot_product = -1.0;
-				for(let i = 0; i < 20; i++)
-				{
-					var dot = vec3.dot(intersect_point, g_ico_collider.face_surface_normals[i]);
-					if(dot > highest_dot_product)
-					{
-						closest_surface_index = i;
-						highest_dot_product = dot;
-					}
-				}
-				
-				if(closest_surface_index != -1)
-				{
-					var edge_face_index_1 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3)] - 1;
-					var edge_face_index_2 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3) + 1] - 1;
-					var edge_face_index_3 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3) + 2] - 1;
-					
-					var i_opp = vec3.create();
-					var j_opp = vec3.create();
-					var k_opp = vec3.create();
-					
-					vec3.add(i_opp, g_ico_collider.face_edge_normals[edge_face_index_2], g_ico_collider.face_edge_normals[edge_face_index_3]);
-					vec3.add(j_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3]);
-					vec3.add(k_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_2]);
-					
-					vec3.normalize(i_opp, i_opp);
-					vec3.normalize(j_opp, j_opp);
-					vec3.normalize(k_opp, k_opp);
-					
-					var T1 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_1])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_1], i_opp));
-					var T2 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_2], j_opp));
-					var T3 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_3])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_3], k_opp));
-					
-					var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
-					var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
-					var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
-					var closest_subface_key = 0;
-					var closest_subface_index = 0;
-					
-					
-					console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> T(', T1, ',', T2, ',', T3, ')');
-					
-					//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
-					//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
-					//g_ico_collider.face_index_buffer_view.setUint8(2, bay_k);
-					
-					//var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0, true);
-					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
-					
-					//var closest_subface_key = bay_i + 8*bay_j + 64*bay_k;
-					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
-					
-					//var bay_i_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
-					//var bay_j_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7) << 3;
-					//var bay_k_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7) << 6;
-					//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(bay_i_v | bay_j_v | bay_k_v);
-					//console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> ', closest_subface_key,'FC(', closest_surface_index, ',', closest_subface_index, ')');
-					//console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
-				}
-				
-				// Lines
-				//var j = vec3.dot(intersect_point, g_ico_collider.change_of_base_j[closest_surface_index]);
-				//var k = vec3.dot(intersect_point, g_ico_collider.change_of_base_k[closest_surface_index]);
-				//var K = Math.floor(8*k + 0.5);
-				//var I = Math.floor((j * (8-K)) + 0.5);
-				//var n = g_ico_collider.k_offset[K] + I;
-				//console.log('PT(', closest_surface_index, ',', n, ')');
-			}
-		}
 	}
 }
 function CB_Mouse_Click(event)
@@ -749,7 +601,164 @@ function Game_Update_And_Render_SceneLoad(t_delta_t)
 }
 
 function Game_Update_And_Render_SceneGame(t_delta_t) 
-{	
+{
+	//calculate the view projection inverse of the camera
+	//calculate the user mouse ray in world-space, collide with sphere surface to get S
+	//find N such that dot(surface_normals[N], S) is min
+	//calculate j = dot(change_of_base_j[N], S)
+	//calculate k = dot(change_of_base_k[N], S)
+	//calculate K = floor(8*k + 0.5);
+	//calculate I = floor((j * (8-K)) + 0.5);
+	//calculate n = k_offset[K] + I;
+	
+	if(g_player_actor.movement_mode == g_player_actor_modes.BUILD)
+	{
+		mat4.invert(g_player_camera.view_proj_inv, g_player_camera.view_proj);
+		mat4.invert(g_moon_local.model_inv, g_moon_local.model);
+		
+		var ndc_mouse_x = (g_user_mouse.x_client_px / html_canvas.clientWidth) * 2 - 1;
+		var ndc_mouse_y = -((g_user_mouse.y_client_px / html_canvas.clientHeight) * 2 - 1);
+		
+		var ray_dir_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, 1.0, 1.0);
+		var ray_origin_ndc = vec4.fromValues(ndc_mouse_x, ndc_mouse_y, -1.0, 1.0);
+		
+		var ray_origin_world = vec4.create();
+		var ray_dir_world = vec4.create();
+		
+		vec4.transformMat4(ray_origin_world, ray_origin_ndc, g_player_camera.view_proj_inv);
+		vec4.transformMat4(ray_dir_world, ray_dir_ndc, g_player_camera.view_proj_inv);
+		
+		vec4.scale(ray_origin_world, ray_origin_world, 1 / ray_origin_world[3]);
+		vec4.scale(ray_dir_world, ray_dir_world, 1 / ray_dir_world[3]);
+		
+		vec3.subtract(ray_dir_world, ray_dir_world, ray_origin_world);
+		vec3.normalize(ray_dir_world, ray_dir_world);
+		
+		var ray_origin_model = vec3.create();
+		var ray_dir_model = vec3.create();
+		
+		var ray_end_world = vec3.create();
+		vec3.add(ray_end_world, ray_origin_world, ray_dir_world);
+		
+		vec3.transformMat4(ray_origin_model, ray_origin_world, g_moon_local.model_inv);
+		vec3.transformMat4(ray_end_world, ray_end_world, g_moon_local.model_inv);
+		
+		vec3.subtract(ray_dir_model, ray_end_world, ray_origin_model);
+		
+		vec3.normalize(ray_dir_model, ray_dir_model);
+		
+		const sphere_center_model = vec3.fromValues(0.0, 0.0, 0.0);
+		const sphere_radius = 1.0;
+		
+		const oc = vec3.create();
+		vec3.subtract(oc, sphere_center_model, ray_origin_model);
+		
+		const a = vec3.dot(ray_dir_model, ray_dir_model);
+		const b = 2.0 * vec3.dot(oc, ray_dir_model); 
+		const c = vec3.dot(oc, oc) - sphere_radius * sphere_radius;
+		
+		const discriminant = b * b - 4 * a * c;
+		if (discriminant < 0) {
+			//console.log('No collision(D < 0): D=', discriminant);
+			return null;
+		}
+		
+		const sqrt_discriminant = Math.sqrt(discriminant);
+		const t0 = (-b - sqrt_discriminant) / (-2 * a);
+		const t1 = (-b + sqrt_discriminant) / (-2 * a);
+		
+		let t = t1;
+		if (t < 0) t = t0;
+		if (t < 0)
+		{
+			//console.log('No collision(t miss): t0=', t0, ', t1=', t1);
+			return null;
+		}
+		
+		const intersect_point = vec3.create();
+		vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
+		//console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
+		
+		var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
+		
+		if(build_snap_type == g_building_type.Pt)
+		{
+			
+		}
+		
+		if(build_snap_type == g_building_type.Tf)
+		{
+			var closest_surface_index = -1;
+			var highest_dot_product = -1.0;
+			for(let i = 0; i < 20; i++)
+			{
+				var dot = vec3.dot(intersect_point, g_ico_collider.face_surface_normals[i]);
+				if(dot > highest_dot_product)
+				{
+					closest_surface_index = i;
+					highest_dot_product = dot;
+				}
+			}
+			
+			if(closest_surface_index != -1)
+			{
+				//var edge_face_index_1 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3)] - 1;
+				//var edge_face_index_2 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3) + 1] - 1;
+				//var edge_face_index_3 = g_ico_collider.face_edge_normal_indexes[(closest_surface_index * 3) + 2] - 1;
+				
+				//var i_opp = vec3.create();
+				//var j_opp = vec3.create();
+				//var k_opp = vec3.create();
+				
+				//vec3.add(i_opp, g_ico_collider.face_edge_normals[edge_face_index_2], g_ico_collider.face_edge_normals[edge_face_index_3]);
+				//vec3.add(j_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_3]);
+				//vec3.add(k_opp, g_ico_collider.face_edge_normals[edge_face_index_1], g_ico_collider.face_edge_normals[edge_face_index_2]);
+				
+				//vec3.normalize(i_opp, i_opp);
+				//vec3.normalize(j_opp, j_opp);
+				//vec3.normalize(k_opp, k_opp);
+				
+				//var T1 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_1])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_1], i_opp));
+				//var T2 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_2], j_opp));
+				//var T3 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_3])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_3], k_opp));
+				
+				//var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
+				//var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
+				//var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
+				//var closest_subface_key = 0;
+				//var closest_subface_index = 0;
+				
+				
+				//console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> T(', T1, ',', T2, ',', T3, ')');
+				
+				//g_ico_collider.face_index_buffer_view.setUint8(0, bay_i);
+				//g_ico_collider.face_index_buffer_view.setUint8(1, bay_j);
+				//g_ico_collider.face_index_buffer_view.setUint8(2, bay_k);
+				
+				//var closest_subface_key = g_ico_collider.face_index_buffer_view.getUint32(0, true);
+				//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
+				
+				//var closest_subface_key = bay_i + 8*bay_j + 64*bay_k;
+				//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(closest_subface_key);
+				
+				//var bay_i_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]) * 8), 0, 7);
+				//var bay_j_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]) * 8), 0, 7) << 3;
+				//var bay_k_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7) << 6;
+				//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(bay_i_v | bay_j_v | bay_k_v);
+				//console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> ', closest_subface_key,'FC(', closest_surface_index, ',', closest_subface_index, ')');
+				//console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
+			}
+			
+			// Lines
+			//var j = vec3.dot(intersect_point, g_ico_collider.change_of_base_j[closest_surface_index]);
+			//var k = vec3.dot(intersect_point, g_ico_collider.change_of_base_k[closest_surface_index]);
+			//var K = Math.floor(8*k + 0.5);
+			//var I = Math.floor((j * (8-K)) + 0.5);
+			//var n = g_ico_collider.k_offset[K] + I;
+			//console.log('PT(', closest_surface_index, ',', n, ')');
+		}
+	}
+	
 	g_player_camera.actor_follow_distance += g_user_mouse.wheel_delta_y_px * g_player_camera.actor_follow_distance_sensitivity;
 	g_player_camera.actor_follow_distance = Clamp(g_player_camera.actor_follow_distance, g_player_camera.actor_follow_distance_min, g_player_camera.actor_follow_distance_max);
 	
