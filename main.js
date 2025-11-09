@@ -679,7 +679,7 @@ function Render_Loop()
   html_pitch.textContent = String(Math.floor(g_player_camera.actor_follow_pitch * Math.pow(10, 1)) / Math.pow(10, 1));
   html_zoom.textContent = String(Math.floor(g_player_camera.actor_follow_distance * Math.pow(10, 1)) / Math.pow(10, 1));
   
-  if(g_frame_time.counter % 180 == 0)
+  if(g_frame_time.counter % 3600 == 0)
   {
 	  console.clear();
   }
