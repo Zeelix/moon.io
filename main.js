@@ -778,6 +778,8 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 				var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
 				var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
 				
+				console.log('V(', bay_i, ',', bay_j, ',', bay_k, ')');
+				
 				var intersect_bay = vec3.fromValues(bay_i, bay_j, bay_k);
 				var closest_subface_index = -1;
 				highest_dot_product = -1.0;
