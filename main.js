@@ -326,7 +326,7 @@ var g_player_actor = {
 	jump_acceleration: -1,
 	
 	movement_mode: g_player_actor_modes.MOVE,
-	build_mode_selected_index: 6 // Valid only when movement_move = BUILD, currently set to sprinkler (6)
+	build_mode_selected_index: 1 // Valid only when movement_move = BUILD, currently set to sp potato plot (1)
 	
 	//pos_leash: vec2.fromValues(0.0, 0.0)
 };
@@ -733,12 +733,12 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		
 		var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 		
-		if(build_snap_type == g_building_type.Fe)
+		if(build_snap_type == g_building_type.Pt)
 		{
 			
 		}
 		
-		if(build_snap_type == g_building_type.Pt)
+		if(build_snap_type == g_building_type.Te)
 		{
 			var closest_surface_index = -1;
 			var highest_dot_product = -1.0;
