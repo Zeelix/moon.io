@@ -782,7 +782,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 				var closest_subface_index = -1;
 				highest_dot_product = -1.0;
 				
-				for(let j = 0; j < g_ico_collider.length; j++)
+				for(let j = 0; j < g_ico_collider.face_sub_normals.length; j++)
 				{
 					var dot = vec3.dot(intersect_bay, g_ico_collider.face_sub_normals[j]);
 					if(dot > highest_dot_product)
