@@ -733,12 +733,12 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		
 		var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 		
-		if(build_snap_type == g_building_type.Pt)
+		if(build_snap_type == g_building_type.Fe)
 		{
 			
 		}
 		
-		if(build_snap_type == g_building_type.Tf)
+		if(build_snap_type == g_building_type.Pt)
 		{
 			var closest_surface_index = -1;
 			var highest_dot_product = -1.0;
