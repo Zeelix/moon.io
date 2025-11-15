@@ -195,6 +195,58 @@ var g_ico_collider = {
 		vec3.fromValues(-1.11806798, 0.00000000,-0.36327024),//1,3,5[2]
 		vec3.fromValues( 0.00000000, 0.00000000,-1.17550253) //1,5,6[3]
 	],
+	face_sub_normals: [
+		vec3.fromValues(0.05098273, 0.05101681, 0.95168581),
+		vec3.fromValues(0.19156020, 0.05089926, 0.87327213),
+		vec3.fromValues(0.34331553, 0.05042906, 0.77001742),
+		vec3.fromValues(0.49730699, 0.04995886, 0.64286271),
+		vec3.fromValues(0.64287944, 0.04995886, 0.49736271),
+		vec3.fromValues(0.77008208, 0.05042906, 0.34326742),
+		vec3.fromValues(0.87324625, 0.05089926, 0.19162213),
+		vec3.fromValues(0.08926589, 0.08922064, 0.91178082),
+		vec3.fromValues(0.05091665, 0.19160691, 0.87324346),
+		vec3.fromValues(0.23810941, 0.09744916, 0.81713821),
+		vec3.fromValues(0.19979649, 0.19971788, 0.77863718),
+		vec3.fromValues(0.09746585, 0.23815681, 0.81710955),
+		vec3.fromValues(0.05045461, 0.34324674, 0.77003676),
+		vec3.fromValues(0.39617678, 0.10332667, 0.69622206),
+		vec3.fromValues(0.35789736, 0.20512519, 0.65791632),
+		vec3.fromValues(0.25239497, 0.25238039, 0.70516446),
+		vec3.fromValues(0.20512661, 0.35794052, 0.65789638),
+		vec3.fromValues(0.10342766, 0.39614435, 0.69619140),
+		vec3.fromValues(0.05004868, 0.49723757, 0.64285359),
+		vec3.fromValues(0.55279873, 0.10556013, 0.55278192),
+		vec3.fromValues(0.51466462, 0.20688844, 0.51472147),
+		vec3.fromValues(0.41327446, 0.26037381, 0.56814449),
+		vec3.fromValues(0.36600610, 0.36593394, 0.52087641),
+		vec3.fromValues(0.26050371, 0.41318914, 0.56812456),
+		vec3.fromValues(0.20690394, 0.51463501, 0.51472778),
+		vec3.fromValues(0.10557674, 0.55272129, 0.55280912),
+		vec3.fromValues(0.05002215, 0.64276478, 0.49738568),
+		vec3.fromValues(0.69626622, 0.10332667, 0.39612206),
+		vec3.fromValues(0.65787500, 0.20512519, 0.35796632),
+		vec3.fromValues(0.56812688, 0.26037381, 0.41329449),
+		vec3.fromValues(0.52085852, 0.36593394, 0.36602641),
+		vec3.fromValues(0.41946836, 0.41941930, 0.41954944),
+		vec3.fromValues(0.36598040, 0.52086517, 0.36600266),
+		vec3.fromValues(0.26047801, 0.56812037, 0.41325081),
+		vec3.fromValues(0.20514421, 0.65781121, 0.35798633),
+		vec3.fromValues(0.10340893, 0.69613260, 0.39614503),
+		vec3.fromValues(0.05040773, 0.76995416, 0.34333417),
+		vec3.fromValues(0.81715681, 0.09744916, 0.23818821),
+		vec3.fromValues(0.77862028, 0.19971788, 0.19978718),
+		vec3.fromValues(0.70521250, 0.25238039, 0.25236446),
+		vec3.fromValues(0.65794414, 0.35794052, 0.20509638),
+		vec3.fromValues(0.56819602, 0.41318914, 0.26042456),
+		vec3.fromValues(0.51470805, 0.51463501, 0.20697778),
+		vec3.fromValues(0.41331790, 0.56812037, 0.26040081),
+		vec3.fromValues(0.35798410, 0.65781121, 0.20513633),
+		vec3.fromValues(0.25233358, 0.70518397, 0.25239815),
+		vec3.fromValues(0.19981310, 0.77853532, 0.19978258),
+		vec3.fromValues(0.09744614, 0.81709181, 0.23821863),
+		vec3.fromValues(0.05093657, 0.87316328, 0.19164255) 
+	],
+	
 	
 	face_index_buffer: new ArrayBuffer(4),
 	face_index_buffer_view: null, 
@@ -722,9 +774,24 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 				//var T2 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_2])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_2], j_opp));
 				//var T3 = Math.acos(vec3.dot(intersect_point, g_ico_collider.face_edge_normals[edge_face_index_3])) / Math.acos(vec3.dot(g_ico_collider.face_edge_normals[edge_face_index_3], k_opp));
 				
-				//var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
-				//var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
-				//var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
+				var bay_i = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_i[closest_surface_index]);
+				var bay_j = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_j[closest_surface_index]);
+				var bay_k = vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]);
+				
+				var intersect_bay = vec3.fromValues(bay_i, bay_j, bay_k);
+				var closest_subface_index = -1;
+				highest_dot_product = -1.0;
+				
+				for(let j = 0; j < g_ico_collider.length; j++)
+				{
+					var dot = vec3.dot(intersect_bay, g_ico_collider.face_sub_normals[j]);
+					if(dot > highest_dot_product)
+					{
+						closest_subface_index = j;
+						highest_dot_product = dot;
+					}
+				}
+				
 				//var closest_subface_key = 0;
 				//var closest_subface_index = 0;
 				
@@ -746,7 +813,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 				//var bay_k_v = Clamp(Math.floor(vec3.dot(intersect_point, g_ico_collider.face_change_of_base_k[closest_surface_index]) * 8), 0, 7) << 6;
 				//var closest_subface_index = g_ico_collider.face_index_lookup.indexOf(bay_i_v | bay_j_v | bay_k_v);
 				//console.log('V(', bay_i, ',', bay_j, ',', bay_k, ') -> ', closest_subface_key,'FC(', closest_surface_index, ',', closest_subface_index, ')');
-				//console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
+				console.log('FC(', closest_surface_index, ',', closest_subface_index, ')');
 			}
 			
 			// Lines
