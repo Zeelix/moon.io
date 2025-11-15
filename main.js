@@ -729,7 +729,7 @@ function Game_Update_And_Render_SceneGame(t_delta_t)
 		
 		const intersect_point = vec3.create();
 		vec3.scaleAndAdd(intersect_point, ray_origin_model, ray_dir_model, t);
-		//console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
+		console.log('Collided! x=', intersect_point[0], ', y=', intersect_point[1], ', z=', intersect_point[2]);
 		
 		var build_snap_type = g_buildings[g_player_actor.build_mode_selected_index].type;
 		
